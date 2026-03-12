@@ -4,6 +4,7 @@ import com.clientes.cuentas.demo.domain.model.Customer;
 import com.clientes.cuentas.demo.domain.port.output.CustomerRepository;
 import com.clientes.cuentas.demo.infrastructure.persistence.mapper.CustomerAccountProjectionMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.Objects;
  * Repository implementation for the Customer Repository port.
  */
 @Repository
+@Slf4j
 @RequiredArgsConstructor
 public class CustomerRepositoryAdapter implements CustomerRepository {
 
@@ -24,7 +26,9 @@ public class CustomerRepositoryAdapter implements CustomerRepository {
 
   @Override
   public List<Customer> getCustomersAndAccounts() {
+    log.info("- Init - getCustomersAndAccounts()");
     var customersAndAccounts = jpaCustomerRepository.getCustomersAndAccounts();
+    log.debug("- getCustomersAndAccounts search returns {} results.", customersAndAccounts.size());
 
     // LinkedHashMap to ensure each customer is created only once and preserve the original iteration order
     Map<Long, Customer> customers = new LinkedHashMap<>();
@@ -35,14 +39,12 @@ public class CustomerRepositoryAdapter implements CustomerRepository {
       Customer customer = customers
               .computeIfAbsent(customerAccountRow.id(), id -> customerAccountProjectionMapper.toCustomer(customerAccountRow));
       if (Objects.nonNull(customerAccountRow.bankAccountId())) {
-        // TODO revisar buenas practicas
-        if (Objects.isNull(customer.getBankAccounts())) {
-          customer.setBankAccounts(new ArrayList<>());
-        }
-        customer.getBankAccounts().add(customerAccountProjectionMapper.toBankAccount(customerAccountRow));
+        customer.addBankAccount(customerAccountProjectionMapper.toBankAccount(customerAccountRow));
       }
     });
+    log.debug("The final list of customers obtained would be: {}", customers.values());
 
+    log.info("- End - getCustomersAndAccounts()");
     return new ArrayList<>(customers.values());
   }
 }

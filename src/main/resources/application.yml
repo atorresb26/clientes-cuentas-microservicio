@@ -17,3 +17,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
+logging:
+  level:
+    root: INFO
+    com.clientes.cuentas.demo: DEBUG

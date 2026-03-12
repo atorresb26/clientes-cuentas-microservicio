@@ -24,9 +24,11 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
 
   @Override
   public ResponseEntity<List<CustomerAccountDTO>> getClients() {
+    log.info("- Init - getClients()");
     var customers = getCustomersUseCase.getCustomers();
 
-    List<CustomerAccountDTO> response = customerApiMapper.toCustomerAccountDtoList(customers);
+    var response = customerApiMapper.toCustomerAccountDtoList(customers);
+    log.info("- End - getClients()");
     return ResponseEntity.ok(response);
   }
 }
