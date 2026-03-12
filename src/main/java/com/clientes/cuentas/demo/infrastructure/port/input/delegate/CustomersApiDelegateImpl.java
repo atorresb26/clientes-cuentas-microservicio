@@ -4,6 +4,7 @@ import com.clientes.cuentas.demo.application.port.input.GetCustomersUseCase;
 import com.clientes.cuentas.demo.infrastructure.input.api.ClientesApiDelegate;
 import com.clientes.cuentas.demo.infrastructure.input.dto.CustomerAccountDTO;
 import com.clientes.cuentas.demo.infrastructure.port.input.mapper.CustomerApiMapper;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,16 +20,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomersApiDelegateImpl implements ClientesApiDelegate {
 
-  private final GetCustomersUseCase  getCustomersUseCase;
+  private final GetCustomersUseCase getCustomersUseCase;
   private final CustomerApiMapper customerApiMapper;
 
   @Override
-  public ResponseEntity<List<CustomerAccountDTO>> getClients() {
-    log.info("- Init - getClients()");
-    var customers = getCustomersUseCase.getCustomers();
+  @Timed(value = "customer.usecase.getCustomersAndAccounts",
+          description = "Time spent executing getCustomersAndAccounts use case.")
+  public ResponseEntity<List<CustomerAccountDTO>> getCustomersAndAccounts() {
+    log.info("- Init - getCustomersAndAccounts()");
+    var customers = getCustomersUseCase.getCustomersAndAccounts();
 
     var response = customerApiMapper.toCustomerAccountDtoList(customers);
-    log.info("- End - getClients()");
+    log.info("- End - getCustomersAndAccounts()");
     return ResponseEntity.ok(response);
   }
 }

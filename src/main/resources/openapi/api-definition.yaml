@@ -3,13 +3,17 @@ info:
   title: Gestión de cuentas bancarias API
   version: 1.0.0
 
+tags:
+  - name: Clientes
+    description: Operaciones relacionadas con los clientes y cuentas bancarias relacionadas.
+
 paths:
   /clientes:
     get:
       tags:
         - Clientes
       summary: Obtener todos los clientes con sus cuentas
-      operationId: getClients
+      operationId: getCustomersAndAccounts
       responses:
         '200':
           description: Lista de todos los clientes con sus datos personales y las cuentas bancarias asociadas
@@ -20,9 +24,9 @@ paths:
                 items:
                   $ref: '#/components/schemas/CustomerAccount'
 
+# TODO -> Separar componentes en otro fichero
 components:
   schemas:
-
     BankAccountNoCustomer:
       type: object
       properties:
@@ -33,7 +37,6 @@ components:
           type: number
           format: double
           example: '1000.50'
-
     CustomerAccount:
       type: object
       properties:

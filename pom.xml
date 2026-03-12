@@ -39,6 +39,24 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${starter.webmvc-ui.version}</version>
         </dependency>
+        <!-- metrics -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-micrometer</artifactId>
+        </dependency>
+        <!-- caffeine cache -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
         <!-- MapStruct API -->
         <dependency>
             <groupId>org.mapstruct</groupId>

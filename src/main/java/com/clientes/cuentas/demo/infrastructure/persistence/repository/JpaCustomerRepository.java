@@ -2,6 +2,7 @@ package com.clientes.cuentas.demo.infrastructure.persistence.repository;
 
 import com.clientes.cuentas.demo.infrastructure.persistence.entity.CustomerEntity;
 import com.clientes.cuentas.demo.infrastructure.persistence.projection.CustomerAccountRow;
+import io.micrometer.core.annotation.Timed;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -19,6 +20,10 @@ public interface JpaCustomerRepository extends JpaRepository<CustomerEntity, Lon
    * @return The list of rows representing the customers with one account. If any customer have more than one,
    * then it will be in more than one record
    */
+  @Timed(value = "jpa.db.query", extraTags = {
+          "repository", "JpaCustomerRepository",
+          "method", "getCustomersAndAccounts"
+  })
   @Query("""
           SELECT new com.clientes.cuentas.demo.infrastructure.persistence.projection.CustomerAccountRow(
                       c.id,
@@ -37,4 +42,3 @@ public interface JpaCustomerRepository extends JpaRepository<CustomerEntity, Lon
           """)
   List<CustomerAccountRow> getCustomersAndAccounts();
 }
-

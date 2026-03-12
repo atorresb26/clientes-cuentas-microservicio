@@ -14,5 +14,5 @@ public interface GetCustomersUseCase {
    *
    * @return the list of all customers.
    */
-  List<Customer> getCustomers();
+  List<Customer> getCustomersAndAccounts();
 }

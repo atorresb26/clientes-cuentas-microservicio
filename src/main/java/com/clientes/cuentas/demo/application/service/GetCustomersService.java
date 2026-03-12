@@ -4,6 +4,7 @@ import com.clientes.cuentas.demo.application.port.input.GetCustomersUseCase;
 import com.clientes.cuentas.demo.domain.model.Customer;
 import com.clientes.cuentas.demo.domain.port.output.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +19,8 @@ public class GetCustomersService implements GetCustomersUseCase {
   private final CustomerRepository customerRepository;
 
   @Override
-  public List<Customer> getCustomers() {
+  @Cacheable(value = "customer-with-accounts", sync = true)
+  public List<Customer> getCustomersAndAccounts() {
     return customerRepository.getCustomersAndAccounts();
   }
 }

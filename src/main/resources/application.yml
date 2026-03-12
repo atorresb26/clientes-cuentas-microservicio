@@ -15,10 +15,28 @@ spring:
       mode: always
       schema-locations: classpath:db/*.sql
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: validate
+    properties:
+      hibernate:
+        generate_statistics: true # Enable hibernate statistics
 
+  cache:
+#    cache-names:
+#      - customer-with-accounts
+    caffeine:
+      spec: maximumSize=500,expireAfterWrite=2m
+
+# Application logs level
 logging:
   level:
     root: INFO
     com.clientes.cuentas.demo: DEBUG
+
+# Expose actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,caches
