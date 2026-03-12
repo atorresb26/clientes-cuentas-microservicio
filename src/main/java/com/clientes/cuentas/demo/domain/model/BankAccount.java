@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * The Bank Account domain model.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

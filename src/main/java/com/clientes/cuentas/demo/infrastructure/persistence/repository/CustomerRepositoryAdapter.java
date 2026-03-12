@@ -1,6 +1,5 @@
 package com.clientes.cuentas.demo.infrastructure.persistence.repository;
 
-import com.clientes.cuentas.demo.domain.model.BankAccount;
 import com.clientes.cuentas.demo.domain.model.Customer;
 import com.clientes.cuentas.demo.domain.port.output.CustomerRepository;
 import com.clientes.cuentas.demo.infrastructure.persistence.mapper.CustomerAccountProjectionMapper;
@@ -13,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Repository implementation for the Customer Repository port.
+ */
 @Repository
 @RequiredArgsConstructor
 public class CustomerRepositoryAdapter implements CustomerRepository {
@@ -20,24 +22,6 @@ public class CustomerRepositoryAdapter implements CustomerRepository {
   private final JpaCustomerRepository jpaCustomerRepository;
   private final CustomerAccountProjectionMapper customerAccountProjectionMapper;
 
-  /**
-   * Retrieves all customers together with their associated bank accounts.
-   *
-   * <p>
-   * The underlying JPA query returns a flat result set where each row represents
-   * a combination of a customer and one of their bank accounts. Therefore, a
-   * customer with multiple accounts will appear in multiple rows.
-   * </p>
-   *
-   * <p>
-   * This method reconstructs the domain aggregate {@link Customer} by grouping
-   * the rows by customer identifier and attaching the corresponding
-   * {@link BankAccount} objects to each customer.
-   * </p>
-   *
-   * @return a list of {@link Customer} domain objects, each containing the list
-   * of associated {@link BankAccount}.
-   */
   @Override
   public List<Customer> getCustomersAndAccounts() {
     var customersAndAccounts = jpaCustomerRepository.getCustomersAndAccounts();

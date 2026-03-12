@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service implementation for the GetCustomersUseCase.
+ */
 @Service
 @RequiredArgsConstructor
 public class GetCustomersService implements GetCustomersUseCase {

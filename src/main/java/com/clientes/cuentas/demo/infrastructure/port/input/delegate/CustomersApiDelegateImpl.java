@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Implementation of the ApiDelegate generated from the API specification.
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor

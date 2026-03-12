@@ -7,8 +7,18 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
+/**
+ * JPA Repository for the Customer Entity.
+ */
 public interface JpaCustomerRepository extends JpaRepository<CustomerEntity, Long> {
 
+  /**
+   * Retrieves all customers together with their associated bank accounts mapped into a projection object
+   * to avoid 1+N queries.
+   *
+   * @return The list of rows representing the customers with one account. If any customer have more than one,
+   * then it will be in more than one record
+   */
   @Query("""
           SELECT new com.clientes.cuentas.demo.infrastructure.persistence.projection.CustomerAccountRow(
                       c.id,
