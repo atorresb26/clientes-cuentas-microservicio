@@ -23,12 +23,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CustomerAccount'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
+#        '401':
+#          $ref: '#/components/responses/Unauthorized'
+#        '403':
+#          $ref: '#/components/responses/Forbidden'
         '500':
           $ref: "#/components/responses/InternalServerError"
 
@@ -45,23 +43,17 @@ components:
         - title
         - status
       properties:
-        type:
-          type: string
-          format: uri
-          description: |
-            Una referencia URI que identifica el tipo de problema.
-            Esta URI debe proporcionar documentación legible para el ser humano sobre el error.
-          example: https://api.example.com/problems/customer-not-found
+        status:
+          type: integer
+          format: int32
+          description: Código de estado HTTP para esta incidencia del problema.
+          example: 404
         title:
           type: string
           description: |
             Un resumen breve y legible del problema.
             No debe cambiar entre las distintas apariciones del mismo error.
           example: Customer not found
-        status:
-          type: integer
-          description: Código de estado HTTP para esta incidencia del problema.
-          example: 404
         detail:
           type: string
           description: Una explicación legible y específica para esta ocurrencia del problema.
@@ -71,10 +63,11 @@ components:
           format: uri
           description: Una referencia URI que identifica la ocurrencia específica del problema.
           example: /customers/123
-        traceId:
+        timestamp:
           type: string
-          description: Identificador de correlación útil para depurar y rastrear la solicitud.
-          example: a7f5d1e3c2
+          format: date-time
+          description: Time when the error occurred
+          example: "2026-03-14T19:30:21Z"
     BankAccountNoCustomer:
       type: object
       properties:
@@ -196,8 +189,8 @@ components:
             serverError:
               summary: Unexpected error
               value:
-                type: https://api.example.com/problems/internal-error
-                title: Internal Server Error
                 status: 500
+                title: Internal Server Error
                 detail: Unexpected error occurred
                 instance: /customers
+                timestamp: 2026-03-14T19:30:21Z
