@@ -1,4 +1,4 @@
-package com.clientes.cuentas.demo.shared.exception;
+package com.clientes.cuentas.demo.infrastructure.api.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
