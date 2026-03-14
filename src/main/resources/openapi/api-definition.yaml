@@ -5,14 +5,14 @@ info:
 
 tags:
   - name: Clientes
-    description: Operaciones relacionadas con los clientes y cuentas bancarias relacionadas.
+    description: Operaciones relacionadas con los clientes.
 
 paths:
   /clientes:
     get:
       tags:
         - Clientes
-      summary: Obtener todos los clientes con sus cuentas
+      summary: Obtener todos los clientes con sus cuentas asociadas.
       operationId: getCustomersAndAccounts
       responses:
         '200':
@@ -27,6 +27,23 @@ paths:
 #          $ref: '#/components/responses/Unauthorized'
 #        '403':
 #          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /clientes/mayores-de-edad:
+    get:
+      tags:
+        - Clientes
+      summary: Obtener todos los clientes que sean mayores de edad (18 años o más).
+      operationId: getAdultCustomers
+      responses:
+        '200':
+          description: Lista de todos los clientes mayores de edad (que tienen 18 años o más).
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
         '500':
           $ref: "#/components/responses/InternalServerError"
 
@@ -101,6 +118,25 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/BankAccountNoCustomer'
+    Customer:
+      type: object
+      properties:
+        dni:
+          type: string
+          example: '00000000Z'
+        name:
+          type: string
+          example: 'Adrián'
+        surname1:
+          type: string
+          example: 'Torres'
+        surname2:
+          type: string
+          example: 'Barca'
+        birthDate:
+          type: string
+          format: date
+          example: '26/09/1993'
 
   responses:
     BadRequest:

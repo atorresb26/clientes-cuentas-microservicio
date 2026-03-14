@@ -4,6 +4,7 @@ import com.clientes.cuentas.demo.domain.model.BankAccount;
 import com.clientes.cuentas.demo.domain.model.Customer;
 import com.clientes.cuentas.demo.infrastructure.input.dto.BankAccountNoCustomerDTO;
 import com.clientes.cuentas.demo.infrastructure.input.dto.CustomerAccountDTO;
+import com.clientes.cuentas.demo.infrastructure.input.dto.CustomerDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -40,4 +41,21 @@ public interface CustomerApiMapper {
    * @return the bankAccountNoCustomerDTO
    */
   BankAccountNoCustomerDTO toBankAccountNoCustomerDto(BankAccount bankAccount);
+
+  /**
+   * Maps a list of {@link Customer} entities to a list of {@link CustomerDTO}.
+   *
+   * @param customerList the list of {@link Customer} entities to be mapped
+   * @return a list of {@link CustomerDTO} objects containing the mapped data,
+   * or an empty list if the input list is empty
+   */
+  List<CustomerDTO> toCustomerDtoList(List<Customer> customerList);
+
+  /**
+   * Maps a {@link Customer} entity to its {@link CustomerDTO} representation.
+   *
+   * @param customer the {@link Customer} entity to convert
+   * @return the mapped {@link CustomerDTO} instance
+   */
+  CustomerDTO toCustomerDto(Customer customer);
 }

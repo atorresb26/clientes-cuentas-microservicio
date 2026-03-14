@@ -6,6 +6,7 @@ import io.micrometer.core.annotation.Timed;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -41,4 +42,16 @@ public interface JpaCustomerRepository extends JpaRepository<CustomerEntity, Lon
             ON ba.customer.id = c.id
           """)
   List<CustomerAccountRow> getCustomersAndAccounts();
+
+  /**
+   * Retrieves a list of customers who meet the condition of having been born before the date specified as a parameter.
+   *
+   * @param date the date we want to use for the search
+   * @return list of customers who meet the condition
+   */
+  @Timed(value = "jpa.db.query", extraTags = {
+          "repository", "JpaCustomerRepository",
+          "method", "getCustomersByBirthDateBefore"
+  })
+  List<CustomerEntity> getCustomersByBirthDateLessThanEqual(LocalDate date);
 }
