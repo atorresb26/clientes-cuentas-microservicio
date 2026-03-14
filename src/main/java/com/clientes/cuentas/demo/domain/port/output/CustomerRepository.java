@@ -19,12 +19,6 @@ public interface CustomerRepository {
    * customer with multiple accounts will appear in multiple rows.
    * </p>
    *
-   * <p>
-   * This method reconstructs the domain aggregate {@link Customer} by grouping
-   * the rows by customer identifier and attaching the corresponding
-   * {@link BankAccount} objects to each customer.
-   * </p>
-   *
    * @return a list of {@link Customer} domain objects, each containing the list
    * of associated {@link BankAccount}.
    */

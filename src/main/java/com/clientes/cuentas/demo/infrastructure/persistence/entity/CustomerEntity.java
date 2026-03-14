@@ -6,7 +6,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
@@ -14,6 +16,8 @@ import java.time.LocalDate;
  * JPA Entity class to map the data from the {@code cliente} table.
  */
 @Entity
+@Setter
+@Getter
 @NoArgsConstructor
 @Table(name = "cliente")
 public class CustomerEntity {

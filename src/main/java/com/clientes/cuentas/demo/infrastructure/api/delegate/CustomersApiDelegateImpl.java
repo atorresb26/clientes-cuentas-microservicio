@@ -1,9 +1,9 @@
-package com.clientes.cuentas.demo.infrastructure.port.input.delegate;
+package com.clientes.cuentas.demo.infrastructure.api.delegate;
 
 import com.clientes.cuentas.demo.application.port.input.GetCustomersUseCase;
+import com.clientes.cuentas.demo.infrastructure.api.mapper.CustomerApiMapper;
 import com.clientes.cuentas.demo.infrastructure.input.api.ClientesApiDelegate;
 import com.clientes.cuentas.demo.infrastructure.input.dto.CustomerAccountDTO;
-import com.clientes.cuentas.demo.infrastructure.port.input.mapper.CustomerApiMapper;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

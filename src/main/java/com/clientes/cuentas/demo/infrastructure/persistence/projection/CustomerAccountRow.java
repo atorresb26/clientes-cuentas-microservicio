@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 /**
  * Projection to obtain the results of the SQL query that returns all customers
- * with their associated accounts and avoid 1+N queries.
+ * with their associated accounts and avoid N+1 queries.
  *
  * @param id the customer id
  * @param dni the customer dni

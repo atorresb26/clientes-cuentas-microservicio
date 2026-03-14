@@ -1,4 +1,4 @@
-package com.clientes.cuentas.demo.infrastructure.port.input.mapper;
+package com.clientes.cuentas.demo.infrastructure.api.mapper;
 
 import com.clientes.cuentas.demo.domain.model.BankAccount;
 import com.clientes.cuentas.demo.domain.model.Customer;

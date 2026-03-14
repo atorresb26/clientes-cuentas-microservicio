@@ -9,12 +9,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * JPA Entity class to map the data from the {@code cuenta_bancaria} table.
  */
 @Entity
+@Setter
+@Getter
 @NoArgsConstructor
 @Table(name = "cuenta_bancaria")
 public class BankAccountEntity {
