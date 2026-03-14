@@ -43,6 +43,19 @@ public class GlobalExceptionHandler {
     return problem;
   }
 
+  /**
+   * Handles validation errors caused by {@link ConstraintViolationException}.
+   *
+   * <p>This method captures constraint violations triggered during request
+   * processing (for example, invalid path parameters, query parameters, or
+   * request body validation) and converts them into a {@link ProblemDetail}
+   * response with HTTP status {@code 400 Bad Request}. The response detail
+   * contains a formatted message describing the violated constraints.</p>
+   *
+   * @param ex      the thrown {@link ConstraintViolationException}
+   * @param request the current HTTP request
+   * @return a {@link ProblemDetail} representing the validation error
+   */
   @ExceptionHandler(ConstraintViolationException.class)
   public ProblemDetail handleConstraintViolations(ConstraintViolationException ex, HttpServletRequest request) {
     ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);

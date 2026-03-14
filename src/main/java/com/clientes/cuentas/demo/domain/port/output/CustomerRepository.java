@@ -25,7 +25,7 @@ public interface CustomerRepository {
   List<Customer> getAdultCustomers();
 
   /**
-   * Returns a list of customers whose account balances exceed the amount provided as a parameter.
+   * Retrieves all customers whose total balance across all their bank accounts is greater than the specified amount.
    *
    * @param amount the amount provided to filter
    * @return the list of {@link Customer} domain objects

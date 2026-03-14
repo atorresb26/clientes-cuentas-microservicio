@@ -62,4 +62,17 @@ class CustomersApiIntegrationTest {
     LocalDate adultLimit = LocalDate.now().minusYears(18);
     customers.forEach(customer -> assertFalse(customer.getBirthDate().isAfter(adultLimit)));
   }
+
+  /**
+   * Comprueba que filtra correctamente
+   *
+   * @throws Exception exception
+   */
+  @Test
+  void shouldReturnFourCustomersWhenMinBalanceIs300()  throws Exception {
+    mockMvc.perform(get("/clientes/con-cuenta-superior-a/{cantidad}", 300.00))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$.length()").value(4));
+  }
 }
