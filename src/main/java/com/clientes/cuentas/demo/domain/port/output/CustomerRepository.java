@@ -23,4 +23,12 @@ public interface CustomerRepository {
    * @return a list of {@link Customer} domain objects
    */
   List<Customer> getAdultCustomers();
+
+  /**
+   * Returns a list of customers whose account balances exceed the amount provided as a parameter.
+   *
+   * @param amount the amount provided to filter
+   * @return the list of {@link Customer} domain objects
+   */
+  List<Customer> getCustomersWithHigherAmount(Double amount);
 }

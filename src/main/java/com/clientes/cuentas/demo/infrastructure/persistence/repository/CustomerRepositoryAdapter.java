@@ -39,4 +39,11 @@ public class CustomerRepositoryAdapter implements CustomerRepository {
             adultCustomers.size(), adultDate);
     return mapper.toCustomerList(adultCustomers);
   }
+
+  @Override
+  public List<Customer> getCustomersWithHigherAmount(Double amount) {
+    var customers = jpaCustomerRepository.getCustomersWithHigherAmount(amount);
+    log.debug("- getCustomersWithHigherAmount search returns {} results.", customers.size());
+    return mapper.toCustomerList(customers);
+  }
 }

@@ -28,10 +28,11 @@ spring:
       enabled: true
 
   cache:
-#    cache-names:
-#      - customer-with-accounts
+    cache-names:
+      - customer-with-accounts
+      - adult-customers
     caffeine:
-      spec: maximumSize=500,expireAfterWrite=2m
+      spec: maximumSize=500,expireAfterWrite=2m,recordStats
 
 # Application logs level
 logging:

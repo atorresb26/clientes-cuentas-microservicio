@@ -1,7 +1,8 @@
 package com.clientes.cuentas.demo.infrastructure.api.delegate;
 
-import com.clientes.cuentas.demo.application.port.input.GetAdultCustomersUseCase;
-import com.clientes.cuentas.demo.application.port.input.GetCustomersUseCase;
+import com.clientes.cuentas.demo.application.usecase.GetAdultCustomersUseCase;
+import com.clientes.cuentas.demo.application.usecase.GetCustomersUseCase;
+import com.clientes.cuentas.demo.application.usecase.GetCustomersWithHigherAmountUseCase;
 import com.clientes.cuentas.demo.infrastructure.api.mapper.CustomerApiMapper;
 import com.clientes.cuentas.demo.infrastructure.input.api.ClientesApiDelegate;
 import com.clientes.cuentas.demo.infrastructure.input.dto.CustomerAccountDTO;
@@ -24,6 +25,7 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
 
   private final GetCustomersUseCase getCustomersUseCase;
   private final GetAdultCustomersUseCase getAdultCustomersUseCase;
+  private final GetCustomersWithHigherAmountUseCase getCustomersWithHigherAmountUseCase;
 
   private final CustomerApiMapper mapper;
 
@@ -32,7 +34,7 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
           description = "Time spent executing getCustomersAndAccounts use case.")
   public ResponseEntity<List<CustomerAccountDTO>> getCustomersAndAccounts() {
     log.info("- Init - getCustomersAndAccounts()");
-    var customers = getCustomersUseCase.getCustomersAndAccounts();
+    var customers = getCustomersUseCase.execute();
 
     var response = mapper.toCustomerAccountDtoList(customers);
     log.info("- End - getCustomersAndAccounts()");
@@ -44,10 +46,22 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
           description = "Time spent executing getAdultCustomers use case.")
   public ResponseEntity<List<CustomerDTO>> getAdultCustomers() {
     log.info("- Init - getAdultCustomers()");
-    var customers = getAdultCustomersUseCase.getAdultCustomers();
+    var customers = getAdultCustomersUseCase.execute();
 
     var response = mapper.toCustomerDtoList(customers);
     log.info("- End - getAdultCustomers()");
+    return ResponseEntity.ok(response);
+  }
+
+  @Override
+  @Timed(value = "customer.usecase.getCustomersWithHigherAmount",
+          description = "Time spent executing getCustomersWithHigherAmount use case.")
+  public ResponseEntity<List<CustomerDTO>> getCustomersWithHigherAmount(Double cantidad) {
+    log.info("- Init - getCustomersWithHigherAmount()");
+    var customers = getCustomersWithHigherAmountUseCase.execute(cantidad);
+
+    var response = mapper.toCustomerDtoList(customers);
+    log.info("- End - getCustomersWithHigherAmount()");
     return ResponseEntity.ok(response);
   }
 }

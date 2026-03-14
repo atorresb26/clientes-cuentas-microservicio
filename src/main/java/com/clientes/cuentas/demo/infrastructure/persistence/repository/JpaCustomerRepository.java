@@ -5,6 +5,7 @@ import com.clientes.cuentas.demo.infrastructure.persistence.projection.CustomerA
 import io.micrometer.core.annotation.Timed;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -38,8 +39,7 @@ public interface JpaCustomerRepository extends JpaRepository<CustomerEntity, Lon
                       ba.total
                       )
             FROM CustomerEntity c
-            LEFT JOIN BankAccountEntity ba
-            ON ba.customer.id = c.id
+            LEFT JOIN BankAccountEntity ba ON ba.customer.id = c.id
           """)
   List<CustomerAccountRow> getCustomersAndAccounts();
 
@@ -54,4 +54,31 @@ public interface JpaCustomerRepository extends JpaRepository<CustomerEntity, Lon
           "method", "getCustomersByBirthDateBefore"
   })
   List<CustomerEntity> getCustomersByBirthDateLessThanEqual(LocalDate date);
+
+  /**
+   * Retrieves all customers whose total balance across all their bank accounts
+   * is greater than the specified amount.
+   *
+   * <p>The query joins customers with their associated bank accounts and groups
+   * the results by customer. For each customer, the total balance is calculated
+   * using the {@code SUM} aggregate function. Only customers whose aggregated
+   * balance exceeds the given amount are returned.</p>
+   *
+   * @param amount the minimum total balance that the sum of all bank accounts
+   *               associated with a customer must exceed
+   * @return a list of {@link CustomerEntity} whose aggregated account balance
+   * is greater than the specified amount
+   */
+  @Timed(value = "jpa.db.query", extraTags = {
+          "repository", "JpaCustomerRepository",
+          "method", "getCustomersWithHigherAmount"
+  })
+  @Query("""
+          SELECT c
+          FROM CustomerEntity c
+          JOIN BankAccountEntity ba ON ba.customer.id = c.id
+          GROUP BY c
+          HAVING SUM(ba.total) > :amount
+          """)
+  List<CustomerEntity> getCustomersWithHigherAmount(@Param("amount") Double amount);
 }

@@ -1,6 +1,6 @@
 package com.clientes.cuentas.demo.application.service;
 
-import com.clientes.cuentas.demo.application.port.input.GetAdultCustomersUseCase;
+import com.clientes.cuentas.demo.application.usecase.GetAdultCustomersUseCase;
 import com.clientes.cuentas.demo.domain.model.Customer;
 import com.clientes.cuentas.demo.domain.port.output.CustomerRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class GetAdultCustomersService implements GetAdultCustomersUseCase {
 
   @Override
   @Cacheable(value = "adult-customers", sync = true)
-  public List<Customer> getAdultCustomers() {
+  public List<Customer> execute() {
     return customerRepository.getAdultCustomers();
   }
 }

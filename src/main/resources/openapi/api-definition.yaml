@@ -28,7 +28,7 @@ paths:
 #        '403':
 #          $ref: '#/components/responses/Forbidden'
         '500':
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
   /clientes/mayores-de-edad:
     get:
       tags:
@@ -45,7 +45,36 @@ paths:
                 items:
                   $ref: '#/components/schemas/Customer'
         '500':
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
+  /clientes/con-cuenta-superior-a/{cantidad}:
+    get:
+      tags:
+        - Clientes
+      summary: Obtener todos los clientes cuya suma total de todas sus cuentas superan la cantidad indicada.
+      operationId: getCustomersWithHigherAmount
+      parameters:
+        - name: cantidad
+          in: path
+          required: true
+          description: Cantidad por la que filtrar clientes.
+          schema:
+            type: number
+            format: double
+            minimum: 0
+            example: 1000.50
+      responses:
+        '200':
+          description: Lista de todos los clientes que tienen una suma total mayor a la indicada.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
 # TODO -> Separar componentes en otro fichero
 components:

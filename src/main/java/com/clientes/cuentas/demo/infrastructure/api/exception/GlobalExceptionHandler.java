@@ -1,6 +1,8 @@
 package com.clientes.cuentas.demo.infrastructure.api.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ElementKind;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,14 +28,12 @@ public class GlobalExceptionHandler {
    * <p>This method captures any {@link Exception} thrown during request processing
    * and converts it into a {@link ProblemDetail} response with HTTP status {@code 500 Internal Server Error}.
    *
-   * @param ex the thrown exception
+   * @param ex      the thrown exception
    * @param request the current HTTP request
    * @return a {@link ProblemDetail} representing the internal server error
    */
   @ExceptionHandler(Exception.class)
-  public ProblemDetail handleGeneric(Exception ex,
-                                     HttpServletRequest request) {
-
+  public ProblemDetail handleGeneric(Exception ex, HttpServletRequest request) {
     ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
     problem.setTitle("Internal Server Error");
     problem.setDetail("Unexpected error occurred");
@@ -43,27 +43,29 @@ public class GlobalExceptionHandler {
     return problem;
   }
 
-  /**
-   * Handles invalid request errors caused by {@link IllegalArgumentException}.
-   *
-   * <p>This method maps invalid arguments or malformed input to a
-   * {@code 400 Bad Request} response. The error detail returned to the client
-   * corresponds to the exception message.</p>
-   *
-   * @param ex the thrown {@link IllegalArgumentException}
-   * @param request the current HTTP request
-   * @return a {@link ProblemDetail} describing the bad request error
-   */
-  @ExceptionHandler(IllegalArgumentException.class)
-  public ProblemDetail handleBadRequest(IllegalArgumentException ex,
-                                        HttpServletRequest request) {
-
+  @ExceptionHandler(ConstraintViolationException.class)
+  public ProblemDetail handleConstraintViolations(ConstraintViolationException ex, HttpServletRequest request) {
     ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-    problem.setTitle("Invalid request");
-    problem.setDetail(ex.getMessage());
+    problem.setTitle("Bad Request");
+    problem.setDetail(getConstraintViolationMessage(ex));
     problem.setInstance(URI.create(request.getRequestURI()));
     problem.setProperty("timestamp", Instant.now());
 
     return problem;
+  }
+
+  private String getConstraintViolationMessage(ConstraintViolationException ex) {
+    return ex.getConstraintViolations().stream()
+            .map(v -> {
+              String propertyName = "";
+              for (var node : v.getPropertyPath()) {
+                if (node.getKind().equals(ElementKind.PARAMETER)) {
+                  propertyName = node.getName();
+                }
+              }
+              return String.format("%s %s.", propertyName, v.getMessage());
+            })
+            .findFirst()
+            .orElse("Invalid Request");
   }
 }
