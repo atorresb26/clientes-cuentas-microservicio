@@ -143,4 +143,87 @@ class JpaCustomerRepositoryTest {
 
     assertThat(result).isEmpty();
   }
+
+  @Test
+  void shouldReturnCustomersWithHigherAmountThanGivenValue() {
+    CustomerEntity c1 = new CustomerEntity();
+    c1.setDni("dni1");
+    c1.setName("name1");
+    c1.setSurname1("surname1");
+    c1.setBirthDate(LocalDate.now().minusYears(20));
+
+    CustomerEntity c2 = new CustomerEntity();
+    c2.setDni("dni2");
+    c2.setName("name2");
+    c2.setSurname1("surname1_2");
+    c2.setBirthDate(LocalDate.now().minusYears(10));
+
+    CustomerEntity c3 = new CustomerEntity();
+    c3.setDni("dni3");
+    c3.setName("name3");
+    c3.setSurname1("surname1_3");
+    c3.setBirthDate(LocalDate.now().minusYears(32));
+
+    testEntityManager.persist(c1);
+    testEntityManager.persist(c2);
+    testEntityManager.persist(c3);
+
+    AccountTypeEntity accountType = new AccountTypeEntity();
+    accountType.setCode("NRML");
+    accountType.setName("NORMAL");
+    testEntityManager.persist(accountType);
+
+    BankAccountEntity ba1 = new BankAccountEntity();
+    ba1.setAccountType(accountType);
+    ba1.setCustomer(c1);
+    ba1.setTotal(200.0);
+
+    BankAccountEntity ba2 = new BankAccountEntity();
+    ba2.setAccountType(accountType);
+    ba2.setCustomer(c1);
+    ba2.setTotal(200.0); // total = 400
+
+    BankAccountEntity ba3 = new BankAccountEntity();
+    ba3.setAccountType(accountType);
+    ba3.setCustomer(c2);
+    ba3.setTotal(100.0);
+
+    testEntityManager.persist(ba1);
+    testEntityManager.persist(ba2);
+    testEntityManager.persist(ba3);
+
+    testEntityManager.flush();
+
+    List<CustomerEntity> result = jpaCustomerRepository.getCustomersWithHigherAmount(300.0);
+
+    assertThat(result)
+            .hasSize(1)
+            .contains(c1);
+  }
+
+  @Test
+  void shouldReturnEmptyListWhenNoCustomerMatches() {
+    CustomerEntity c1 = new CustomerEntity();
+    c1.setDni("dni1");
+    c1.setName("name1");
+    c1.setSurname1("surname1");
+    c1.setBirthDate(LocalDate.now().minusYears(20));
+    testEntityManager.persist(c1);
+
+    AccountTypeEntity accountType = new AccountTypeEntity();
+    accountType.setCode("NRML");
+    accountType.setName("NORMAL");
+    testEntityManager.persist(accountType);
+
+    BankAccountEntity ba = new BankAccountEntity();
+    ba.setCustomer(c1);
+    ba.setTotal(100.0);
+    ba.setAccountType(accountType);
+    testEntityManager.persist(ba);
+    testEntityManager.flush();
+
+    List<CustomerEntity> result = jpaCustomerRepository.getCustomersWithHigherAmount(300.0);
+
+    assertThat(result).isEmpty();
+  }
 }
