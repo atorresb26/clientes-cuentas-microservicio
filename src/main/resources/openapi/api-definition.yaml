@@ -115,9 +115,15 @@ paths:
                 - codTipoCuenta
       responses:
         '201':
-          description: Cuenta creada
+          description: Cuenta creada con el location del detalle y el objeto creado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccountNoCustomer'
         '400':
           $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -161,6 +167,10 @@ components:
     BankAccountNoCustomer:
       type: object
       properties:
+        apiId:
+          type: string
+          format: uuid
+          example: '6d291095-1a05-4a2d-8c65-a861c0e5797a'
         accountType:
           type: string
           example: 'NORMAL'

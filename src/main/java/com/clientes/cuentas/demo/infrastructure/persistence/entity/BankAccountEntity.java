@@ -27,6 +27,9 @@ public class BankAccountEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(name = "api_id", nullable = false, unique = true)
+  private String apiId;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "cliente_id", nullable = false)
   private CustomerEntity customer;

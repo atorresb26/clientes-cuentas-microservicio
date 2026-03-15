@@ -26,5 +26,6 @@ public interface CustomerAccountProjectionMapper {
    * @return the domain object {@link BankAccount}
    */
   @Mapping(target = "accountType", source = "bankAccountType")
+  @Mapping(target = "apiId", source = "bankAccountApiId")
   BankAccount toBankAccount(CustomerAccountRow customerAccountRow);
 }

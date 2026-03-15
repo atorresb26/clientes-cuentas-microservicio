@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * JPA Repository for the Customer Entity.
@@ -35,6 +36,7 @@ public interface JpaCustomerRepository extends JpaRepository<CustomerEntity, Lon
                       c.surname2,
                       c.birthDate,
                       ba.id AS bankAccountId,
+                      ba.apiId AS bankAccountApiId,
                       ba.accountType.name AS bankAccountType,
                       ba.total
                       )
@@ -81,4 +83,6 @@ public interface JpaCustomerRepository extends JpaRepository<CustomerEntity, Lon
           HAVING SUM(ba.total) > :amount
           """)
   List<CustomerEntity> getCustomersWithHigherAmount(@Param("amount") Double amount);
+
+  Optional<CustomerEntity> findByDni(String dni);
 }

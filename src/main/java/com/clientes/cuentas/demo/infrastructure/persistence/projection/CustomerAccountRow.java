@@ -13,6 +13,7 @@ import java.time.LocalDate;
  * @param surname2 the customer surname2
  * @param birthDate the customer birthdate
  * @param bankAccountId the related bank account id
+ * @param bankAccountApiId the related bank account api id
  * @param bankAccountType the related bank account type
  * @param total the total of account
  */
@@ -24,6 +25,7 @@ public record CustomerAccountRow(
         String surname2,
         LocalDate birthDate,
         Long bankAccountId,
+        String bankAccountApiId,
         String bankAccountType,
         Double total
 ) {

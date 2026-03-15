@@ -29,4 +29,6 @@ public interface CustomerEntityMapper {
    */
   @Mapping(target = "bankAccounts", ignore = true)
   Customer toCustomer(CustomerEntity customerEntity);
+
+  CustomerEntity toEntity(Customer customer);
 }

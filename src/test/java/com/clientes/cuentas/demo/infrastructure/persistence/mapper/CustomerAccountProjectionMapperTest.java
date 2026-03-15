@@ -55,7 +55,7 @@ class CustomerAccountProjectionMapperTest {
 
     BankAccount account = mapper.toBankAccount(row);
 
-    assertEquals("NORMAL", account.getAccountType());
+    assertEquals("NORMAL", account.getAccountType().getName());
     assertEquals(10000.50, account.getTotal());
   }
 }

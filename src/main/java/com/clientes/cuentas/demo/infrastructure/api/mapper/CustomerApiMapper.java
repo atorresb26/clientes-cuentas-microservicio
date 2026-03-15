@@ -40,6 +40,7 @@ public interface CustomerApiMapper {
    * @param bankAccount the bankAccount domain object
    * @return the bankAccountNoCustomerDTO
    */
+  @Mapping(target = "accountType", expression = "java(bankAccount.getAccountType().getName())")
   BankAccountNoCustomerDTO toBankAccountNoCustomerDto(BankAccount bankAccount);
 
   /**

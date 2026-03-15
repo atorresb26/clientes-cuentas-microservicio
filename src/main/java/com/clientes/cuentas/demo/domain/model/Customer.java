@@ -1,5 +1,7 @@
 package com.clientes.cuentas.demo.domain.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,9 +18,12 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Customer {
 
+  private Long id;
   private String dni;
   private String name;
   private String surname1;

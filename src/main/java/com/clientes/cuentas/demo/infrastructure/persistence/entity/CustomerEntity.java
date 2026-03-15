@@ -9,6 +9,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
@@ -19,6 +20,7 @@ import java.time.LocalDate;
 @Setter
 @Getter
 @NoArgsConstructor
+@ToString
 @Table(name = "cliente")
 public class CustomerEntity {
 
@@ -29,15 +31,15 @@ public class CustomerEntity {
   @Column(name = "dni", unique = true, nullable = false)
   private String dni;
 
-  @Column(name = "nombre", nullable = false)
+  @Column(name = "nombre")
   private String name;
 
-  @Column(name = "apellido1", nullable = false)
+  @Column(name = "apellido1")
   private String surname1;
 
   @Column(name = "apellido2")
   private String surname2;
 
-  @Column(name = "fecha_nacimiento", nullable = false)
+  @Column(name = "fecha_nacimiento")
   private LocalDate birthDate;
 }

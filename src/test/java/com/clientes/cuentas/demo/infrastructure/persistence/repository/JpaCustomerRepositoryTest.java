@@ -12,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,6 +50,7 @@ class JpaCustomerRepositoryTest {
     testEntityManager.persist(accountType);
 
     BankAccountEntity bankAccount = new BankAccountEntity();
+    bankAccount.setApiId(UUID.randomUUID().toString());
     bankAccount.setCustomer(customer);
     bankAccount.setAccountType(accountType);
     bankAccount.setTotal(1000.0);
@@ -174,16 +176,19 @@ class JpaCustomerRepositoryTest {
     testEntityManager.persist(accountType);
 
     BankAccountEntity ba1 = new BankAccountEntity();
+    ba1.setApiId(UUID.randomUUID().toString());
     ba1.setAccountType(accountType);
     ba1.setCustomer(c1);
     ba1.setTotal(200.0);
 
     BankAccountEntity ba2 = new BankAccountEntity();
+    ba2.setApiId(UUID.randomUUID().toString());
     ba2.setAccountType(accountType);
     ba2.setCustomer(c1);
     ba2.setTotal(200.0); // total = 400
 
     BankAccountEntity ba3 = new BankAccountEntity();
+    ba3.setApiId(UUID.randomUUID().toString());
     ba3.setAccountType(accountType);
     ba3.setCustomer(c2);
     ba3.setTotal(100.0);
@@ -216,6 +221,7 @@ class JpaCustomerRepositoryTest {
     testEntityManager.persist(accountType);
 
     BankAccountEntity ba = new BankAccountEntity();
+    ba.setApiId(UUID.randomUUID().toString());
     ba.setCustomer(c1);
     ba.setTotal(100.0);
     ba.setAccountType(accountType);

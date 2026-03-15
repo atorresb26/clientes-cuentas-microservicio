@@ -1,5 +1,6 @@
 package com.clientes.cuentas.demo.infrastructure.api.mapper;
 
+import com.clientes.cuentas.demo.domain.enums.AccountType;
 import com.clientes.cuentas.demo.domain.model.BankAccount;
 import com.clientes.cuentas.demo.domain.model.Customer;
 import com.clientes.cuentas.demo.infrastructure.input.dto.BankAccountNoCustomerDTO;
@@ -10,6 +11,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -32,6 +34,8 @@ class CustomerApiMapperTest {
   @Test
   void shouldMapCustomerToCustomerAccountDTO() {
     BankAccount account = new BankAccount();
+    account.setApiId(UUID.randomUUID().toString());
+    account.setAccountType(AccountType.NORMAL);
     account.setTotal(100.0);
 
     Customer customer = new Customer();
@@ -48,17 +52,19 @@ class CustomerApiMapperTest {
     assertEquals("surname1", dto.getSurname1());
     assertEquals("surname2", dto.getSurname2());
     assertEquals(1, dto.getAccounts().size());
+    assertEquals(account.getApiId(), dto.getAccounts().getFirst().getApiId().toString());
+    assertEquals(AccountType.NORMAL.getName(), dto.getAccounts().getFirst().getAccountType());
   }
 
   @Test
   void shouldMapBankAccountToDto() {
     BankAccount account = new BankAccount();
-    account.setAccountType("type");
+    account.setAccountType(AccountType.NORMAL);
     account.setTotal(200.0);
 
     BankAccountNoCustomerDTO dto = mapper.toBankAccountNoCustomerDto(account);
 
-    assertEquals("type", dto.getAccountType());
+    assertEquals(AccountType.NORMAL.getName(), dto.getAccountType());
     assertEquals(200.0, dto.getTotal());
   }
 

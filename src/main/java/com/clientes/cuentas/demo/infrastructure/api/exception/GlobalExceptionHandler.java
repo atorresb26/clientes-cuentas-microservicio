@@ -1,5 +1,6 @@
 package com.clientes.cuentas.demo.infrastructure.api.exception;
 
+import com.clientes.cuentas.demo.domain.exception.AccountTypeNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ElementKind;
@@ -80,5 +81,16 @@ public class GlobalExceptionHandler {
             })
             .findFirst()
             .orElse("Invalid Request");
+  }
+
+  @ExceptionHandler({AccountTypeNotFoundException.class})
+  public ProblemDetail handleNotFoundExceptions(Exception ex, HttpServletRequest request) {
+    ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+    problem.setTitle("Not Found");
+    problem.setDetail(ex.getMessage());
+    problem.setInstance(URI.create(request.getRequestURI()));
+    problem.setProperty("timestamp", Instant.now());
+
+    return problem;
   }
 }

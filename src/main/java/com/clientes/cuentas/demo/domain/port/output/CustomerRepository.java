@@ -4,6 +4,7 @@ import com.clientes.cuentas.demo.domain.model.BankAccount;
 import com.clientes.cuentas.demo.domain.model.Customer;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Output port for the repository dedicated to the {@code cliente} table
@@ -31,4 +32,8 @@ public interface CustomerRepository {
    * @return the list of {@link Customer} domain objects
    */
   List<Customer> getCustomersWithHigherAmount(Double amount);
+
+  Optional<Customer> findByDni(String dni);
+
+  Customer save(Customer customer);
 }
