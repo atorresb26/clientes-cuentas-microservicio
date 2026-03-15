@@ -6,12 +6,34 @@ import com.clientes.cuentas.demo.infrastructure.persistence.entity.BankAccountEn
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = { AccountTypeMapper.class, CustomerReferenceMapper.class, AccountTypeReferenceMapper.class })
+/**
+ * Mapper responsible for converting between {@link BankAccount} domain objects
+ * and {@link BankAccountEntity} persistence entities.
+ */
+@Mapper(componentModel = "spring", uses = {
+        AccountTypeMapper.class,
+        CustomerReferenceMapper.class,
+        AccountTypeReferenceMapper.class
+})
 public interface BankAccountEntityMapper {
 
+  /**
+   * Converts a {@link BankAccount} domain object into its persistence
+   * representation {@link BankAccountEntity}.
+   *
+   * @param bankAccount domain bank account to be mapped
+   * @return persistence entity representing the bank account
+   */
   @Mapping(target = "customer", source = "customerId")
   @Mapping(target = "accountType", source = "accountType.code")
   BankAccountEntity toEntity(BankAccount bankAccount);
 
+  /**
+   * Converts a {@link BankAccountEntity} persistence entity into the
+   * corresponding {@link BankAccount} domain object.
+   *
+   * @param savedEntity persistence entity retrieved from the database
+   * @return domain representation of the bank account
+   */
   BankAccount toDomainObject(BankAccountEntity savedEntity);
 }

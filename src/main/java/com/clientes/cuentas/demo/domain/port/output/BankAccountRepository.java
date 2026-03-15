@@ -7,5 +7,11 @@ import com.clientes.cuentas.demo.domain.model.BankAccount;
  */
 public interface BankAccountRepository {
 
+  /**
+   * Persists the given {@link BankAccount} in the underlying persistence store.
+   *
+   * @param bankAccount domain bank account to be persisted
+   * @return the persisted bank account instance
+   */
   BankAccount save(BankAccount bankAccount);
 }
