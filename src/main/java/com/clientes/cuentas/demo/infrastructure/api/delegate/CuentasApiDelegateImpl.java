@@ -30,6 +30,7 @@ public class CuentasApiDelegateImpl implements CuentasApiDelegate {
   @Timed(value = "bankaccount.api.createBankAccountForCustomer",
           description = "Time spent executing the createBankAccountForCustomer functionality.")
   public ResponseEntity<BankAccountNoCustomerDTO> createBankAccountForCustomer(CreateBankAccountForCustomerRequestDTO requestDTO) {
+    // TODO -> Pendiente validar request body
     log.info("- Init - createBankAccountForCustomer() with the following parameters: {}", requestDTO);
 
     var command = mapper.toCommand(requestDTO);

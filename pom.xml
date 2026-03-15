@@ -58,6 +58,11 @@
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
         </dependency>
+        <!-- validations -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
         <!-- MapStruct API -->
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -122,6 +127,8 @@
                                 <useTags>true</useTags>
                                 <!-- evita Optional en responses -->
                                 <openApiNullable>false</openApiNullable>
+                                <!-- enabled validations -->
+                                <useBeanValidation>true</useBeanValidation>
                             </configOptions>
                             <ignoreFileOverride>${project.basedir}/.openapi-generator-ignore</ignoreFileOverride>
                         </configuration>

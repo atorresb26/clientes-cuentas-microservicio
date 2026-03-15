@@ -96,6 +96,7 @@ paths:
                 dniCliente:
                   type: string
                   description: DNI del cliente al que le queremos crear la cuenta
+                  pattern: "^[0-9]{8}[A-Za-z]$"
                   example: 12345678A
                 codTipoCuenta:
                   type: string
