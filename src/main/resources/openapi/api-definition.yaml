@@ -6,6 +6,8 @@ info:
 tags:
   - name: Clientes
     description: Operaciones relacionadas con los clientes.
+  - name: Cuentas
+    description: Operaciones relacionadas con las cuentas bancarias.
 
 paths:
   /clientes:
@@ -23,10 +25,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CustomerAccount'
-#        '401':
-#          $ref: '#/components/responses/Unauthorized'
-#        '403':
-#          $ref: '#/components/responses/Forbidden'
+        #        '401':
+        #          $ref: '#/components/responses/Unauthorized'
+        #        '403':
+        #          $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/InternalServerError'
   /clientes/mayores-de-edad:
@@ -75,6 +77,49 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
+  /cuentas:
+    post:
+      tags:
+        - Cuentas
+      summary: Dar de alta una nueva cuenta bancaria
+      description: |
+        Servicio para dar de alta una nueva cuenta bancaria. Si el cliente existe, se le asocia la cuenta;
+        si no existe se crea el nuevo cliente con la cuenta asociada.
+      operationId: createBankAccountForCustomer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dniCliente:
+                  type: string
+                  description: DNI del cliente al que le queremos crear la cuenta
+                  example: 12345678A
+                codTipoCuenta:
+                  type: string
+                  description: Código del tipo de cuenta
+                  example: NRML
+                  enum:
+                    - JR
+                    - NRML
+                    - PREM
+                total:
+                  type: number
+                  format: double
+                  minimum: 0
+                  example: 10000.00
+              required:
+                - dniCliente
+                - codTipoCuenta
+      responses:
+        '201':
+          description: Cuenta creada
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
 # TODO -> Separar componentes en otro fichero
 components:
@@ -84,10 +129,6 @@ components:
       description: |
         Respuesta de error estándar según RFC 7807 «Detalles del problema para API HTTP».
         Este objeto proporciona detalles legibles sobre un error.
-      required:
-        - type
-        - title
-        - status
       properties:
         status:
           type: integer
@@ -114,6 +155,9 @@ components:
           format: date-time
           description: Time when the error occurred
           example: "2026-03-14T19:30:21Z"
+      required:
+        - title
+        - status
     BankAccountNoCustomer:
       type: object
       properties:
@@ -178,7 +222,6 @@ components:
             invalidRequest:
               summary: Invalid query parameter
               value:
-                type: https://api.example.com/problems/invalid-request
                 title: Invalid request
                 status: 400
                 detail: Query parameter 'limit' must be greater than 0
@@ -193,7 +236,6 @@ components:
             missingToken:
               summary: Missing authentication token
               value:
-                type: https://api.example.com/problems/unauthorized
                 title: Unauthorized
                 status: 401
                 detail: Authentication credentials were not provided.
@@ -201,7 +243,6 @@ components:
             invalidToken:
               summary: Invalid authentication token
               value:
-                type: https://api.example.com/problems/invalid-token
                 title: Invalid authentication token
                 status: 401
                 detail: The access token provided is expired or invalid.
@@ -216,7 +257,6 @@ components:
             insufficientPermissions:
               summary: User lacks required permissions
               value:
-                type: https://api.example.com/problems/forbidden
                 title: Forbidden
                 status: 403
                 detail: You do not have permission to access this resource.
@@ -224,7 +264,6 @@ components:
             roleNotAllowed:
               summary: Role not allowed
               value:
-                type: https://api.example.com/problems/insufficient-role
                 title: Access denied
                 status: 403
                 detail: Only administrators can access this resource.
@@ -239,7 +278,6 @@ components:
             customerNotFound:
               summary: Customer does not exist
               value:
-                type: https://api.example.com/problems/customer-not-found
                 title: Customer not found
                 status: 404
                 detail: Customer with id 123 was not found

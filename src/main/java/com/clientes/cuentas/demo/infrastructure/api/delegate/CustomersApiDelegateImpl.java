@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Implementation of the ApiDelegate generated from the API specification.
+ * Implementation of the ApiDelegate generated from the API Specification for Customers.
  */
 @Service
 @Slf4j
@@ -30,8 +30,8 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
   private final CustomerApiMapper mapper;
 
   @Override
-  @Timed(value = "customer.usecase.getCustomersAndAccounts",
-          description = "Time spent executing getCustomersAndAccounts use case.")
+  @Timed(value = "customer.api.getCustomersAndAccounts",
+          description = "Time spent executing the getCustomersAndAccounts functionality.")
   public ResponseEntity<List<CustomerAccountDTO>> getCustomersAndAccounts() {
     log.info("- Init - getCustomersAndAccounts()");
     var customers = getCustomersUseCase.execute();
@@ -42,8 +42,8 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
   }
 
   @Override
-  @Timed(value = "customer.usecase.getAdultCustomers",
-          description = "Time spent executing getAdultCustomers use case.")
+  @Timed(value = "customer.api.getAdultCustomers",
+          description = "Time spent executing the getAdultCustomers functionality.")
   public ResponseEntity<List<CustomerDTO>> getAdultCustomers() {
     log.info("- Init - getAdultCustomers()");
     var customers = getAdultCustomersUseCase.execute();
@@ -54,10 +54,10 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
   }
 
   @Override
-  @Timed(value = "customer.usecase.getCustomersWithHigherAmount",
-          description = "Time spent executing getCustomersWithHigherAmount use case.")
+  @Timed(value = "customer.api.getCustomersWithHigherAmount",
+          description = "Time spent executing the getCustomersWithHigherAmount functionality.")
   public ResponseEntity<List<CustomerDTO>> getCustomersWithHigherAmount(Double cantidad) {
-    log.info("- Init - getCustomersWithHigherAmount()");
+    log.info("- Init - getCustomersWithHigherAmount() with 'cantidad' parameter: {}", cantidad);
     var customers = getCustomersWithHigherAmountUseCase.execute(cantidad);
 
     var response = mapper.toCustomerDtoList(customers);
