@@ -2,6 +2,10 @@ package com.clientes.cuentas.bankingservice.application.service;
 
 import com.clientes.cuentas.bankingservice.application.command.CreateBankAccountForCustomerCommand;
 import com.clientes.cuentas.bankingservice.application.mapper.BankAccountMapper;
+import com.clientes.cuentas.bankingservice.domain.enums.AccountType;
+import com.clientes.cuentas.bankingservice.domain.exception.InvalidAccountTypeCodeException;
+import com.clientes.cuentas.bankingservice.domain.exception.InvalidAmountException;
+import com.clientes.cuentas.bankingservice.domain.exception.InvalidCustomerDniException;
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
 import com.clientes.cuentas.bankingservice.domain.port.output.BankAccountRepository;
@@ -21,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
@@ -81,7 +86,7 @@ class CreateBankAccountForCustomerServiceTest {
   void shouldCreateCustomerWhenItDoesNotExistAndThenCreateBankAccount() {
 	CreateBankAccountForCustomerCommand command = new CreateBankAccountForCustomerCommand();
 	command.setCustomerDni("99999999Z");
-	command.setAccountTypeCode("PRM");
+	command.setAccountTypeCode("PREM");
 	command.setTotal(new BigDecimal("300.00"));
 
 	Customer createdCustomer = Customer.builder()
@@ -158,4 +163,58 @@ class CreateBankAccountForCustomerServiceTest {
 	verify(bankAccountRepository).save(mappedBankAccount);
 	verifyNoMoreInteractions(customerRepository, bankAccountMapper, bankAccountRepository);
   }
+
+		  @Test
+		  void shouldThrowInvalidAmountExceptionWhenTotalIsNull() {
+			CreateBankAccountForCustomerCommand command = new CreateBankAccountForCustomerCommand();
+			command.setCustomerDni("12345678A");
+			command.setAccountTypeCode("NRML");
+			command.setTotal(null);
+
+			InvalidAmountException ex = assertThrows(InvalidAmountException.class, () -> service.execute(command));
+
+			assertEquals("The amount must be greater than or equal to 0", ex.getMessage());
+			verifyNoInteractions(customerRepository, bankAccountMapper, bankAccountRepository);
+		  }
+
+		  @Test
+		  void shouldThrowInvalidAmountExceptionWhenTotalIsNegative() {
+			CreateBankAccountForCustomerCommand command = new CreateBankAccountForCustomerCommand();
+			command.setCustomerDni("12345678A");
+			command.setAccountTypeCode("NRML");
+			command.setTotal(new BigDecimal("-1.00"));
+
+			InvalidAmountException ex = assertThrows(InvalidAmountException.class, () -> service.execute(command));
+
+			assertEquals("The amount must be greater than or equal to 0", ex.getMessage());
+			verifyNoInteractions(customerRepository, bankAccountMapper, bankAccountRepository);
+		  }
+
+								  @Test
+								  void shouldThrowInvalidCustomerDniExceptionWhenDniFormatIsInvalid() {
+									CreateBankAccountForCustomerCommand command = new CreateBankAccountForCustomerCommand();
+									command.setCustomerDni("1234A");
+									command.setAccountTypeCode("NRML");
+									command.setTotal(new BigDecimal("10.00"));
+
+									InvalidCustomerDniException ex = assertThrows(InvalidCustomerDniException.class, () -> service.execute(command));
+
+									assertEquals("The customer DNI format is invalid. It must match 8 digits and 1 letter", ex.getMessage());
+									verifyNoInteractions(customerRepository, bankAccountMapper, bankAccountRepository);
+								  }
+
+								  @Test
+								  void shouldThrowInvalidAccountTypeCodeExceptionWhenAccountTypeCodeIsInvalid() {
+									CreateBankAccountForCustomerCommand command = new CreateBankAccountForCustomerCommand();
+									command.setCustomerDni("12345678A");
+									command.setAccountTypeCode("VIP");
+									command.setTotal(new BigDecimal("10.00"));
+
+									InvalidAccountTypeCodeException ex = assertThrows(InvalidAccountTypeCodeException.class, () -> service.execute(command));
+
+										  assertEquals(
+												  String.format("Invalid account type code 'VIP'. Accepted values are: %s", AccountType.getAcceptedCodesMessage()),
+												  ex.getMessage());
+									verifyNoInteractions(customerRepository, bankAccountMapper, bankAccountRepository);
+								  }
 }

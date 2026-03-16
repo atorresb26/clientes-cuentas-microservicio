@@ -5,6 +5,7 @@ import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -15,6 +16,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -71,5 +74,61 @@ class CustomersApiIntegrationTest extends BaseIntegrationTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$.length()").value(4));
+  }
+
+  @Test
+  void shouldReturnCustomProblemDetailWhenRequestBodyHasMissingField() throws Exception {
+    mockMvc.perform(post("/cuentas")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("""
+                            {
+                              "dniCliente": "12345678A",
+                              "total": 100.00
+                            }
+                            """))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.title").value("Bad Request"))
+            .andExpect(jsonPath("$.detail").value(org.hamcrest.Matchers.containsString("'codTipoCuenta'")))
+            .andExpect(jsonPath("$.instance").value("/cuentas"))
+            .andExpect(jsonPath("$.timestamp").exists());
+  }
+
+  @Test
+  void shouldReturnCustomProblemDetailWhenEnumValueIsInvalid() throws Exception {
+    mockMvc.perform(post("/cuentas")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("""
+                            {
+                              "dniCliente": "12345678A",
+                              "codTipoCuenta": "INVALIDA",
+                              "total": 100.00
+                            }
+                            """))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.title").value("Bad Request"))
+            .andExpect(jsonPath("$.detail").value("Invalid value 'INVALIDA' for field 'codTipoCuenta'. Accepted values are: [JR, NRML, PREM]."))
+            .andExpect(jsonPath("$.instance").value("/cuentas"))
+            .andExpect(jsonPath("$.timestamp").exists());
+  }
+
+  @Test
+  void shouldReturnCustomProblemDetailWhenDniFormatIsInvalid() throws Exception {
+    mockMvc.perform(post("/cuentas")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("""
+                            {
+                              "dniCliente": "1234A",
+                              "codTipoCuenta": "NRML",
+                              "total": 100.00
+                            }
+                            """))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.title").value("Bad Request"))
+            .andExpect(jsonPath("$.detail").value(org.hamcrest.Matchers.containsString("'dniCliente'")))
+            .andExpect(jsonPath("$.instance").value("/cuentas"))
+            .andExpect(jsonPath("$.timestamp").exists());
   }
 }

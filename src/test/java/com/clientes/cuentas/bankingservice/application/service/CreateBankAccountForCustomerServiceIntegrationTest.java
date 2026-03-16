@@ -14,7 +14,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -44,7 +43,7 @@ class CreateBankAccountForCustomerServiceIntegrationTest {
 
   @Test
   void shouldRollbackCustomerCreationWhenBankAccountSaveFails() {
-    String dni = "ROLLBACK-" + UUID.randomUUID().toString().substring(0, 8);
+    String dni = "00000000Z";
 
     long customerCountBefore = jpaCustomerRepository.count();
     long bankAccountCountBefore = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM cuenta_bancaria", Long.class);

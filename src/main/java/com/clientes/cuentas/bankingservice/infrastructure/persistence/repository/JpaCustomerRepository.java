@@ -29,7 +29,7 @@ public interface JpaCustomerRepository extends JpaRepository<CustomerEntity, Lon
           "method", "getCustomersAndAccounts"
   })
   @Query("""
-          SELECT new com.clientes.cuentas.demo.infrastructure.persistence.projection.CustomerAccountRow(
+          SELECT new com.clientes.cuentas.bankingservice.infrastructure.persistence.projection.CustomerAccountRow(
                       c.id,
                       c.dni,
                       c.name,

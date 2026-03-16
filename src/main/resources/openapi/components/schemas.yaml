@@ -116,4 +116,4 @@ CreateBankAccountForCustomerRequest:
   required:
     - dniCliente
     - codTipoCuenta
-
+    - total

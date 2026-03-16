@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * Represents the supported bank account types.
@@ -52,5 +53,27 @@ public enum AccountType {
             .filter(type -> type.getCode().equals(code))
             .findFirst()
             .orElseThrow(() -> new EnumConstantNotPresentException(AccountType.class, code));
+  }
+
+  /**
+   * Validates if the provided code is one of the supported account type codes.
+   *
+   * @param code the account type code to validate
+   * @return true when the code exists in the enum, false otherwise
+   */
+  public static boolean isValidCode(String code) {
+    return Arrays.stream(AccountType.values())
+            .anyMatch(type -> type.getCode().equals(code));
+  }
+
+  /**
+   * Returns supported account type codes using the same bracket format as previous messages.
+   *
+   * @return accepted account type codes, e.g. [JR, NRML, PREM]
+   */
+  public static String getAcceptedCodesMessage() {
+    return Arrays.stream(AccountType.values())
+            .map(AccountType::getCode)
+            .collect(Collectors.joining(", ", "[", "]"));
   }
 }
