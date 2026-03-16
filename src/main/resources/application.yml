@@ -39,7 +39,7 @@ spring:
 logging:
   level:
     root: INFO
-    com.clientes.cuentas.demo: DEBUG
+    com.clientes.cuentas.bankingservice: DEBUG
 
 # Expose actuator endpoints
 management:

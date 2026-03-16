@@ -7,6 +7,7 @@ import com.clientes.cuentas.bankingservice.domain.exception.InvalidCustomerDniEx
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -32,6 +33,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  */
 @RestControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
+@Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
   private static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
@@ -49,6 +51,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
    */
   @ExceptionHandler(Exception.class)
   public ProblemDetail handleGeneric(Exception ex, HttpServletRequest request) {
+    // Keep API response generic while logging full server-side context for diagnostics.
+    log.error(
+            "Unhandled exception. method={} path={} exceptionType={} message={}",
+            request.getMethod(),
+            request.getRequestURI(),
+            ex.getClass().getName(),
+            ex.getMessage(),
+            ex
+    );
+
     return ProblemDetailHelper.fromHttpRequest(
             HttpStatus.INTERNAL_SERVER_ERROR,
             INTERNAL_SERVER_ERROR,
