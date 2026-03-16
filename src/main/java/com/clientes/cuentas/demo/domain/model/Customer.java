@@ -10,7 +10,6 @@ import lombok.ToString;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * The Customer domain object.
@@ -30,17 +29,17 @@ public class Customer {
   private String surname2;
   private LocalDate birthDate;
 
-  private List<BankAccount> bankAccounts;
+  //Builder.Default to initialize the list when using the builder pattern.
+  @Builder.Default
+  private List<BankAccount> bankAccounts = new ArrayList<>();
+
 
   /**
-   * Add bank account to the list and check if it is initialized.
+   * Adds a bank account to this customer.
    *
-   * @param bankAccount the account to add
+   * @param bankAccount the bank account to add
    */
   public void addBankAccount(BankAccount bankAccount) {
-    if (Objects.isNull(bankAccounts)) {
-      bankAccounts = new ArrayList<>();
-    }
     bankAccounts.add(bankAccount);
   }
 }

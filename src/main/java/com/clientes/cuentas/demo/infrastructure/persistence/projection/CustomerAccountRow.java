@@ -1,5 +1,6 @@
 package com.clientes.cuentas.demo.infrastructure.persistence.projection;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -27,6 +28,6 @@ public record CustomerAccountRow(
         Long bankAccountId,
         String bankAccountApiId,
         String bankAccountType,
-        Double total
+        BigDecimal total
 ) {
 }

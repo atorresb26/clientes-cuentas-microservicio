@@ -9,6 +9,7 @@ import com.clientes.cuentas.demo.infrastructure.input.dto.CustomerDTO;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -36,7 +37,7 @@ class CustomerApiMapperTest {
     BankAccount account = new BankAccount();
     account.setApiId(UUID.randomUUID().toString());
     account.setAccountType(AccountType.NORMAL);
-    account.setTotal(100.0);
+    account.setTotal(new BigDecimal("100.0"));
 
     Customer customer = new Customer();
     customer.setDni("dni");
@@ -60,12 +61,12 @@ class CustomerApiMapperTest {
   void shouldMapBankAccountToDto() {
     BankAccount account = new BankAccount();
     account.setAccountType(AccountType.NORMAL);
-    account.setTotal(200.0);
+    account.setTotal(new BigDecimal("200.00"));
 
     BankAccountNoCustomerDTO dto = mapper.toBankAccountNoCustomerDto(account);
 
     assertEquals(AccountType.NORMAL.getName(), dto.getAccountType());
-    assertEquals(200.0, dto.getTotal());
+    assertEquals(new BigDecimal("200.00"), dto.getTotal());
   }
 
   @Test

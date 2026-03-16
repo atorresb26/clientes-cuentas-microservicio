@@ -6,10 +6,12 @@ import com.clientes.cuentas.demo.infrastructure.persistence.projection.CustomerA
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -42,8 +44,8 @@ class CustomerAccountProjectionMapperTest {
     assertEquals("Smith", customer.getSurname2());
     assertEquals(LocalDate.of(1990, 1, 1), customer.getBirthDate());
 
-    // It must be null because it is ignored
-    assertNull(customer.getBankAccounts());
+    // It must be empty because it is ignored
+    assertTrue(customer.getBankAccounts().isEmpty());
   }
 
   @Test
@@ -51,11 +53,11 @@ class CustomerAccountProjectionMapperTest {
     CustomerAccountRow row = mock(CustomerAccountRow.class);
 
     when(row.bankAccountType()).thenReturn("NORMAL");
-    when(row.total()).thenReturn(10000.50);
+    when(row.total()).thenReturn(new BigDecimal("10000.50"));
 
     BankAccount account = mapper.toBankAccount(row);
 
     assertEquals("NORMAL", account.getAccountType().getName());
-    assertEquals(10000.50, account.getTotal());
+    assertEquals(new BigDecimal("10000.50"), account.getTotal());
   }
 }

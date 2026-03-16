@@ -27,5 +27,6 @@ public interface CustomerAccountProjectionMapper {
    */
   @Mapping(target = "accountType", source = "bankAccountType")
   @Mapping(target = "apiId", source = "bankAccountApiId")
+  @Mapping(target = "customerId", ignore = true)
   BankAccount toBankAccount(CustomerAccountRow customerAccountRow);
 }

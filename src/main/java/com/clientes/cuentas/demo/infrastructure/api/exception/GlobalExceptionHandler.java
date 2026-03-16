@@ -1,6 +1,7 @@
 package com.clientes.cuentas.demo.infrastructure.api.exception;
 
 import com.clientes.cuentas.demo.domain.exception.AccountTypeNotFoundException;
+import com.clientes.cuentas.demo.domain.exception.InvalidAmountException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ElementKind;
@@ -58,7 +59,7 @@ public class GlobalExceptionHandler {
    * @return a {@link ProblemDetail} representing the validation error
    */
   @ExceptionHandler(ConstraintViolationException.class)
-  public ProblemDetail handleConstraintViolations(ConstraintViolationException ex, HttpServletRequest request) {
+  public ProblemDetail handleBadRequests(ConstraintViolationException ex, HttpServletRequest request) {
     ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
     problem.setTitle("Bad Request");
     problem.setDetail(getConstraintViolationMessage(ex));
@@ -81,6 +82,17 @@ public class GlobalExceptionHandler {
             })
             .findFirst()
             .orElse("Invalid Request");
+  }
+
+  @ExceptionHandler(InvalidAmountException.class)
+  public ProblemDetail handleBadRequests(Exception ex, HttpServletRequest request) {
+    ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+    problem.setTitle("Bad Request");
+    problem.setDetail(ex.getMessage());
+    problem.setInstance(URI.create(request.getRequestURI()));
+    problem.setProperty("timestamp", Instant.now());
+
+    return problem;
   }
 
   @ExceptionHandler({AccountTypeNotFoundException.class})

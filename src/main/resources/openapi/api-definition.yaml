@@ -24,13 +24,14 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/CustomerAccount'
+                  $ref: './components/schemas.yaml#/CustomerAccount'
         #        '401':
-        #          $ref: '#/components/responses/Unauthorized'
+        #          $ref: './components/responses.yaml#/Unauthorized'
         #        '403':
-        #          $ref: '#/components/responses/Forbidden'
+        #          $ref: './components/responses.yaml#/Forbidden'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: './components/responses.yaml#/InternalServerError'
+
   /clientes/mayores-de-edad:
     get:
       tags:
@@ -45,9 +46,10 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Customer'
+                  $ref: './components/schemas.yaml#/Customer'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: './components/responses.yaml#/InternalServerError'
+
   /clientes/con-cuenta-superior-a/{cantidad}:
     get:
       tags:
@@ -61,7 +63,7 @@ paths:
           description: Cantidad por la que filtrar clientes.
           schema:
             type: number
-            format: double
+            format: bigdecimal
             minimum: 0
             example: 1000.50
       responses:
@@ -72,11 +74,12 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Customer'
+                  $ref: './components/schemas.yaml#/Customer'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: './components/responses.yaml#/BadRequest'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: './components/responses.yaml#/InternalServerError'
+
   /cuentas:
     post:
       tags:
@@ -91,220 +94,17 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                dniCliente:
-                  type: string
-                  description: DNI del cliente al que le queremos crear la cuenta
-                  pattern: "^[0-9]{8}[A-Za-z]$"
-                  example: 12345678A
-                codTipoCuenta:
-                  type: string
-                  description: Código del tipo de cuenta
-                  example: NRML
-                  enum:
-                    - JR
-                    - NRML
-                    - PREM
-                total:
-                  type: number
-                  format: double
-                  minimum: 0
-                  example: 10000.00
-              required:
-                - dniCliente
-                - codTipoCuenta
+              $ref: './components/schemas.yaml#/CreateBankAccountForCustomerRequest'
       responses:
         '201':
           description: Cuenta creada con el location del detalle y el objeto creado.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BankAccountNoCustomer'
+                $ref: './components/schemas.yaml#/BankAccountNoCustomer'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          $ref: './components/responses.yaml#/BadRequest'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: './components/responses.yaml#/NotFound'
         '500':
-          $ref: '#/components/responses/InternalServerError'
-
-# TODO -> Separar componentes en otro fichero
-components:
-  schemas:
-    Problem:
-      type: object
-      description: |
-        Respuesta de error estándar según RFC 7807 «Detalles del problema para API HTTP».
-        Este objeto proporciona detalles legibles sobre un error.
-      properties:
-        status:
-          type: integer
-          format: int32
-          description: Código de estado HTTP para esta incidencia del problema.
-          example: 404
-        title:
-          type: string
-          description: |
-            Un resumen breve y legible del problema.
-            No debe cambiar entre las distintas apariciones del mismo error.
-          example: Customer not found
-        detail:
-          type: string
-          description: Una explicación legible y específica para esta ocurrencia del problema.
-          example: Customer with id 123 was not found.
-        instance:
-          type: string
-          format: uri
-          description: Una referencia URI que identifica la ocurrencia específica del problema.
-          example: /customers/123
-        timestamp:
-          type: string
-          format: date-time
-          description: Time when the error occurred
-          example: "2026-03-14T19:30:21Z"
-      required:
-        - title
-        - status
-    BankAccountNoCustomer:
-      type: object
-      properties:
-        apiId:
-          type: string
-          format: uuid
-          example: '6d291095-1a05-4a2d-8c65-a861c0e5797a'
-        accountType:
-          type: string
-          example: 'NORMAL'
-        total:
-          type: number
-          format: double
-          example: '1000.50'
-    CustomerAccount:
-      type: object
-      properties:
-        dni:
-          type: string
-          example: '00000000Z'
-        name:
-          type: string
-          example: 'Adrián'
-        surname1:
-          type: string
-          example: 'Torres'
-        surname2:
-          type: string
-          example: 'Barca'
-        birthDate:
-          type: string
-          format: date
-          example: '26/09/1993'
-        accounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/BankAccountNoCustomer'
-    Customer:
-      type: object
-      properties:
-        dni:
-          type: string
-          example: '00000000Z'
-        name:
-          type: string
-          example: 'Adrián'
-        surname1:
-          type: string
-          example: 'Torres'
-        surname2:
-          type: string
-          example: 'Barca'
-        birthDate:
-          type: string
-          format: date
-          example: '26/09/1993'
-
-  responses:
-    BadRequest:
-      description: Parámetros de solicitud no válidos
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            invalidRequest:
-              summary: Invalid query parameter
-              value:
-                title: Invalid request
-                status: 400
-                detail: Query parameter 'limit' must be greater than 0
-                instance: /customers?limit=-1
-    Unauthorized:
-      description: Se requiere autenticación para acceder a este recurso.
-      content:
-        application/problem+json:
-          schema:
-            $ref: "#/components/schemas/Problem"
-          examples:
-            missingToken:
-              summary: Missing authentication token
-              value:
-                title: Unauthorized
-                status: 401
-                detail: Authentication credentials were not provided.
-                instance: /customers
-            invalidToken:
-              summary: Invalid authentication token
-              value:
-                title: Invalid authentication token
-                status: 401
-                detail: The access token provided is expired or invalid.
-                instance: /customers
-    Forbidden:
-      description: El usuario autenticado no tiene permiso para acceder a este recurso.
-      content:
-        application/problem+json:
-          schema:
-            $ref: "#/components/schemas/Problem"
-          examples:
-            insufficientPermissions:
-              summary: User lacks required permissions
-              value:
-                title: Forbidden
-                status: 403
-                detail: You do not have permission to access this resource.
-                instance: /customers
-            roleNotAllowed:
-              summary: Role not allowed
-              value:
-                title: Access denied
-                status: 403
-                detail: Only administrators can access this resource.
-                instance: /admin/customers
-    NotFound:
-      description: Recurso no encontrado
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            customerNotFound:
-              summary: Customer does not exist
-              value:
-                title: Customer not found
-                status: 404
-                detail: Customer with id 123 was not found
-                instance: /customers/123
-    InternalServerError:
-      description: Error inesperado del servidor
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            serverError:
-              summary: Unexpected error
-              value:
-                status: 500
-                title: Internal Server Error
-                detail: Unexpected error occurred
-                instance: /customers
-                timestamp: 2026-03-14T19:30:21Z
+          $ref: './components/responses.yaml#/InternalServerError'

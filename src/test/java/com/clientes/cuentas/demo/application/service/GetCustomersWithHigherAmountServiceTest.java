@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,26 +35,27 @@ class GetCustomersWithHigherAmountServiceTest {
             () -> service.execute(null)
     );
 
-    assertEquals("La cantidad debe ser mayor o igual a 0", ex.getMessage());
+    assertEquals("The amount must be greater than or equal to 0", ex.getMessage());
 
     verifyNoInteractions(customerRepository);
   }
 
   @Test
   void shouldThrowExceptionWhenAmountIsNegative() {
+    BigDecimal amount = new BigDecimal("-10.0");
     InvalidAmountException ex = assertThrows(
             InvalidAmountException.class,
-            () -> service.execute(-10.0)
+            () -> service.execute(amount)
     );
 
-    assertEquals("La cantidad debe ser mayor o igual a 0", ex.getMessage());
+    assertEquals("The amount must be greater than or equal to 0", ex.getMessage());
 
     verifyNoInteractions(customerRepository);
   }
 
   @Test
   void shouldReturnCustomersWhenAmountIsValid() {
-    Double amount = 300.0;
+    BigDecimal amount = new BigDecimal("300.0");
 
     List<Customer> expectedCustomers = List.of(
             new Customer(),

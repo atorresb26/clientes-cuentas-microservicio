@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -53,7 +54,7 @@ class JpaCustomerRepositoryTest {
     bankAccount.setApiId(UUID.randomUUID().toString());
     bankAccount.setCustomer(customer);
     bankAccount.setAccountType(accountType);
-    bankAccount.setTotal(1000.0);
+    bankAccount.setTotal(new BigDecimal("1000.00"));
     testEntityManager.persist(bankAccount);
 
     testEntityManager.flush();
@@ -75,7 +76,7 @@ class JpaCustomerRepositoryTest {
 
     assertEquals(bankAccount.getId(), row.bankAccountId());
     assertEquals("NORMAL", row.bankAccountType());
-    assertEquals(1000.0, row.total());
+    assertEquals(bankAccount.getTotal(), row.total());
   }
 
   @Test
@@ -179,19 +180,19 @@ class JpaCustomerRepositoryTest {
     ba1.setApiId(UUID.randomUUID().toString());
     ba1.setAccountType(accountType);
     ba1.setCustomer(c1);
-    ba1.setTotal(200.0);
+    ba1.setTotal(new BigDecimal("200.0"));
 
     BankAccountEntity ba2 = new BankAccountEntity();
     ba2.setApiId(UUID.randomUUID().toString());
     ba2.setAccountType(accountType);
     ba2.setCustomer(c1);
-    ba2.setTotal(200.0); // total = 400
+    ba2.setTotal(new BigDecimal("200.0")); // total = 400
 
     BankAccountEntity ba3 = new BankAccountEntity();
     ba3.setApiId(UUID.randomUUID().toString());
     ba3.setAccountType(accountType);
     ba3.setCustomer(c2);
-    ba3.setTotal(100.0);
+    ba3.setTotal(new BigDecimal("100.0"));
 
     testEntityManager.persist(ba1);
     testEntityManager.persist(ba2);
@@ -199,7 +200,7 @@ class JpaCustomerRepositoryTest {
 
     testEntityManager.flush();
 
-    List<CustomerEntity> result = jpaCustomerRepository.getCustomersWithHigherAmount(300.0);
+    List<CustomerEntity> result = jpaCustomerRepository.getCustomersWithHigherAmount(new BigDecimal("300.0"));
 
     assertThat(result)
             .hasSize(1)
@@ -223,12 +224,12 @@ class JpaCustomerRepositoryTest {
     BankAccountEntity ba = new BankAccountEntity();
     ba.setApiId(UUID.randomUUID().toString());
     ba.setCustomer(c1);
-    ba.setTotal(100.0);
+    ba.setTotal(new BigDecimal("100.0"));
     ba.setAccountType(accountType);
     testEntityManager.persist(ba);
     testEntityManager.flush();
 
-    List<CustomerEntity> result = jpaCustomerRepository.getCustomersWithHigherAmount(300.0);
+    List<CustomerEntity> result = jpaCustomerRepository.getCustomersWithHigherAmount(new BigDecimal("300.0"));
 
     assertThat(result).isEmpty();
   }

@@ -3,6 +3,7 @@ package com.clientes.cuentas.demo.domain.port.output;
 import com.clientes.cuentas.demo.domain.model.BankAccount;
 import com.clientes.cuentas.demo.domain.model.Customer;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ public interface CustomerRepository {
    * @param amount the amount provided to filter
    * @return the list of {@link Customer} domain objects
    */
-  List<Customer> getCustomersWithHigherAmount(Double amount);
+  List<Customer> getCustomersWithHigherAmount(BigDecimal amount);
 
   Optional<Customer> findByDni(String dni);
 

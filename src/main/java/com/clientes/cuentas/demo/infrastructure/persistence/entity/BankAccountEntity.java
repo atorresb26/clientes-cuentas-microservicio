@@ -13,6 +13,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 /**
  * JPA Entity class to map the data from the {@code cuenta_bancaria} table.
  */
@@ -39,5 +41,5 @@ public class BankAccountEntity {
   private AccountTypeEntity accountType;
 
   @Column(name = "total", nullable = false)
-  private Double total;
+  private BigDecimal total;
 }

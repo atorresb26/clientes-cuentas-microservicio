@@ -1,17 +1,15 @@
 package com.clientes.cuentas.demo.api;
 
+import com.clientes.cuentas.demo.BaseIntegrationTest;
 import com.clientes.cuentas.demo.infrastructure.input.dto.CustomerDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -20,13 +18,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class CustomersApiIntegrationTest {
+class CustomersApiIntegrationTest extends BaseIntegrationTest {
 
   @Autowired
   private MockMvc mockMvc;
+
+  @Autowired
+  private ObjectMapper objectMapper;
 
   /**
    * Check that it returns the original 5 customers.
@@ -54,9 +52,8 @@ class CustomersApiIntegrationTest {
 
     String json = result.getResponse().getContentAsString();
 
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.registerModule(new JavaTimeModule());
-    List<CustomerDTO> customers = mapper.readValue(json, new TypeReference<>() {
+    // ObjectMapper inyectado por Spring Boot ya tiene JavaTimeModule registrado
+    List<CustomerDTO> customers = objectMapper.readValue(json, new TypeReference<>() {
     });
 
     LocalDate adultLimit = LocalDate.now().minusYears(18);
@@ -70,7 +67,7 @@ class CustomersApiIntegrationTest {
    */
   @Test
   void shouldReturnFourCustomersWhenMinBalanceIs300()  throws Exception {
-    mockMvc.perform(get("/clientes/con-cuenta-superior-a/{cantidad}", 300.00))
+    mockMvc.perform(get("/clientes/con-cuenta-superior-a/{cantidad}", new BigDecimal("300.00")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$.length()").value(4));

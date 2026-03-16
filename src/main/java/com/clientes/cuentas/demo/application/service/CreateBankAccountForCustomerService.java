@@ -10,6 +10,7 @@ import com.clientes.cuentas.demo.domain.port.output.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,7 @@ public class CreateBankAccountForCustomerService implements CreateBankAccountFor
   private final BankAccountMapper bankAccountMapper;
 
   @Override
+  @Transactional
   @CacheEvict(value = "customer-with-accounts", allEntries = true)
   public BankAccount execute(CreateBankAccountForCustomerCommand command) {
     var customer = customerRepository.findByDni(command.getCustomerDni())

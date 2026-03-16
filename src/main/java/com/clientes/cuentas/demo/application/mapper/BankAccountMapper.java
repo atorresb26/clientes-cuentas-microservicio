@@ -24,5 +24,7 @@ public interface BankAccountMapper {
    * @return domain bank account object
    */
   @Mapping(target = "accountType", source = "accountTypeCode")
+  @Mapping(target = "apiId", ignore = true)
+  @Mapping(target = "customerId", ignore = true)
   BankAccount toBankAccount(CreateBankAccountForCustomerCommand command);
 }

@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -33,11 +34,11 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
   @Timed(value = "customer.api.getCustomersAndAccounts",
           description = "Time spent executing the getCustomersAndAccounts functionality.")
   public ResponseEntity<List<CustomerAccountDTO>> getCustomersAndAccounts() {
-    log.info("- Init - getCustomersAndAccounts()");
+    log.debug("- Init - getCustomersAndAccounts()");
     var customers = getCustomersUseCase.execute();
 
     var response = mapper.toCustomerAccountDtoList(customers);
-    log.info("- End - getCustomersAndAccounts()");
+    log.debug("- End - getCustomersAndAccounts()");
     return ResponseEntity.ok(response);
   }
 
@@ -45,23 +46,23 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
   @Timed(value = "customer.api.getAdultCustomers",
           description = "Time spent executing the getAdultCustomers functionality.")
   public ResponseEntity<List<CustomerDTO>> getAdultCustomers() {
-    log.info("- Init - getAdultCustomers()");
+    log.debug("- Init - getAdultCustomers()");
     var customers = getAdultCustomersUseCase.execute();
 
     var response = mapper.toCustomerDtoList(customers);
-    log.info("- End - getAdultCustomers()");
+    log.debug("- End - getAdultCustomers()");
     return ResponseEntity.ok(response);
   }
 
   @Override
   @Timed(value = "customer.api.getCustomersWithHigherAmount",
           description = "Time spent executing the getCustomersWithHigherAmount functionality.")
-  public ResponseEntity<List<CustomerDTO>> getCustomersWithHigherAmount(Double cantidad) {
-    log.info("- Init - getCustomersWithHigherAmount() with 'cantidad' parameter: {}", cantidad);
+  public ResponseEntity<List<CustomerDTO>> getCustomersWithHigherAmount(BigDecimal cantidad) {
+    log.debug("- Init - getCustomersWithHigherAmount() with 'cantidad' parameter: {}", cantidad);
     var customers = getCustomersWithHigherAmountUseCase.execute(cantidad);
 
     var response = mapper.toCustomerDtoList(customers);
-    log.info("- End - getCustomersWithHigherAmount()");
+    log.debug("- End - getCustomersWithHigherAmount()");
     return ResponseEntity.ok(response);
   }
 }

@@ -1,10 +1,10 @@
 CREATE TABLE cuenta_bancaria
 (
     id             BIGINT GENERATED ALWAYS AS IDENTITY,
-    api_id         VARCHAR(36)      DEFAULT RANDOM_UUID() NOT NULL,
-    cliente_id     BIGINT           NOT NULL,
-    tipo_cuenta_id BIGINT           NOT NULL,
-    total          DOUBLE PRECISION NOT NULL DEFAULT 0
+    api_id         VARCHAR(36)             DEFAULT RANDOM_UUID() NOT NULL,
+    cliente_id     BIGINT         NOT NULL,
+    tipo_cuenta_id BIGINT         NOT NULL,
+    total          DECIMAL(19, 2) NOT NULL DEFAULT 0
 );
 
 ALTER TABLE cuenta_bancaria

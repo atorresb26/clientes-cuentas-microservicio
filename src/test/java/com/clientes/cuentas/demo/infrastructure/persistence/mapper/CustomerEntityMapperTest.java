@@ -55,6 +55,6 @@ class CustomerEntityMapperTest {
     assertThat(customer.getSurname2()).isEqualTo("López");
 
     // campo ignorado
-    assertThat(customer.getBankAccounts()).isNull();
+    assertTrue(customer.getBankAccounts().isEmpty());
   }
 }

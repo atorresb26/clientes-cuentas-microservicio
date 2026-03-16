@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 /**
  * Command object used by the use case responsible for creating a bank account
  * for an existing customer.
@@ -15,6 +17,5 @@ public class CreateBankAccountForCustomerCommand {
 
   private String customerDni;
   private String accountTypeCode;
-  private Double total;
-
+  private BigDecimal total;
 }

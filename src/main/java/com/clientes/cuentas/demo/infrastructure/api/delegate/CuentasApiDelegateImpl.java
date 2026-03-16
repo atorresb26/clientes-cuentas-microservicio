@@ -31,14 +31,14 @@ public class CuentasApiDelegateImpl implements CuentasApiDelegate {
           description = "Time spent executing the createBankAccountForCustomer functionality.")
   public ResponseEntity<BankAccountNoCustomerDTO> createBankAccountForCustomer(CreateBankAccountForCustomerRequestDTO requestDTO) {
     // TODO -> Pendiente validar request body
-    log.info("- Init - createBankAccountForCustomer() with the following parameters: {}", requestDTO);
+    log.debug("- Init - createBankAccountForCustomer() with the following parameters: {}", requestDTO);
 
     var command = mapper.toCommand(requestDTO);
     BankAccount response = createBankAccountForCustomerUseCase.execute(command);
     // TODO -> pendiente crear endpoint consulta de detalle
     URI location = URI.create("/cuentas/" + response.getApiId());
 
-    log.info("- End -  createBankAccountForCustomer()");
+    log.debug("- End -  createBankAccountForCustomer()");
     return ResponseEntity
             .created(location)
             .body(mapper.toDto(response));

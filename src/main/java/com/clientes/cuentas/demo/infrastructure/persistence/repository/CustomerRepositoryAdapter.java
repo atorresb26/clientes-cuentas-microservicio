@@ -7,7 +7,9 @@ import com.clientes.cuentas.demo.infrastructure.persistence.mapper.CustomerEntit
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +28,7 @@ public class CustomerRepositoryAdapter implements CustomerRepository {
   private final CustomerEntityMapper mapper;
 
   @Override
+  @Transactional(readOnly = true)
   public List<Customer> getCustomersAndAccounts() {
     var customersAndAccounts = jpaCustomerRepository.getCustomersAndAccounts();
     log.debug("- getCustomersAndAccounts search returns {} results.", customersAndAccounts.size());
@@ -33,8 +36,9 @@ public class CustomerRepositoryAdapter implements CustomerRepository {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public List<Customer> getAdultCustomers() {
-    var adultDate =  LocalDate.now().minusYears(18);
+    var adultDate = LocalDate.now().minusYears(18);
     var adultCustomers = jpaCustomerRepository.getCustomersByBirthDateLessThanEqual(adultDate);
     log.debug("- getCustomersByBirthDateBefore search returns {} results who were born before that date: {}",
             adultCustomers.size(), adultDate);
@@ -42,13 +46,15 @@ public class CustomerRepositoryAdapter implements CustomerRepository {
   }
 
   @Override
-  public List<Customer> getCustomersWithHigherAmount(Double amount) {
+  @Transactional(readOnly = true)
+  public List<Customer> getCustomersWithHigherAmount(BigDecimal amount) {
     var customers = jpaCustomerRepository.getCustomersWithHigherAmount(amount);
     log.debug("- getCustomersWithHigherAmount search returns {} results.", customers.size());
     return mapper.toCustomerList(customers);
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Optional<Customer> findByDni(String dni) {
     log.debug("- findByDni - Searching for customer with dni {}", dni);
     return jpaCustomerRepository.findByDni(dni)

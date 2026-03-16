@@ -1,6 +1,6 @@
 spring:
   application:
-    name: demo
+    name: banking-service
   datasource:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
@@ -31,6 +31,7 @@ spring:
     cache-names:
       - customer-with-accounts
       - adult-customers
+      - account-types
     caffeine:
       spec: maximumSize=500,expireAfterWrite=2m,recordStats
 

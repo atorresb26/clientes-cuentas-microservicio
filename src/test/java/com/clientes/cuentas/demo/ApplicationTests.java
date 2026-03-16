@@ -1,7 +1,6 @@
 package com.clientes.cuentas.demo;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  * Integration tests for the Spring Boot application.
@@ -10,9 +9,11 @@ import org.springframework.boot.test.context.SpringBootTest;
  * loads successfully. The {@code contextLoads()} test ensures that
  * the application configuration is valid and that all required
  * beans can be initialized without errors.</p>
+ *
+ * <p>Extends {@link BaseIntegrationTest} to share the same Spring context
+ * with other integration tests and avoid SQL initialization conflicts.</p>
  */
-@SpringBootTest
-class ApplicationTests {
+class ApplicationTests extends BaseIntegrationTest {
 
   /**
    * Verifies that the Spring application context loads successfully.
