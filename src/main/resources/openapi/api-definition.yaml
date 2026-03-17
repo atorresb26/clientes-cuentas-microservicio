@@ -24,13 +24,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: './components/schemas.yaml#/CustomerAccount'
+                  $ref: '#/components/schemas/CustomerAccount'
         #        '401':
         #          $ref: './components/responses.yaml#/Unauthorized'
         #        '403':
         #          $ref: './components/responses.yaml#/Forbidden'
         '500':
-          $ref: './components/responses.yaml#/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
 
   /clientes/mayores-de-edad:
     get:
@@ -46,9 +46,9 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: './components/schemas.yaml#/Customer'
+                  $ref: '#/components/schemas/Customer'
         '500':
-          $ref: './components/responses.yaml#/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
 
   /clientes/con-cuenta-superior-a/{cantidad}:
     get:
@@ -74,11 +74,11 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: './components/schemas.yaml#/Customer'
+                  $ref: '#/components/schemas/Customer'
         '400':
-          $ref: './components/responses.yaml#/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '500':
-          $ref: './components/responses.yaml#/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
 
   /cuentas:
     post:
@@ -94,17 +94,72 @@ paths:
         content:
           application/json:
             schema:
-              $ref: './components/schemas.yaml#/CreateBankAccountForCustomerRequest'
+              $ref: '#/components/schemas/CreateBankAccountForCustomerRequest'
       responses:
         '201':
           description: Cuenta creada con el location del detalle y el objeto creado.
           content:
             application/json:
               schema:
-                $ref: './components/schemas.yaml#/BankAccountNoCustomer'
+                $ref: '#/components/schemas/BankAccountNoCustomer'
         '400':
-          $ref: './components/responses.yaml#/BadRequest'
+          $ref: '#/components/responses/BadRequest'
         '404':
-          $ref: './components/responses.yaml#/NotFound'
+          $ref: '#/components/responses/NotFound'
         '500':
-          $ref: './components/responses.yaml#/InternalServerError'
+          $ref: '#/components/responses/InternalServerError'
+
+  /cuentas/{apiIdCuenta}:
+    get:
+      tags:
+        - Cuentas
+      summary: Obtener el detalle de una cuenta bancaria por su API ID.
+      operationId: getBankAccountByApiId
+      parameters:
+        - name: apiIdCuenta
+          in: path
+          required: true
+          description: API ID de la cuenta bancaria a consultar.
+          schema:
+            type: string
+            format: uuid
+            example: '123e4567-e89b-12d3-a456-426614174000'
+      responses:
+        '200':
+          description: Detalle de la cuenta bancaria solicitada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccount'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+    Problem:
+      $ref: './components/schemas.yaml#/Problem'
+    BankAccountNoCustomer:
+      $ref: './components/schemas.yaml#/BankAccountNoCustomer'
+    BankAccount:
+      $ref: './components/schemas.yaml#/BankAccount'
+    CustomerAccount:
+      $ref: './components/schemas.yaml#/CustomerAccount'
+    Customer:
+      $ref: './components/schemas.yaml#/Customer'
+    CreateBankAccountForCustomerRequest:
+      $ref: './components/schemas.yaml#/CreateBankAccountForCustomerRequest'
+  responses:
+    BadRequest:
+      $ref: './components/responses.yaml#/BadRequest'
+    Unauthorized:
+      $ref: './components/responses.yaml#/Unauthorized'
+    Forbidden:
+      $ref: './components/responses.yaml#/Forbidden'
+    NotFound:
+      $ref: './components/responses.yaml#/NotFound'
+    InternalServerError:
+      $ref: './components/responses.yaml#/InternalServerError'

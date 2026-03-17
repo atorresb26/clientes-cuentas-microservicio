@@ -47,3 +47,9 @@ management:
     web:
       exposure:
         include: health,info,metrics,caches
+
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+    url: /openapi/api-definition.yaml
+

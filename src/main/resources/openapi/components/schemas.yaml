@@ -48,6 +48,15 @@ BankAccountNoCustomer:
       format: bigdecimal
       example: '1000.50'
 
+BankAccount:
+  allOf:
+    - $ref: '#/BankAccountNoCustomer'
+    - type: object
+      properties:
+        customerDni:
+          type: string
+          example: '00000000Z'
+
 CustomerAccount:
   type: object
   properties:
