@@ -1,9 +1,11 @@
 package com.clientes.cuentas.bankingservice.infrastructure.api.delegate;
 
 import com.clientes.cuentas.bankingservice.application.usecase.CreateBankAccountForCustomerUseCase;
+import com.clientes.cuentas.bankingservice.application.usecase.GetBankAccountDetailUseCase;
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
 import com.clientes.cuentas.bankingservice.infrastructure.api.mapper.BankAccountApiMapper;
 import com.clientes.cuentas.bankingservice.infrastructure.input.api.CuentasApiDelegate;
+import com.clientes.cuentas.bankingservice.infrastructure.input.dto.BankAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.BankAccountNoCustomerDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CreateBankAccountForCustomerRequestDTO;
 import io.micrometer.core.annotation.Timed;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
+import java.util.UUID;
 
 /**
  * Implementation of the ApiDelegate generated from the API Specification for Bank Accounts.
@@ -22,7 +25,8 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class CuentasApiDelegateImpl implements CuentasApiDelegate {
 
-  private final CreateBankAccountForCustomerUseCase  createBankAccountForCustomerUseCase;
+  private final CreateBankAccountForCustomerUseCase createBankAccountForCustomerUseCase;
+  private final GetBankAccountDetailUseCase getBankAccountDetailUseCase;
 
   private final BankAccountApiMapper mapper;
 
@@ -34,12 +38,24 @@ public class CuentasApiDelegateImpl implements CuentasApiDelegate {
 
     var command = mapper.toCommand(requestDTO);
     BankAccount response = createBankAccountForCustomerUseCase.execute(command);
-    // TODO -> pendiente crear endpoint consulta de detalle
     URI location = URI.create("/cuentas/" + response.getApiId());
 
     log.debug("- End -  createBankAccountForCustomer()");
     return ResponseEntity
             .created(location)
-            .body(mapper.toDto(response));
+            .body(mapper.toNoCustomerDto(response));
+  }
+
+  @Override
+  @Timed(value = "bankaccount.api.getBankAccountByApiId",
+          description = "Time spent executing the getBankAccountByApiId functionality.")
+  public ResponseEntity<BankAccountDTO> getBankAccountByApiId(UUID bankAccountApiId) {
+    log.debug("- Init - getBankAccountByApiId() with the following API ID: {}", bankAccountApiId);
+
+    var bankAccount = getBankAccountDetailUseCase.execute(bankAccountApiId);
+    var response = mapper.toDto(bankAccount);
+
+    log.debug("- End - getBankAccountByApiId()");
+    return ResponseEntity.ok(response);
   }
 }

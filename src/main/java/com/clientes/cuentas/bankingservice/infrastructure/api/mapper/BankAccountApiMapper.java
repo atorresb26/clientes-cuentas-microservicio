@@ -2,6 +2,7 @@ package com.clientes.cuentas.bankingservice.infrastructure.api.mapper;
 
 import com.clientes.cuentas.bankingservice.application.command.CreateBankAccountForCustomerCommand;
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
+import com.clientes.cuentas.bankingservice.infrastructure.input.dto.BankAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.BankAccountNoCustomerDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CreateBankAccountForCustomerRequestDTO;
 import org.mapstruct.Mapper;
@@ -28,11 +29,19 @@ public interface BankAccountApiMapper {
   CreateBankAccountForCustomerCommand toCommand(CreateBankAccountForCustomerRequestDTO requestDTO);
 
   /**
-   * Converts a domain {@link BankAccount} object into a DTO suitable
-   * for returning in API responses.
+   * Converts a domain {@link BankAccount} object into a DTO without customer information.
    *
    * @param response domain bank account object
-   * @return DTO representation of the bank account for API responses
+   * @return DTO representation of the bank account without customer data
    */
-  BankAccountNoCustomerDTO toDto(BankAccount response);
+  BankAccountNoCustomerDTO toNoCustomerDto(BankAccount response);
+
+  /**
+   * Converts a domain {@link BankAccount} object into a DTO including
+   * customer information for API responses.
+   *
+   * @param response domain bank account object
+   * @return DTO representation of the bank account with customer data
+   */
+  BankAccountDTO toDto(BankAccount response);
 }

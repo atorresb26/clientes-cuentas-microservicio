@@ -25,4 +25,5 @@ public class BankAccount {
   private AccountType accountType;
   private BigDecimal total;
   private Long customerId;
+  private String customerDni;
 }

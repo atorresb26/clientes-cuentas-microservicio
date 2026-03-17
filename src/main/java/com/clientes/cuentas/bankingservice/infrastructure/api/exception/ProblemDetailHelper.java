@@ -47,6 +47,7 @@ final class ProblemDetailHelper {
    */
   static ProblemDetail fromHttpRequest(HttpStatus status, String title, String detail, HttpServletRequest request) {
     ProblemDetail problem = ProblemDetail.forStatus(status);
+    problem.setType(null);
     problem.setTitle(title);
     problem.setDetail(detail);
     problem.setInstance(URI.create(request.getRequestURI()));
@@ -67,6 +68,7 @@ final class ProblemDetailHelper {
    */
   static ProblemDetail badRequestFromWebRequest(HttpStatusCode status, String detail, WebRequest request) {
     ProblemDetail problem = ProblemDetail.forStatus(status);
+    problem.setType(null);
     problem.setTitle(BAD_REQUEST);
     problem.setDetail(detail);
 

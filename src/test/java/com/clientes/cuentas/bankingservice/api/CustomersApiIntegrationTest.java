@@ -5,8 +5,8 @@ import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -54,10 +54,7 @@ class CustomersApiIntegrationTest extends BaseIntegrationTest {
             .andReturn();
 
     String json = result.getResponse().getContentAsString();
-
-    // ObjectMapper inyectado por Spring Boot ya tiene JavaTimeModule registrado
-    List<CustomerDTO> customers = objectMapper.readValue(json, new TypeReference<>() {
-    });
+    List<CustomerDTO> customers = objectMapper.readValue(json, new TypeReference<>() {});
 
     LocalDate adultLimit = LocalDate.now().minusYears(18);
     customers.forEach(customer -> assertFalse(customer.getBirthDate().isAfter(adultLimit)));
@@ -88,6 +85,7 @@ class CustomersApiIntegrationTest extends BaseIntegrationTest {
                             """))
             .andExpect(status().isBadRequest())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.type").doesNotExist())
             .andExpect(jsonPath("$.title").value("Bad Request"))
             .andExpect(jsonPath("$.detail").value(org.hamcrest.Matchers.containsString("'codTipoCuenta'")))
             .andExpect(jsonPath("$.instance").value("/cuentas"))
@@ -107,6 +105,7 @@ class CustomersApiIntegrationTest extends BaseIntegrationTest {
                             """))
             .andExpect(status().isBadRequest())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.type").doesNotExist())
             .andExpect(jsonPath("$.title").value("Bad Request"))
             .andExpect(jsonPath("$.detail").value("Invalid value 'INVALIDA' for field 'codTipoCuenta'. Accepted values are: [JR, NRML, PREM]."))
             .andExpect(jsonPath("$.instance").value("/cuentas"))
@@ -126,6 +125,7 @@ class CustomersApiIntegrationTest extends BaseIntegrationTest {
                             """))
             .andExpect(status().isBadRequest())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.type").doesNotExist())
             .andExpect(jsonPath("$.title").value("Bad Request"))
             .andExpect(jsonPath("$.detail").value(org.hamcrest.Matchers.containsString("'dniCliente'")))
             .andExpect(jsonPath("$.instance").value("/cuentas"))

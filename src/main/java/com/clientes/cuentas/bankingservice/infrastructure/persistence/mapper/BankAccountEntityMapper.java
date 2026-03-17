@@ -36,5 +36,6 @@ public interface BankAccountEntityMapper {
    * @return domain representation of the bank account
    */
   @Mapping(target = "customerId", ignore = true)
+  @Mapping(target = "customerDni", source = "customer.dni")
   BankAccount toDomainObject(BankAccountEntity savedEntity);
 }

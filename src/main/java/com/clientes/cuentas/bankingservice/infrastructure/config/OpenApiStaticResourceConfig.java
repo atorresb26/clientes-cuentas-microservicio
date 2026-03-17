@@ -1,4 +1,4 @@
-package com.clientes.cuentas.bankingservice.config;
+package com.clientes.cuentas.bankingservice.infrastructure.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

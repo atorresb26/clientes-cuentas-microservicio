@@ -6,7 +6,9 @@ import com.clientes.cuentas.bankingservice.infrastructure.persistence.mapper.Ban
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -27,5 +29,12 @@ public class BankAccountRepositoryAdapter implements BankAccountRepository {
     entity.setApiId(UUID.randomUUID().toString());
     var savedEntity = jpaBankAccountRepository.save(entity);
     return mapper.toDomainObject(savedEntity);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Optional<BankAccount> findByApiId(UUID apiId) {
+    var entity = jpaBankAccountRepository.findByApiId(apiId.toString());
+    return entity.map(mapper::toDomainObject);
   }
 }
