@@ -1,6 +1,7 @@
 package com.clientes.cuentas.bankingservice.infrastructure.api.delegate;
 
 import com.clientes.cuentas.bankingservice.application.usecase.GetAdultCustomersUseCase;
+import com.clientes.cuentas.bankingservice.application.usecase.GetCustomerByDniUseCase;
 import com.clientes.cuentas.bankingservice.application.usecase.GetCustomersUseCase;
 import com.clientes.cuentas.bankingservice.application.usecase.GetCustomersWithHigherAmountUseCase;
 import com.clientes.cuentas.bankingservice.infrastructure.api.mapper.CustomerApiMapper;
@@ -27,6 +28,7 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
   private final GetCustomersUseCase getCustomersUseCase;
   private final GetAdultCustomersUseCase getAdultCustomersUseCase;
   private final GetCustomersWithHigherAmountUseCase getCustomersWithHigherAmountUseCase;
+  private final GetCustomerByDniUseCase getCustomerByDniUseCase;
 
   private final CustomerApiMapper mapper;
 
@@ -63,6 +65,19 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
 
     var response = mapper.toCustomerDtoList(customers);
     log.debug("- End - getCustomersWithHigherAmount()");
+    return ResponseEntity.ok(response);
+  }
+
+  @Override
+  @Timed(value = "customer.api.getCustomerByDni",
+          description = "Time spent executing the getCustomerByDni functionality.")
+  public ResponseEntity<CustomerAccountDTO> getCustomerByDni(String dni) {
+    log.debug("- Init - getCustomerByDni() with the following DNI: {}", dni);
+
+    var customer = getCustomerByDniUseCase.execute(dni);
+    var response = mapper.toCustomerAccountDto(customer);
+
+    log.debug("- End - getCustomerByDni()");
     return ResponseEntity.ok(response);
   }
 }

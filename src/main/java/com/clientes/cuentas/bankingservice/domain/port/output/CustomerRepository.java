@@ -34,7 +34,27 @@ public interface CustomerRepository {
    */
   List<Customer> getCustomersWithHigherAmount(BigDecimal amount);
 
+  /**
+   * Finds a customer by their DNI.
+   *
+   * @param dni the customer's DNI
+   * @return an {@link Optional} containing the matching {@link Customer}, or empty if no customer is found
+   */
   Optional<Customer> findByDni(String dni);
 
+  /**
+   * Finds a customer by their DNI together with all their associated bank accounts
+   *
+   * @param dni the customer's DNI
+   * @return an {@link Optional} containing the matching {@link Customer} with their accounts, or empty if not found
+   */
+  Optional<Customer> findByDniWithAccounts(String dni);
+
+  /**
+   * Persists the given customer.
+   *
+   * @param customer the customer to persist
+   * @return the persisted customer
+   */
   Customer save(Customer customer);
 }

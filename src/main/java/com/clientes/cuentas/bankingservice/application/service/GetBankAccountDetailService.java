@@ -18,6 +18,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class GetBankAccountDetailService implements GetBankAccountDetailUseCase {
 
+  private static final String NOT_FOUND = "Account type not found for apiId %s";
+
   private final BankAccountRepository bankAccountRepository;
 
   @Override
@@ -27,6 +29,6 @@ public class GetBankAccountDetailService implements GetBankAccountDetailUseCase 
     }
 
     return bankAccountRepository.findByApiId(apiId)
-            .orElseThrow(() -> new BankAccountNotFoundException(apiId));
+            .orElseThrow(() -> new BankAccountNotFoundException(String.format(NOT_FOUND, apiId)));
   }
 }

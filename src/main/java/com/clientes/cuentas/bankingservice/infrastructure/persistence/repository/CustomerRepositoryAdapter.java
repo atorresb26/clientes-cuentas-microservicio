@@ -62,6 +62,14 @@ public class CustomerRepositoryAdapter implements CustomerRepository {
   }
 
   @Override
+  @Transactional(readOnly = true)
+  public Optional<Customer> findByDniWithAccounts(String dni) {
+    log.debug("- findByDniWithAccounts - Searching for customer with accounts for dni {}", dni);
+    var rows = jpaCustomerRepository.findCustomerWithAccountsByDni(dni);
+    return customerAccountAssembler.toCustomers(rows).stream().findFirst();
+  }
+
+  @Override
   public Customer save(Customer customer) {
     var customerEntity = mapper.toEntity(customer);
     log.debug("Saving customer entity with the following data: {}", customerEntity);

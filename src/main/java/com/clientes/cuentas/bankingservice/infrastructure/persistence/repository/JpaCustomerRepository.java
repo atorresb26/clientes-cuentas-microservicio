@@ -98,4 +98,34 @@ public interface JpaCustomerRepository extends JpaRepository<CustomerEntity, Lon
           "method", "findByDni"
   })
   Optional<CustomerEntity> findByDni(String dni);
+
+  /**
+   * Retrieves a customer together with all their associated bank accounts.
+   *
+   * @param dni the customer's DNI
+   * @return the list of flat rows for the matching customer
+   */
+  @Timed(value = "jpa.db.query", extraTags = {
+          "repository", "JpaCustomerRepository",
+          "method", "findCustomerWithAccountsByDni"
+  })
+  @Query("""
+          SELECT new com.clientes.cuentas.bankingservice.infrastructure.persistence.projection.CustomerAccountRow(
+                      c.id,
+                      c.dni,
+                      c.name,
+                      c.surname1,
+                      c.surname2,
+                      c.birthDate,
+                      ba.id,
+                      ba.apiId,
+                      at.name,
+                      ba.total
+                      )
+            FROM CustomerEntity c
+            LEFT JOIN BankAccountEntity ba ON ba.customer.id = c.id
+            LEFT JOIN ba.accountType at
+            WHERE c.dni = :dni
+          """)
+  List<CustomerAccountRow> findCustomerWithAccountsByDni(@Param("dni") String dni);
 }

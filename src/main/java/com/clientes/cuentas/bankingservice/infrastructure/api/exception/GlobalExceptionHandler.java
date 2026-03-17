@@ -2,6 +2,7 @@ package com.clientes.cuentas.bankingservice.infrastructure.api.exception;
 
 import com.clientes.cuentas.bankingservice.domain.exception.AccountTypeNotFoundException;
 import com.clientes.cuentas.bankingservice.domain.exception.BankAccountNotFoundException;
+import com.clientes.cuentas.bankingservice.domain.exception.CustomerNotFoundException;
 import com.clientes.cuentas.bankingservice.domain.exception.InvalidAccountTypeCodeException;
 import com.clientes.cuentas.bankingservice.domain.exception.InvalidAmountException;
 import com.clientes.cuentas.bankingservice.domain.exception.InvalidCustomerDniException;
@@ -180,7 +181,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
    * @param request the current HTTP request
    * @return a {@link ProblemDetail} representing a 404 Not Found response
    */
-  @ExceptionHandler({AccountTypeNotFoundException.class, BankAccountNotFoundException.class})
+  @ExceptionHandler({AccountTypeNotFoundException.class, BankAccountNotFoundException.class,
+          CustomerNotFoundException.class})
   public ProblemDetail handleNotFoundExceptions(Exception ex, HttpServletRequest request) {
     return ProblemDetailHelper.fromHttpRequest(
             HttpStatus.NOT_FOUND,
