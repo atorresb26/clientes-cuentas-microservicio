@@ -1,6 +1,7 @@
-package com.clientes.cuentas.bankingservice.application.service;
+package com.clientes.cuentas.bankingservice.infrastructure.persistence;
 
 import com.clientes.cuentas.bankingservice.application.command.CreateBankAccountForCustomerCommand;
+import com.clientes.cuentas.bankingservice.application.service.CreateBankAccountForCustomerService;
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.entity.AccountTypeEntity;
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.entity.BankAccountEntity;
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.repository.JpaAccountTypeRepository;
@@ -22,6 +23,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * Integration test for CreateBankAccountForCustomerService.
+ * Located in infrastructure layer because it tests the integration between
+ * application and persistence layers, requiring direct access to repositories.
+ */
 @SpringBootTest
 @ActiveProfiles("test")
 class CreateBankAccountForCustomerServiceIntegrationTest {
