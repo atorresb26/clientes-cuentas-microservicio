@@ -7,6 +7,8 @@ import com.clientes.cuentas.bankingservice.domain.port.output.BankAccountReposit
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.security.InvalidParameterException;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -20,6 +22,10 @@ public class GetBankAccountDetailService implements GetBankAccountDetailUseCase 
 
   @Override
   public BankAccount execute(UUID apiId) {
+    if (Objects.isNull(apiId)) {
+      throw new InvalidParameterException("apiId must not be null");
+    }
+
     return bankAccountRepository.findByApiId(apiId)
             .orElseThrow(() -> new BankAccountNotFoundException(apiId));
   }
