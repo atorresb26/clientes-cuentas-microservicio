@@ -19,6 +19,14 @@ public interface BankAccountRepository {
   BankAccount save(BankAccount bankAccount);
 
   /**
+   * Updates an existing {@link BankAccount} in the underlying persistence store.
+   *
+   * @param bankAccount domain bank account with updated values to be persisted
+   * @return the updated bank account instance
+   */
+  BankAccount update(BankAccount bankAccount);
+
+  /**
    * Retrieves a bank account by its external API identifier.
    *
    * @param apiId external API identifier of the bank account

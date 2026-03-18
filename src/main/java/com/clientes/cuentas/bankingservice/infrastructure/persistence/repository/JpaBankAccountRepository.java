@@ -22,6 +22,6 @@ public interface JpaBankAccountRepository extends JpaRepository<BankAccountEntit
           "repository", "JpaBankAccountRepository",
           "method", "findByApiId"
   })
-  @EntityGraph(attributePaths = "accountType")
+  @EntityGraph(attributePaths = {"accountType", "customer"})
   Optional<BankAccountEntity> findByApiId(String apiId);
 }

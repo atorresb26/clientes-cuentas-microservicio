@@ -24,11 +24,20 @@ public class BankAccountRepositoryAdapter implements BankAccountRepository {
   private final BankAccountEntityMapper mapper;
 
   @Override
+  @Transactional
   public BankAccount save(BankAccount bankAccount) {
     var entity = mapper.toEntity(bankAccount);
     entity.setApiId(UUID.randomUUID().toString());
     var savedEntity = jpaBankAccountRepository.save(entity);
     return mapper.toDomainObject(savedEntity);
+  }
+
+  @Override
+  @Transactional
+  public BankAccount update(BankAccount bankAccount) {
+    var entity = mapper.toEntity(bankAccount);
+    var updatedEntity = jpaBankAccountRepository.save(entity);
+    return mapper.toDomainObject(updatedEntity);
   }
 
   @Override

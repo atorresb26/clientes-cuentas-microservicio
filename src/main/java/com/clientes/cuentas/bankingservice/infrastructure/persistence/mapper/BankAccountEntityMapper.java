@@ -25,7 +25,6 @@ public interface BankAccountEntityMapper {
    */
   @Mapping(target = "customer", source = "customerId")
   @Mapping(target = "accountType", source = "accountType.code")
-  @Mapping(target = "id", ignore = true)
   BankAccountEntity toEntity(BankAccount bankAccount);
 
   /**
@@ -35,7 +34,7 @@ public interface BankAccountEntityMapper {
    * @param savedEntity persistence entity retrieved from the database
    * @return domain representation of the bank account
    */
-  @Mapping(target = "customerId", ignore = true)
+  @Mapping(target = "customerId", source = "customer.id")
   @Mapping(target = "customerDni", source = "customer.dni")
   BankAccount toDomainObject(BankAccountEntity savedEntity);
 }

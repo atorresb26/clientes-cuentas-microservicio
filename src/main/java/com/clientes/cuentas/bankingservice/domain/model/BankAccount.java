@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class BankAccount {
 
+  private Long id;
   private String apiId;
   private AccountType accountType;
   private BigDecimal total;

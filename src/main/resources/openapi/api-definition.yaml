@@ -166,6 +166,43 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags:
+        - Cuentas
+      summary: Actualizar el saldo total de una cuenta bancaria por su API ID.
+      operationId: updateBankAccountTotal
+      parameters:
+        - name: apiIdCuenta
+          in: path
+          required: true
+          description: API ID de la cuenta bancaria a actualizar.
+          schema:
+            type: string
+            format: uuid
+            example: '123e4567-e89b-12d3-a456-426614174000'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                total:
+                  type: number
+                  format: bigdecimal
+                  minimum: 0
+                  example: 1500.75
+              required:
+                - total
+      responses:
+        '204':
+          description: Cuenta bancaria actualizada correctamente. No devuelve contenido.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
 components:
   schemas:

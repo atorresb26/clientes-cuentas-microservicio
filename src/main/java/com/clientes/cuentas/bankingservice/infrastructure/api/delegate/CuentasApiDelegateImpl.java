@@ -2,12 +2,14 @@ package com.clientes.cuentas.bankingservice.infrastructure.api.delegate;
 
 import com.clientes.cuentas.bankingservice.application.usecase.CreateBankAccountForCustomerUseCase;
 import com.clientes.cuentas.bankingservice.application.usecase.GetBankAccountDetailUseCase;
+import com.clientes.cuentas.bankingservice.application.usecase.UpdateBankAccountTotalUseCase;
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
 import com.clientes.cuentas.bankingservice.infrastructure.api.mapper.BankAccountApiMapper;
 import com.clientes.cuentas.bankingservice.infrastructure.input.api.CuentasApiDelegate;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.BankAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.BankAccountNoCustomerDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CreateBankAccountForCustomerRequestDTO;
+import com.clientes.cuentas.bankingservice.infrastructure.input.dto.UpdateBankAccountTotalRequestDTO;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,7 @@ public class CuentasApiDelegateImpl implements CuentasApiDelegate {
 
   private final CreateBankAccountForCustomerUseCase createBankAccountForCustomerUseCase;
   private final GetBankAccountDetailUseCase getBankAccountDetailUseCase;
+  private final UpdateBankAccountTotalUseCase updateBankAccountTotalUseCase;
 
   private final BankAccountApiMapper mapper;
 
@@ -57,5 +60,16 @@ public class CuentasApiDelegateImpl implements CuentasApiDelegate {
 
     log.debug("- End - getBankAccountByApiId()");
     return ResponseEntity.ok(response);
+  }
+
+  @Override
+  public ResponseEntity<Void> updateBankAccountTotal(UUID accountApiId, UpdateBankAccountTotalRequestDTO requestDTO) {
+    log.debug("- Init - updateBankAccountTotal() with the following parameters: API ID: {}, total: {}",
+            accountApiId, requestDTO.getTotal());
+
+    updateBankAccountTotalUseCase.execute(accountApiId, requestDTO.getTotal());
+
+    log.debug("- End - updateBankAccountTotal()");
+    return ResponseEntity.noContent().build();
   }
 }
