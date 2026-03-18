@@ -10,6 +10,9 @@ import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * Implements the use case for updating the total amount of a bank account.
+ */
 @Service
 @RequiredArgsConstructor
 public class UpdateBankAccountTotalService implements UpdateBankAccountTotalUseCase {

@@ -63,6 +63,8 @@ public class BankAccountApiDelegateImpl implements CuentasApiDelegate {
   }
 
   @Override
+  @Timed(value = "bankaccount.api.updateBankAccountTotal",
+          description = "Time spent executing the updateBankAccountTotal functionality.")
   public ResponseEntity<Void> updateBankAccountTotal(UUID accountApiId, UpdateBankAccountTotalRequestDTO requestDTO) {
     log.debug("- Init - updateBankAccountTotal() with the following parameters: API ID: {}, total: {}",
             accountApiId, requestDTO.getTotal());

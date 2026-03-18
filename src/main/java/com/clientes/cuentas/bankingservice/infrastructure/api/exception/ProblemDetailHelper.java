@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * Utility helper for building and formatting `ProblemDetail` responses.
+ * Utility helper for building and formatting {@link ProblemDetail} responses.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 final class ProblemDetailHelper {

@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
+/**
+ * Implements the GetCustomerByDniUseCase to retrieve a customer by their DNI.
+ */
 @Service
 @RequiredArgsConstructor
 public class GetCustomerByDniService implements GetCustomerByDniUseCase {

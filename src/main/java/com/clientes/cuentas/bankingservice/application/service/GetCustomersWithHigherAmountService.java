@@ -12,6 +12,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Implements the use case to retrieve customers with a total amount greater than a specified value.
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
