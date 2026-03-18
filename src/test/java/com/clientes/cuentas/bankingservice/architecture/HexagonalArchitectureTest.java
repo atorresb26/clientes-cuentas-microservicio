@@ -245,7 +245,7 @@ public class HexagonalArchitectureTest {
           classes()
                   .that().resideInAPackage("com.clientes.cuentas.bankingservice..")
                   .and().doNotHaveSimpleName("Application")
-                  .and().doNotHaveSimpleName("ApplicationTests")
+                  .and().doNotHaveSimpleName("ApplicationTest")
                   .and().doNotHaveSimpleName("BaseIntegrationTest")
                   .and().doNotHaveSimpleName("HexagonalArchitectureTest")
                   .and().doNotHaveSimpleName("CustomersApiIntegrationTest")

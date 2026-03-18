@@ -1,0 +1,65 @@
+package com.clientes.cuentas.bankingservice.infrastructure.persistence.mapper;
+
+import com.clientes.cuentas.bankingservice.domain.enums.AccountType;
+import com.clientes.cuentas.bankingservice.infrastructure.persistence.entity.AccountTypeEntity;
+import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+class AccountTypeEntityMapperTest {
+
+  private final AccountTypeEntityMapper mapper = Mappers.getMapper(AccountTypeEntityMapper.class);
+
+  // -------------------------------------------------------------------------
+  // fromEntity() — null guard
+  // -------------------------------------------------------------------------
+
+  @Test
+  void shouldReturnNullWhenEntityIsNull() {
+    assertNull(mapper.fromEntity(null));
+  }
+
+  // -------------------------------------------------------------------------
+  // fromEntity() — happy path for every supported code
+  // -------------------------------------------------------------------------
+
+  @Test
+  void shouldMapJrCodeToJuniorAccountType() {
+    AccountTypeEntity entity = new AccountTypeEntity();
+    entity.setCode("JR");
+
+    assertEquals(AccountType.JUNIOR, mapper.fromEntity(entity));
+  }
+
+  @Test
+  void shouldMapNrmlCodeToNormalAccountType() {
+    AccountTypeEntity entity = new AccountTypeEntity();
+    entity.setCode("NRML");
+
+    assertEquals(AccountType.NORMAL, mapper.fromEntity(entity));
+  }
+
+  @Test
+  void shouldMapPremCodeToPremiumAccountType() {
+    AccountTypeEntity entity = new AccountTypeEntity();
+    entity.setCode("PREM");
+
+    assertEquals(AccountType.PREMIUM, mapper.fromEntity(entity));
+  }
+
+  // -------------------------------------------------------------------------
+  // fromEntity() — unknown code
+  // -------------------------------------------------------------------------
+
+  @Test
+  void shouldThrowEnumConstantNotPresentExceptionWhenEntityHasUnknownCode() {
+    AccountTypeEntity entity = new AccountTypeEntity();
+    entity.setCode("UNKNOWN");
+
+    assertThrows(EnumConstantNotPresentException.class, () -> mapper.fromEntity(entity));
+  }
+}
+

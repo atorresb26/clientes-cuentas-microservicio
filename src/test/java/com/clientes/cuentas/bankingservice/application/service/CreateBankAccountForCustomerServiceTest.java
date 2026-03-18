@@ -204,6 +204,21 @@ class CreateBankAccountForCustomerServiceTest {
 								  }
 
 								  @Test
+								  void shouldThrowInvalidAccountTypeCodeExceptionWhenAccountTypeCodeIsNull() {
+									CreateBankAccountForCustomerCommand command = new CreateBankAccountForCustomerCommand();
+									command.setCustomerDni("12345678A");
+									command.setAccountTypeCode(null);
+									command.setTotal(new BigDecimal("10.00"));
+
+									InvalidAccountTypeCodeException ex = assertThrows(InvalidAccountTypeCodeException.class, () -> service.execute(command));
+
+									assertEquals(
+											String.format("Invalid account type code. Accepted values are: %s", AccountType.getAcceptedCodesMessage()),
+											ex.getMessage());
+									verifyNoInteractions(customerRepository, bankAccountMapper, bankAccountRepository);
+								  }
+
+								  @Test
 								  void shouldThrowInvalidAccountTypeCodeExceptionWhenAccountTypeCodeIsInvalid() {
 									CreateBankAccountForCustomerCommand command = new CreateBankAccountForCustomerCommand();
 									command.setCustomerDni("12345678A");

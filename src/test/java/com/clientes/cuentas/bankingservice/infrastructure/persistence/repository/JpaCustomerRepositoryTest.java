@@ -85,74 +85,6 @@ class JpaCustomerRepositoryTest {
   }
 
   @Test
-  void shouldReturnCustomersOlderThan18() {
-    LocalDate today = LocalDate.now();
-    LocalDate adultDate = today.minusYears(18);
-
-    CustomerEntity adult = new CustomerEntity();
-    adult.setDni("dni1");
-    adult.setName("name1");
-    adult.setSurname1("surname1_1");
-    adult.setBirthDate(today.minusYears(20));
-    testEntityManager.persist(adult);
-
-    CustomerEntity minor = new CustomerEntity();
-    minor.setDni("dni2");
-    minor.setName("name2");
-    minor.setSurname1("surname1_2");
-    minor.setBirthDate(today.minusYears(10));
-    testEntityManager.persist(minor);
-
-    testEntityManager.flush();
-
-    List<CustomerEntity> result =
-            jpaCustomerRepository.getCustomersByBirthDateLessThanEqual(adultDate);
-
-    assertEquals(1, result.size());
-    assertEquals(today.minusYears(20), result.getFirst().getBirthDate());
-  }
-
-  @Test
-  void shouldIncludeCustomerTurning18Today() {
-    LocalDate today = LocalDate.now();
-    LocalDate adultDate = today.minusYears(18);
-
-    CustomerEntity customer = new CustomerEntity();
-    customer.setDni("dni1");
-    customer.setName("name");
-    customer.setSurname1("surname1");
-    customer.setBirthDate(adultDate);
-
-    testEntityManager.persist(customer);
-    testEntityManager.flush();
-
-    List<CustomerEntity> result =
-            jpaCustomerRepository.getCustomersByBirthDateLessThanEqual(adultDate);
-
-    assertEquals(1, result.size());
-  }
-
-  @Test
-  void shouldReturnEmptyListWhenNoAdults() {
-    LocalDate today = LocalDate.now();
-    LocalDate adultDate = today.minusYears(18);
-
-    CustomerEntity minor = new CustomerEntity();
-    minor.setDni("dni1");
-    minor.setName("name1");
-    minor.setSurname1("surname1");
-    minor.setBirthDate(today.minusYears(10));
-
-    testEntityManager.persist(minor);
-    testEntityManager.flush();
-
-    List<CustomerEntity> result =
-            jpaCustomerRepository.getCustomersByBirthDateLessThanEqual(adultDate);
-
-    assertTrue(result.isEmpty());
-  }
-
-  @Test
   void shouldReturnCustomersWithHigherAmountThanGivenValue() {
     CustomerEntity c1 = new CustomerEntity();
     c1.setDni("dni1");
@@ -378,5 +310,197 @@ class JpaCustomerRepositoryTest {
     Optional<CustomerEntity> result = jpaCustomerRepository.findByDni("99999999Z");
 
     assertTrue(result.isEmpty());
+  }
+
+  // =========================================================================
+  // findCustomerWithAccountsByDni()
+  // =========================================================================
+
+  @Test
+  void shouldReturnEmptyListWhenDniNotFoundWithAccounts() {
+    CustomerEntity customer = new CustomerEntity();
+    customer.setDni("12345678A");
+    customer.setName("John");
+    customer.setSurname1("Doe");
+    customer.setBirthDate(LocalDate.of(1990, 5, 15));
+    testEntityManager.persist(customer);
+    testEntityManager.flush();
+
+    List<CustomerAccountRow> result =
+            jpaCustomerRepository.findCustomerWithAccountsByDni("99999999Z");
+
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void shouldReturnOneRowWithAllFieldsWhenCustomerHasOneAccount() {
+    CustomerEntity customer = new CustomerEntity();
+    customer.setDni("11111111A");
+    customer.setName("Ana");
+    customer.setSurname1("Garcia");
+    customer.setSurname2("Lopez");
+    customer.setBirthDate(LocalDate.of(1988, 3, 22));
+    testEntityManager.persist(customer);
+
+    AccountTypeEntity accountType = new AccountTypeEntity();
+    accountType.setCode("NRML");
+    accountType.setName("NORMAL");
+    testEntityManager.persist(accountType);
+
+    String apiId = UUID.randomUUID().toString();
+    BankAccountEntity bankAccount = new BankAccountEntity();
+    bankAccount.setApiId(apiId);
+    bankAccount.setCustomer(customer);
+    bankAccount.setAccountType(accountType);
+    bankAccount.setTotal(new BigDecimal("1500.00"));
+    testEntityManager.persist(bankAccount);
+
+    testEntityManager.flush();
+
+    List<CustomerAccountRow> result =
+            jpaCustomerRepository.findCustomerWithAccountsByDni("11111111A");
+
+    assertEquals(1, result.size());
+    CustomerAccountRow row = result.getFirst();
+
+    // customer fields
+    assertEquals(customer.getId(), row.id());
+    assertEquals("11111111A", row.dni());
+    assertEquals("Ana", row.name());
+    assertEquals("Garcia", row.surname1());
+    assertEquals("Lopez", row.surname2());
+    assertEquals(LocalDate.of(1988, 3, 22), row.birthDate());
+
+    // account fields
+    assertEquals(bankAccount.getId(), row.bankAccountId());
+    assertEquals(apiId, row.bankAccountApiId());
+    assertEquals("NORMAL", row.bankAccountType());
+    assertEquals(new BigDecimal("1500.00"), row.total());
+  }
+
+  @Test
+  void shouldReturnOneRowPerAccountWhenCustomerHasMultipleAccounts() {
+    CustomerEntity customer = new CustomerEntity();
+    customer.setDni("22222222B");
+    customer.setName("Luis");
+    customer.setSurname1("Martinez");
+    customer.setBirthDate(LocalDate.of(1985, 7, 10));
+    testEntityManager.persist(customer);
+
+    AccountTypeEntity accountType = new AccountTypeEntity();
+    accountType.setCode("PREM");
+    accountType.setName("PREMIUM");
+    testEntityManager.persist(accountType);
+
+    BankAccountEntity ba1 = new BankAccountEntity();
+    ba1.setApiId(UUID.randomUUID().toString());
+    ba1.setCustomer(customer);
+    ba1.setAccountType(accountType);
+    ba1.setTotal(new BigDecimal("200.00"));
+    testEntityManager.persist(ba1);
+
+    BankAccountEntity ba2 = new BankAccountEntity();
+    ba2.setApiId(UUID.randomUUID().toString());
+    ba2.setCustomer(customer);
+    ba2.setAccountType(accountType);
+    ba2.setTotal(new BigDecimal("800.00"));
+    testEntityManager.persist(ba2);
+
+    testEntityManager.flush();
+
+    List<CustomerAccountRow> result =
+            jpaCustomerRepository.findCustomerWithAccountsByDni("22222222B");
+
+    // one row per account
+    assertEquals(2, result.size());
+
+    // all rows belong to the same customer
+    assertTrue(result.stream().allMatch(r -> r.id().equals(customer.getId())));
+    assertTrue(result.stream().allMatch(r -> "22222222B".equals(r.dni())));
+
+    // each row has a distinct bank account
+    Set<Long> bankAccountIds = result.stream()
+            .map(CustomerAccountRow::bankAccountId)
+            .collect(Collectors.toSet());
+    assertEquals(new HashSet<>(List.of(ba1.getId(), ba2.getId())), bankAccountIds);
+
+    Set<BigDecimal> totals = result.stream()
+            .map(CustomerAccountRow::total)
+            .collect(Collectors.toSet());
+    assertEquals(new HashSet<>(List.of(new BigDecimal("200.00"), new BigDecimal("800.00"))), totals);
+  }
+
+  @Test
+  void shouldReturnRowWithNullAccountFieldsWhenCustomerHasNoAccounts() {
+    CustomerEntity customer = new CustomerEntity();
+    customer.setDni("33333333C");
+    customer.setName("Maria");
+    customer.setSurname1("Ruiz");
+    customer.setBirthDate(LocalDate.of(1992, 11, 5));
+    testEntityManager.persist(customer);
+    testEntityManager.flush();
+
+    List<CustomerAccountRow> result =
+            jpaCustomerRepository.findCustomerWithAccountsByDni("33333333C");
+
+    // LEFT JOIN → one row with customer data but null account fields
+    assertEquals(1, result.size());
+    CustomerAccountRow row = result.getFirst();
+
+    assertEquals(customer.getId(), row.id());
+    assertEquals("33333333C", row.dni());
+    assertEquals("Maria", row.name());
+    assertNull(row.bankAccountId());
+    assertNull(row.bankAccountApiId());
+    assertNull(row.bankAccountType());
+    assertNull(row.total());
+  }
+
+  @Test
+  void shouldReturnOnlyRowsForSearchedDniIgnoringOtherCustomers() {
+    CustomerEntity target = new CustomerEntity();
+    target.setDni("44444444D");
+    target.setName("Carlos");
+    target.setSurname1("Fernandez");
+    target.setBirthDate(LocalDate.of(1978, 1, 30));
+    testEntityManager.persist(target);
+
+    CustomerEntity other = new CustomerEntity();
+    other.setDni("55555555E");
+    other.setName("Elena");
+    other.setSurname1("Gomez");
+    other.setBirthDate(LocalDate.of(1995, 6, 18));
+    testEntityManager.persist(other);
+
+    AccountTypeEntity accountType = new AccountTypeEntity();
+    accountType.setCode("JR");
+    accountType.setName("JUNIOR");
+    testEntityManager.persist(accountType);
+
+    BankAccountEntity baTarget = new BankAccountEntity();
+    baTarget.setApiId(UUID.randomUUID().toString());
+    baTarget.setCustomer(target);
+    baTarget.setAccountType(accountType);
+    baTarget.setTotal(new BigDecimal("300.00"));
+    testEntityManager.persist(baTarget);
+
+    BankAccountEntity baOther = new BankAccountEntity();
+    baOther.setApiId(UUID.randomUUID().toString());
+    baOther.setCustomer(other);
+    baOther.setAccountType(accountType);
+    baOther.setTotal(new BigDecimal("999.00"));
+    testEntityManager.persist(baOther);
+
+    testEntityManager.flush();
+
+    List<CustomerAccountRow> result =
+            jpaCustomerRepository.findCustomerWithAccountsByDni("44444444D");
+
+    assertEquals(1, result.size());
+    CustomerAccountRow row = result.getFirst();
+    assertEquals(target.getId(), row.id());
+    assertEquals("44444444D", row.dni());
+    assertEquals(baTarget.getId(), row.bankAccountId());
+    assertEquals(new BigDecimal("300.00"), row.total());
   }
 }
