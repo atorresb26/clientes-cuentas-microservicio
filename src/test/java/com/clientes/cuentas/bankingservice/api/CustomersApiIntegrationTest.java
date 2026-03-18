@@ -1,6 +1,7 @@
 package com.clientes.cuentas.bankingservice.api;
 
 import com.clientes.cuentas.bankingservice.BaseIntegrationTest;
+import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,9 +13,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -63,17 +66,24 @@ class CustomersApiIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @DisplayName("6. Comprueba que devuelve correctamente el cliente solicitado por su DNI.")
+  @DisplayName("4. Comprueba que devuelve correctamente el cliente solicitado por su DNI.")
   void shouldReturnCustomerByDni() throws Exception {
-    mockMvc.perform(get("/clientes/{dni}", "22222222B"))
+    // Cliente '22222222B' (Raúl Canales Rodríguez) tiene 2 cuentas en BD: NRML y JR
+    MvcResult result = mockMvc.perform(get("/clientes/{dni}", "22222222B"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.dni").value("22222222B"))
-            .andExpect(jsonPath("$.name").value("Raúl"))
-            .andExpect(jsonPath("$.surname1").value("Canales"))
-            .andExpect(jsonPath("$.surname2").value("Rodríguez"))
-            .andExpect(jsonPath("$.birthDate").value("1985-03-01"))
-            .andExpect(jsonPath("$.accounts").isArray())
-            .andExpect(jsonPath("$.accounts.length()").value(2));
+            .andReturn();
+
+    // Se lee explícitamente como UTF-8 para evitar la decodificación incorrecta
+    // por defecto (ISO-8859-1) que corrompería los caracteres acentuados
+    String json = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+    CustomerAccountDTO customer = objectMapper.readValue(json, CustomerAccountDTO.class);
+
+    assertEquals("22222222B", customer.getDni());
+    assertEquals("Raúl", customer.getName());
+    assertEquals("Canales", customer.getSurname1());
+    assertEquals("Rodríguez", customer.getSurname2());
+    assertEquals(LocalDate.of(1985, 3, 1), customer.getBirthDate());
+    assertEquals(2, customer.getAccounts().size());
   }
 
   @Test

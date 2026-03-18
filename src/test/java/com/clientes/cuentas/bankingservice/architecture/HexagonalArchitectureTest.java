@@ -249,6 +249,7 @@ public class HexagonalArchitectureTest {
                   .and().doNotHaveSimpleName("BaseIntegrationTest")
                   .and().doNotHaveSimpleName("HexagonalArchitectureTest")
                   .and().doNotHaveSimpleName("CustomersApiIntegrationTest")
+                  .and().doNotHaveSimpleName("BankAccountApiIntegrationTest")
                   .and().doNotHaveSimpleName("CacheConfig")
                   .and().doNotHaveSimpleName("MetricsConfig")
                   .and().haveNameNotMatching(".*\\$.*")
