@@ -25,7 +25,7 @@ import java.util.UUID;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class CuentasApiDelegateImpl implements CuentasApiDelegate {
+public class BankAccountApiDelegateImpl implements CuentasApiDelegate {
 
   private final CreateBankAccountForCustomerUseCase createBankAccountForCustomerUseCase;
   private final GetBankAccountDetailUseCase getBankAccountDetailUseCase;

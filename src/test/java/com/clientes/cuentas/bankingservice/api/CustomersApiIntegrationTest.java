@@ -4,6 +4,7 @@ import com.clientes.cuentas.bankingservice.BaseIntegrationTest;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -29,12 +30,8 @@ class CustomersApiIntegrationTest extends BaseIntegrationTest {
   @Autowired
   private ObjectMapper objectMapper;
 
-  /**
-   * Check that it returns the original 5 customers.
-   *
-   * @throws Exception exception
-   */
   @Test
+  @DisplayName("1. Comprueba que devuelve los 5 clientes iniciales.")
   void shouldReturnAllCustomers() throws Exception {
     mockMvc.perform(get("/clientes"))
             .andExpect(status().isOk())
@@ -42,12 +39,8 @@ class CustomersApiIntegrationTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.length()").value(5));
   }
 
-  /**
-   * Comprueba que devuelve solo los mayores de 18 años
-   *
-   * @throws Exception exception
-   */
   @Test
+  @DisplayName("2. Comprueba que devuelve solo los mayores de 18 años.")
   void shouldReturnOnlyAdultCustomers() throws Exception {
     MvcResult result = mockMvc.perform(get("/clientes/mayores-de-edad"))
             .andExpect(status().isOk())
@@ -60,17 +53,27 @@ class CustomersApiIntegrationTest extends BaseIntegrationTest {
     customers.forEach(customer -> assertFalse(customer.getBirthDate().isAfter(adultLimit)));
   }
 
-  /**
-   * Comprueba que filtra correctamente
-   *
-   * @throws Exception exception
-   */
   @Test
+  @DisplayName("3. Comprueba que filtra correctamente")
   void shouldReturnFourCustomersWhenMinBalanceIs300()  throws Exception {
     mockMvc.perform(get("/clientes/con-cuenta-superior-a/{cantidad}", new BigDecimal("300.00")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$.length()").value(4));
+  }
+
+  @Test
+  @DisplayName("6. Comprueba que devuelve correctamente el cliente solicitado por su DNI.")
+  void shouldReturnCustomerByDni() throws Exception {
+    mockMvc.perform(get("/clientes/{dni}", "22222222B"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.dni").value("22222222B"))
+            .andExpect(jsonPath("$.name").value("Raúl"))
+            .andExpect(jsonPath("$.surname1").value("Canales"))
+            .andExpect(jsonPath("$.surname2").value("Rodríguez"))
+            .andExpect(jsonPath("$.birthDate").value("1985-03-01"))
+            .andExpect(jsonPath("$.accounts").isArray())
+            .andExpect(jsonPath("$.accounts.length()").value(2));
   }
 
   @Test
