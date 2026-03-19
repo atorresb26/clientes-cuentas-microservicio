@@ -1,5 +1,7 @@
 package com.clientes.cuentas.bankingservice.infrastructure.api.delegate;
 
+import com.clientes.cuentas.bankingservice.application.pagination.PageResult;
+import com.clientes.cuentas.bankingservice.application.pagination.PaginationCriteria;
 import com.clientes.cuentas.bankingservice.application.usecase.GetAdultCustomersUseCase;
 import com.clientes.cuentas.bankingservice.application.usecase.GetCustomerByDniUseCase;
 import com.clientes.cuentas.bankingservice.application.usecase.GetCustomersUseCase;
@@ -10,8 +12,6 @@ import com.clientes.cuentas.bankingservice.infrastructure.api.mapper.CustomerApi
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.PaginatedCustomerAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.PaginatedCustomerDTO;
-import com.clientes.cuentas.bankingservice.application.pagination.PaginationCriteria;
-import com.clientes.cuentas.bankingservice.application.pagination.PageResult;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -54,22 +54,19 @@ class CustomersApiDelegateImplTest {
   @Mock
   private CustomerApiMapper mapper;
 
-  // =========================================================================
-  // getCustomersAndAccounts()
-  // =========================================================================
 
   @Test
   void shouldReturn200OkWithPaginatedCustomerAccountDtoList() {
     List<Customer> customers = List.of(new Customer(), new Customer());
     PageResult<Customer> pageResult = PageResult.<Customer>builder()
-        .content(customers)
-        .pageNumber(1)
-        .pageSize(2)
-        .totalElements(5)
-        .totalPages(3)
-        .isFirst(false)
-        .isLast(false)
-        .build();
+            .content(customers)
+            .pageNumber(1)
+            .pageSize(2)
+            .totalElements(5)
+            .totalPages(3)
+            .isFirst(false)
+            .isLast(false)
+            .build();
     PaginatedCustomerAccountDTO expectedResponse = new PaginatedCustomerAccountDTO();
     expectedResponse.setContent(List.of(new CustomerAccountDTO(), new CustomerAccountDTO()));
     expectedResponse.setCurrentPage(1);
@@ -105,14 +102,14 @@ class CustomersApiDelegateImplTest {
   @Test
   void shouldReturn200OkWithEmptyPaginatedListWhenNoCustomersAndAccountsExist() {
     PageResult<Customer> emptyPage = PageResult.<Customer>builder()
-        .content(List.of())
-        .pageNumber(0)
-        .pageSize(20)
-        .totalElements(0)
-        .totalPages(0)
-        .isFirst(true)
-        .isLast(true)
-        .build();
+            .content(List.of())
+            .pageNumber(0)
+            .pageSize(20)
+            .totalElements(0)
+            .totalPages(0)
+            .isFirst(true)
+            .isLast(true)
+            .build();
 
     PaginatedCustomerAccountDTO expectedResponse = new PaginatedCustomerAccountDTO();
     expectedResponse.setContent(List.of());
@@ -126,22 +123,18 @@ class CustomersApiDelegateImplTest {
     assertTrue(response.getBody().getContent().isEmpty());
   }
 
-  // =========================================================================
-  // getAdultCustomers()
-  // =========================================================================
-
   @Test
   void shouldReturn200OkWithPaginatedAdultCustomerDtoList() {
     List<Customer> adults = List.of(new Customer());
     PageResult<Customer> pageResult = PageResult.<Customer>builder()
-        .content(adults)
-        .pageNumber(0)
-        .pageSize(20)
-        .totalElements(21)
-        .totalPages(2)
-        .isFirst(true)
-        .isLast(false)
-        .build();
+            .content(adults)
+            .pageNumber(0)
+            .pageSize(20)
+            .totalElements(21)
+            .totalPages(2)
+            .isFirst(true)
+            .isLast(false)
+            .build();
     PaginatedCustomerDTO expectedResponse = new PaginatedCustomerDTO();
     expectedResponse.setContent(List.of());
     expectedResponse.setCurrentPage(0);
@@ -177,14 +170,14 @@ class CustomersApiDelegateImplTest {
   @Test
   void shouldReturn200OkWithEmptyPaginatedListWhenNoAdultCustomersFound() {
     PageResult<Customer> emptyPage = PageResult.<Customer>builder()
-        .content(List.of())
-        .pageNumber(0)
-        .pageSize(20)
-        .totalElements(0)
-        .totalPages(0)
-        .isFirst(true)
-        .isLast(true)
-        .build();
+            .content(List.of())
+            .pageNumber(0)
+            .pageSize(20)
+            .totalElements(0)
+            .totalPages(0)
+            .isFirst(true)
+            .isLast(true)
+            .build();
 
     PaginatedCustomerDTO expectedResponse = new PaginatedCustomerDTO();
     expectedResponse.setContent(List.of());
@@ -198,28 +191,24 @@ class CustomersApiDelegateImplTest {
     assertTrue(response.getBody().getContent().isEmpty());
   }
 
-  // =========================================================================
-  // getCustomersWithHigherAmount()
-  // =========================================================================
-
   @Test
   void shouldReturn200OkWithPaginatedDtoListForHigherAmount() {
     BigDecimal cantidad = new BigDecimal("500.00");
     List<Customer> customers = List.of(new Customer());
     PageResult<Customer> pageResult = PageResult.<Customer>builder()
-        .content(customers)
-        .pageNumber(0)
-        .pageSize(20)
-        .totalElements(1)
-        .totalPages(1)
-        .isFirst(true)
-        .isLast(true)
-        .build();
+            .content(customers)
+            .pageNumber(0)
+            .pageSize(20)
+            .totalElements(1)
+            .totalPages(1)
+            .isFirst(true)
+            .isLast(true)
+            .build();
     PaginatedCustomerDTO expectedResponse = new PaginatedCustomerDTO();
     expectedResponse.setContent(List.of());
 
     when(getCustomersWithHigherAmountUseCase.execute(eq(cantidad), any(PaginationCriteria.class)))
-        .thenReturn(pageResult);
+            .thenReturn(pageResult);
     when(mapper.toPaginatedCustomerDto(pageResult)).thenReturn(expectedResponse);
 
     ResponseEntity<PaginatedCustomerDTO> response = delegate.getCustomersWithHigherAmount(cantidad, 0, 20, null);
@@ -236,29 +225,25 @@ class CustomersApiDelegateImplTest {
   void shouldPassCantidadParameterDirectlyToUseCase() {
     BigDecimal cantidad = new BigDecimal("1000.00");
     PageResult<Customer> emptyPage = PageResult.<Customer>builder()
-        .content(List.of())
-        .pageNumber(0)
-        .pageSize(20)
-        .totalElements(0)
-        .totalPages(0)
-        .isFirst(true)
-        .isLast(true)
-        .build();
+            .content(List.of())
+            .pageNumber(0)
+            .pageSize(20)
+            .totalElements(0)
+            .totalPages(0)
+            .isFirst(true)
+            .isLast(true)
+            .build();
 
     PaginatedCustomerDTO expectedResponse = new PaginatedCustomerDTO();
     expectedResponse.setContent(List.of());
     when(getCustomersWithHigherAmountUseCase.execute(eq(cantidad), any(PaginationCriteria.class)))
-        .thenReturn(emptyPage);
+            .thenReturn(emptyPage);
     when(mapper.toPaginatedCustomerDto(emptyPage)).thenReturn(expectedResponse);
 
     delegate.getCustomersWithHigherAmount(cantidad, 0, 20, null);
 
     verify(getCustomersWithHigherAmountUseCase).execute(eq(cantidad), any(PaginationCriteria.class));
   }
-
-  // =========================================================================
-  // getCustomerByDni()
-  // =========================================================================
 
   @Test
   void shouldReturn200OkWithMappedCustomerAccountDtoForDni() {
@@ -293,4 +278,3 @@ class CustomersApiDelegateImplTest {
     verify(getCustomerByDniUseCase).execute("99999999Z");
   }
 }
-

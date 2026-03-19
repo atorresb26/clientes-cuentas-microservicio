@@ -24,4 +24,3 @@ import org.springframework.transaction.annotation.Transactional;
 @Rollback
 public abstract class BaseIntegrationTest {
 }
-

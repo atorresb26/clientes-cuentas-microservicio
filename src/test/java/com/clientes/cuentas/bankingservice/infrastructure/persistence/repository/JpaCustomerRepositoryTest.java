@@ -323,10 +323,6 @@ class JpaCustomerRepositoryTest {
     assertTrue(result.isEmpty());
   }
 
-  // =========================================================================
-  // findCustomerWithAccountsByDni()
-  // =========================================================================
-
   @Test
   void shouldReturnEmptyListWhenDniNotFoundWithAccounts() {
     CustomerEntity customer = new CustomerEntity();

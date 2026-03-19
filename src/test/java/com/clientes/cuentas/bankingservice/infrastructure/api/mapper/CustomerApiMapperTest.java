@@ -1,5 +1,6 @@
 package com.clientes.cuentas.bankingservice.infrastructure.api.mapper;
 
+import com.clientes.cuentas.bankingservice.application.pagination.PageResult;
 import com.clientes.cuentas.bankingservice.domain.enums.AccountType;
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
@@ -10,7 +11,6 @@ import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerAcco
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.PaginatedCustomerAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.PaginatedCustomerDTO;
-import com.clientes.cuentas.bankingservice.application.pagination.PageResult;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
@@ -134,18 +134,18 @@ class CustomerApiMapperTest {
   @Test
   void shouldMapPageResultToPaginatedCustomerDto() {
     Customer customer = Customer.builder()
-        .dni(Dni.of("11111111A"))
-        .name("Juan")
-        .build();
+            .dni(Dni.of("11111111A"))
+            .name("Juan")
+            .build();
     PageResult<Customer> pageResult = PageResult.<Customer>builder()
-        .content(List.of(customer))
-        .pageNumber(2)
-        .pageSize(10)
-        .totalElements(25)
-        .totalPages(3)
-        .isFirst(false)
-        .isLast(true)
-        .build();
+            .content(List.of(customer))
+            .pageNumber(2)
+            .pageSize(10)
+            .totalElements(25)
+            .totalPages(3)
+            .isFirst(false)
+            .isLast(true)
+            .build();
 
     PaginatedCustomerDTO dto = mapper.toPaginatedCustomerDto(pageResult);
 
@@ -164,18 +164,18 @@ class CustomerApiMapperTest {
   @Test
   void shouldMapPageResultToPaginatedCustomerAccountDto() {
     Customer customer = Customer.builder()
-        .dni(Dni.of("22222222B"))
-        .name("Maria")
-        .build();
+            .dni(Dni.of("22222222B"))
+            .name("Maria")
+            .build();
     PageResult<Customer> pageResult = PageResult.<Customer>builder()
-        .content(List.of(customer))
-        .pageNumber(0)
-        .pageSize(20)
-        .totalElements(1)
-        .totalPages(1)
-        .isFirst(true)
-        .isLast(true)
-        .build();
+            .content(List.of(customer))
+            .pageNumber(0)
+            .pageSize(20)
+            .totalElements(1)
+            .totalPages(1)
+            .isFirst(true)
+            .isLast(true)
+            .build();
 
     PaginatedCustomerAccountDTO dto = mapper.toPaginatedCustomerAccountDto(pageResult);
 

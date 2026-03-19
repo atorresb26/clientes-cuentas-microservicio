@@ -53,10 +53,6 @@ class GlobalExceptionHandlerTest {
     return new ServletWebRequest(request, new MockHttpServletResponse());
   }
 
-  // =========================================================================
-  // handleGeneric() — 500 Internal Server Error
-  // =========================================================================
-
   @Test
   void shouldReturn500ProblemDetailForUnhandledException() {
     Exception ex = new RuntimeException("Something exploded");
@@ -70,10 +66,6 @@ class GlobalExceptionHandlerTest {
     assertNotNull(result.getProperties());
     assertInstanceOf(Instant.class, result.getProperties().get("timestamp"));
   }
-
-  // =========================================================================
-  // handleBadRequests(ConstraintViolationException) — 400
-  // =========================================================================
 
   @Test
   void shouldReturn400ProblemDetailForConstraintViolationWithParameterName() {
@@ -98,10 +90,6 @@ class GlobalExceptionHandlerTest {
     assertNotNull(result.getProperties());
     assertInstanceOf(Instant.class, result.getProperties().get("timestamp"));
   }
-
-  // =========================================================================
-  // handleMethodArgumentNotValid() — 400
-  // =========================================================================
 
   @Test
   void shouldReturn400ResponseEntityWithFieldErrorDetailsForMethodArgumentNotValid() {
@@ -144,10 +132,6 @@ class GlobalExceptionHandlerTest {
     assertEquals("'name' must not be null. 'total' must be positive.", body.getDetail());
   }
 
-  // =========================================================================
-  // handleHttpMessageNotReadable() — 400
-  // =========================================================================
-
   @Test
   void shouldReturn400ResponseEntityForMalformedJsonBody() {
     HttpMessageNotReadableException ex = new HttpMessageNotReadableException("Malformed JSON");
@@ -166,10 +150,6 @@ class GlobalExceptionHandlerTest {
     assertInstanceOf(Instant.class, body.getProperties().get("timestamp"));
   }
 
-  // =========================================================================
-  // handleBadRequests(InvalidAmountException) — 400
-  // =========================================================================
-
   @Test
   void shouldReturn400ProblemDetailForInvalidAmountException() {
     InvalidAmountException ex = new InvalidAmountException("Amount must be >= 0");
@@ -181,10 +161,6 @@ class GlobalExceptionHandlerTest {
     assertEquals("Amount must be >= 0", result.getDetail());
     assertEquals(URI.create("/api/accounts/1"), result.getInstance());
   }
-
-  // =========================================================================
-  // handleInputValidationBadRequests() — 400
-  // =========================================================================
 
   @Test
   void shouldReturn400ProblemDetailForInvalidCustomerDniException() {
@@ -207,10 +183,6 @@ class GlobalExceptionHandlerTest {
     assertEquals("Bad Request", result.getTitle());
     assertEquals("Unknown code XYZ", result.getDetail());
   }
-
-  // =========================================================================
-  // handleNotFoundExceptions() — 404
-  // =========================================================================
 
   @Test
   void shouldReturn404ProblemDetailForAccountTypeNotFoundException() {

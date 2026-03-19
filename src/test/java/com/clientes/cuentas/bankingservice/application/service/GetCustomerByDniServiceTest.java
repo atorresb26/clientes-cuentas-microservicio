@@ -73,4 +73,3 @@ class GetCustomerByDniServiceTest {
     assertTrue(ex.getMessage().contains(dni));
   }
 }
-

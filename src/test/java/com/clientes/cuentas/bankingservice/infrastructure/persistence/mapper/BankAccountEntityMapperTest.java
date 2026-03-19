@@ -38,19 +38,12 @@ class BankAccountEntityMapperTest {
   @Mock
   private AccountTypeReferenceMapper accountTypeReferenceMapper;
 
-  // -------------------------------------------------------------------------
-  // toEntity() — null guard
-  // -------------------------------------------------------------------------
 
   @Test
   void shouldReturnNullWhenBankAccountIsNull() {
     assertNull(mapper.toEntity(null));
     verifyNoInteractions(accountTypeEntityMapper, customerReferenceMapper, accountTypeReferenceMapper);
   }
-
-  // -------------------------------------------------------------------------
-  // toEntity() — happy path
-  // -------------------------------------------------------------------------
 
   @Test
   void shouldMapBankAccountToEntityDelegatingToSubMappers() {
@@ -135,19 +128,11 @@ class BankAccountEntityMapperTest {
     assertSame(accountTypeEntity, result.getAccountType());
   }
 
-  // -------------------------------------------------------------------------
-  // toDomainObject() — null guard
-  // -------------------------------------------------------------------------
-
   @Test
   void shouldReturnNullWhenEntityIsNull() {
     assertNull(mapper.toDomainObject(null));
     verifyNoInteractions(accountTypeEntityMapper, customerReferenceMapper, accountTypeReferenceMapper);
   }
-
-  // -------------------------------------------------------------------------
-  // toDomainObject() — happy path
-  // -------------------------------------------------------------------------
 
   @Test
   void shouldMapEntityToDomainObjectDelegatingAccountTypeToSubMapper() {

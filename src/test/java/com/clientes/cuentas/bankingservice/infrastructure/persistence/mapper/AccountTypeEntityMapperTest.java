@@ -14,18 +14,11 @@ class AccountTypeEntityMapperTest {
 
   private final AccountTypeEntityMapper mapper = Mappers.getMapper(AccountTypeEntityMapper.class);
 
-  // -------------------------------------------------------------------------
-  // fromEntity() — null guard
-  // -------------------------------------------------------------------------
 
   @Test
   void shouldReturnNullWhenEntityIsNull() {
     assertNull(mapper.fromEntity(null));
   }
-
-  // -------------------------------------------------------------------------
-  // fromEntity() — happy path for every supported code
-  // -------------------------------------------------------------------------
 
   @Test
   void shouldMapJrCodeToJuniorAccountType() {
@@ -51,10 +44,6 @@ class AccountTypeEntityMapperTest {
     assertEquals(AccountType.PREMIUM, mapper.fromEntity(entity));
   }
 
-  // -------------------------------------------------------------------------
-  // fromEntity() — unknown code
-  // -------------------------------------------------------------------------
-
   @Test
   void shouldThrowInvalidAccountTypeCodeExceptionWhenEntityHasUnknownCode() {
     AccountTypeEntity entity = new AccountTypeEntity();
@@ -63,4 +52,3 @@ class AccountTypeEntityMapperTest {
     assertThrows(InvalidAccountTypeCodeException.class, () -> mapper.fromEntity(entity));
   }
 }
-

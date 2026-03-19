@@ -25,9 +25,6 @@ class CustomerReferenceMapperTest {
   @Mock
   private JpaCustomerRepository jpaCustomerRepository;
 
-  // -------------------------------------------------------------------------
-  // mapFromCustomerId() — null guard
-  // -------------------------------------------------------------------------
 
   @Test
   void shouldReturnNullWhenIdIsNull() {
@@ -36,10 +33,6 @@ class CustomerReferenceMapperTest {
     assertNull(result);
     verifyNoInteractions(jpaCustomerRepository);
   }
-
-  // -------------------------------------------------------------------------
-  // mapFromCustomerId() — happy path
-  // -------------------------------------------------------------------------
 
   @Test
   void shouldReturnEntityReferenceWhenIdIsNotNull() {
@@ -57,10 +50,6 @@ class CustomerReferenceMapperTest {
     verifyNoMoreInteractions(jpaCustomerRepository);
   }
 
-  // -------------------------------------------------------------------------
-  // mapFromCustomerId() — JPA exception propagation
-  // -------------------------------------------------------------------------
-
   @Test
   void shouldPropagateExceptionWhenJpaGetReferenceByIdFails() {
     Long id = 99L;
@@ -71,4 +60,3 @@ class CustomerReferenceMapperTest {
             () -> mapper.mapFromCustomerId(id));
   }
 }
-

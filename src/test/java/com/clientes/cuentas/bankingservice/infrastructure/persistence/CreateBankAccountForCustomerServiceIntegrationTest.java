@@ -47,6 +47,7 @@ class CreateBankAccountForCustomerServiceIntegrationTest {
   @MockitoBean
   private JpaBankAccountRepository jpaBankAccountRepository;
 
+
   @Test
   void shouldRollbackCustomerCreationWhenBankAccountSaveFails() {
     String dni = "00000000Z";
@@ -80,4 +81,3 @@ class CreateBankAccountForCustomerServiceIntegrationTest {
     verify(jpaBankAccountRepository).save(any(BankAccountEntity.class));
   }
 }
-

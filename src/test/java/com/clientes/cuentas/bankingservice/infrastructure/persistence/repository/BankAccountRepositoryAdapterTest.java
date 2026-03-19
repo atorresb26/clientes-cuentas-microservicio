@@ -37,9 +37,6 @@ class BankAccountRepositoryAdapterTest {
   @Mock
   private BankAccountEntityMapper mapper;
 
-  // -------------------------------------------------------------------------
-  // save()
-  // -------------------------------------------------------------------------
 
   @Test
   void shouldSaveBankAccountAndAssignRandomUuidAsApiId() {
@@ -115,10 +112,6 @@ class BankAccountRepositoryAdapterTest {
     assertThrows(RuntimeException.class, () -> adapter.save(domainAccount));
   }
 
-  // -------------------------------------------------------------------------
-  // update()
-  // -------------------------------------------------------------------------
-
   @Test
   void shouldUpdateBankAccountAndReturnMappedDomainObject() {
     BankAccount domainAccount = BankAccount.builder()
@@ -156,10 +149,6 @@ class BankAccountRepositoryAdapterTest {
 
     assertThrows(RuntimeException.class, () -> adapter.update(domainAccount));
   }
-
-  // -------------------------------------------------------------------------
-  // findByApiId()
-  // -------------------------------------------------------------------------
 
   @Test
   void shouldReturnMappedBankAccountWhenEntityFoundByApiId() {

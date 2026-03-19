@@ -30,5 +30,3 @@ class PageResultConverterTest {
     assertTrue(result.hasPrevious());
   }
 }
-
-

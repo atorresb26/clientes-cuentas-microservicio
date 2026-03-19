@@ -108,10 +108,6 @@ class BankAccountApiDelegateImplTest {
     assertEquals(URI.create("http://localhost:8080/cuentas/fixed-api-id-123"), response.getHeaders().getLocation());
   }
 
-  // =========================================================================
-  // getBankAccountByApiId()
-  // =========================================================================
-
   @Test
   void shouldReturn200OkWithMappedBankAccountDto() {
     UUID apiId = UUID.randomUUID();
@@ -148,10 +144,6 @@ class BankAccountApiDelegateImplTest {
     verify(getBankAccountDetailUseCase).execute(apiId);
   }
 
-  // =========================================================================
-  // updateBankAccountTotal()
-  // =========================================================================
-
   @Test
   void shouldReturn204NoContentAfterSuccessfulUpdate() {
     UUID accountApiId = UUID.randomUUID();
@@ -179,4 +171,3 @@ class BankAccountApiDelegateImplTest {
     verify(updateBankAccountTotalUseCase).execute(accountApiId, new BigDecimal("0.00"));
   }
 }
-

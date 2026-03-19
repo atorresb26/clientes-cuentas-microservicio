@@ -46,6 +46,7 @@ class CreateBankAccountForCustomerServiceTest {
   @Mock
   private BankAccountMapper bankAccountMapper;
 
+
   @Test
   void shouldCreateBankAccountForExistingCustomer() {
     CreateBankAccountForCustomerCommand command = new CreateBankAccountForCustomerCommand(

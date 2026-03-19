@@ -21,9 +21,6 @@ class BankAccountApiMapperTest {
 
   private final BankAccountApiMapper mapper = Mappers.getMapper(BankAccountApiMapper.class);
 
-  // =========================================================================
-  // toCommand()
-  // =========================================================================
 
   @Test
   void shouldReturnNullWhenRequestDtoIsNull() {
@@ -149,10 +146,6 @@ class BankAccountApiMapperTest {
     assertNull(dto.getAccountType());
   }
 
-  // =========================================================================
-  // toDto()
-  // =========================================================================
-
   @Test
   void shouldReturnNullWhenBankAccountIsNullForToDto() {
     assertNull(mapper.toDto(null));
@@ -208,4 +201,3 @@ class BankAccountApiMapperTest {
     assertNull(dto.getAccountType());
   }
 }
-

@@ -74,4 +74,3 @@ class GetBankAccountDetailServiceTest {
     assertTrue(ex.getMessage().contains(apiId.toString()));
   }
 }
-

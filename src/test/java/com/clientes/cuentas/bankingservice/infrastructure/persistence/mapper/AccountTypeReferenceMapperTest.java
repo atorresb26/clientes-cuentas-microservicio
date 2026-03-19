@@ -29,9 +29,6 @@ class AccountTypeReferenceMapperTest {
   @Mock
   private JpaAccountTypeRepository jpaAccountTypeRepository;
 
-  // -------------------------------------------------------------------------
-  // mapFromCode() — null guard
-  // -------------------------------------------------------------------------
 
   @Test
   void shouldReturnNullWhenCodeIsNull() {
@@ -40,10 +37,6 @@ class AccountTypeReferenceMapperTest {
     assertNull(result);
     verifyNoInteractions(jpaAccountTypeRepository);
   }
-
-  // -------------------------------------------------------------------------
-  // mapFromCode() — happy path
-  // -------------------------------------------------------------------------
 
   @Test
   void shouldReturnAccountTypeEntityWhenCodeIsFound() {
@@ -74,10 +67,6 @@ class AccountTypeReferenceMapperTest {
     }
   }
 
-  // -------------------------------------------------------------------------
-  // mapFromCode() — not found
-  // -------------------------------------------------------------------------
-
   @Test
   void shouldThrowAccountTypeNotFoundExceptionWhenCodeNotFound() {
     String code = "UNKNOWN";
@@ -92,4 +81,3 @@ class AccountTypeReferenceMapperTest {
     verify(jpaAccountTypeRepository).findByCode(code);
   }
 }
-

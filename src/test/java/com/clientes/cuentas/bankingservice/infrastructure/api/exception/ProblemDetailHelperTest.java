@@ -39,10 +39,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ProblemDetailHelperTest {
 
-  // =========================================================================
-  // fromHttpRequest()
-  // =========================================================================
-
   @Test
   void shouldBuildProblemDetailWithAllFieldsFromHttpRequest() {
     MockHttpServletRequest request = new MockHttpServletRequest();
@@ -84,10 +80,6 @@ class ProblemDetailHelperTest {
     assertEquals(URI.create("/api/customers/12345678A"), result.getInstance());
   }
 
-  // =========================================================================
-  // badRequestFromWebRequest()
-  // =========================================================================
-
   @Test
   void shouldBuildProblemDetailWithAllFieldsFromServletWebRequest() {
     MockHttpServletRequest servletRequest = new MockHttpServletRequest();
@@ -101,6 +93,7 @@ class ProblemDetailHelperTest {
     assertEquals(ProblemDetailHelper.BAD_REQUEST, result.getTitle());
     assertEquals("Validation failed", result.getDetail());
     assertEquals(URI.create("/api/accounts"), result.getInstance());
+    Assertions.assertNotNull(result.getProperties());
     assertInstanceOf(Instant.class, result.getProperties().get(ProblemDetailHelper.TIMESTAMP));
   }
 
@@ -115,10 +108,6 @@ class ProblemDetailHelperTest {
     assertEquals(ProblemDetailHelper.BAD_REQUEST, result.getTitle());
     assertNull(result.getInstance());
   }
-
-  // =========================================================================
-  // getFieldErrorMessages()
-  // =========================================================================
 
   @Test
   void shouldFormatSingleFieldErrorMessage() {
@@ -153,10 +142,6 @@ class ProblemDetailHelperTest {
 
     assertEquals("", ProblemDetailHelper.getFieldErrorMessages(ex));
   }
-
-  // =========================================================================
-  // getConstraintViolationMessage()
-  // =========================================================================
 
   @Test
   void shouldUseParameterNodeNameInViolationMessage() {
@@ -199,10 +184,6 @@ class ProblemDetailHelperTest {
     assertEquals("Invalid Request", ProblemDetailHelper.getConstraintViolationMessage(
             new ConstraintViolationException(Set.of())));
   }
-
-  // =========================================================================
-  // getHttpMessageNotReadableDetail() — InvalidFormatException
-  // =========================================================================
 
   @Test
   void shouldListAcceptedEnumValuesWhenInvalidFormatTargetsEnum() {
@@ -249,10 +230,6 @@ class ProblemDetailHelperTest {
             ProblemDetailHelper.getHttpMessageNotReadableDetail(ex));
   }
 
-  // =========================================================================
-  // getHttpMessageNotReadableDetail() — ValueInstantiationException
-  // =========================================================================
-
   @Test
   void shouldListAcceptedEnumValuesWhenValueInstantiationWrapsUnexpectedValueError() {
     // Simulates: @JsonCreator throws IllegalArgumentException("Unexpected value 'BADCODE'")
@@ -276,10 +253,6 @@ class ProblemDetailHelperTest {
             "Invalid value 'BADCODE' for field 'codTipoCuenta'. Accepted values are: [JUNIOR, NORMAL, PREMIUM].",
             ProblemDetailHelper.getHttpMessageNotReadableDetail(ex));
   }
-
-  // =========================================================================
-  // getHttpMessageNotReadableDetail() — plain JsonMappingException
-  // =========================================================================
 
   @Test
   void shouldReturnInvalidValueForFieldWhenOnlyJsonMappingExceptionIsPresent() {
@@ -309,10 +282,6 @@ class ProblemDetailHelperTest {
             ProblemDetailHelper.getHttpMessageNotReadableDetail(ex));
   }
 
-  // =========================================================================
-  // getHttpMessageNotReadableDetail() — unrecognised cause
-  // =========================================================================
-
   @Test
   void shouldReturnMalformedJsonMessageWhenNoCauseIsRecognised() {
     HttpMessageNotReadableException ex =
@@ -322,4 +291,3 @@ class ProblemDetailHelperTest {
             ProblemDetailHelper.getHttpMessageNotReadableDetail(ex));
   }
 }
-
