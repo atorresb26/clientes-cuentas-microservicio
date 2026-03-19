@@ -1,10 +1,10 @@
 package com.clientes.cuentas.bankingservice.infrastructure.api.delegate;
 
+import com.clientes.cuentas.bankingservice.application.pagination.PaginationCriteria;
 import com.clientes.cuentas.bankingservice.application.usecase.GetAdultCustomersUseCase;
 import com.clientes.cuentas.bankingservice.application.usecase.GetCustomerByDniUseCase;
 import com.clientes.cuentas.bankingservice.application.usecase.GetCustomersUseCase;
 import com.clientes.cuentas.bankingservice.application.usecase.GetCustomersWithHigherAmountUseCase;
-import com.clientes.cuentas.bankingservice.application.pagination.PaginationCriteria;
 import com.clientes.cuentas.bankingservice.infrastructure.api.mapper.CustomerApiMapper;
 import com.clientes.cuentas.bankingservice.infrastructure.input.api.ClientesApiDelegate;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerAccountDTO;
@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * Implementation of the ApiDelegate generated from the API Specification for Customers.
@@ -91,8 +92,8 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
 
   private PaginationCriteria toPaginationCriteria(Integer page, Integer size, String sort) {
     return PaginationCriteria.builder()
-            .page(page != null ? page : 0)
-            .size(size != null ? size : 20)
+            .page(Objects.nonNull(page) ? page : 0)
+            .size(Objects.nonNull(size) ? size : 20)
             .sort(sort)
             .build();
   }
