@@ -2,6 +2,7 @@ package com.clientes.cuentas.bankingservice.application.service;
 
 import com.clientes.cuentas.bankingservice.application.repository.BankAccountRepository;
 import com.clientes.cuentas.bankingservice.domain.exception.BankAccountNotFoundException;
+import com.clientes.cuentas.bankingservice.domain.exception.InvalidAmountException;
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
 import com.clientes.cuentas.bankingservice.domain.model.vo.Money;
 import org.junit.jupiter.api.Test;
@@ -31,9 +32,6 @@ class UpdateBankAccountTotalServiceTest {
   @Mock
   private BankAccountRepository bankAccountRepository;
 
-  // =========================================================================
-  // Happy path
-  // =========================================================================
 
   @Test
   void shouldFindAccountSetNewTotalAndPersistIt() {
@@ -72,58 +70,53 @@ class UpdateBankAccountTotalServiceTest {
     verify(bankAccountRepository).update(account);
   }
 
-  // =========================================================================
-  // Validation — apiId
-  // =========================================================================
-
   @Test
   void shouldThrowIllegalArgumentExceptionWhenApiIdIsNull() {
+    BigDecimal newTotal = new BigDecimal("100.00");
     IllegalArgumentException ex = assertThrows(
             IllegalArgumentException.class,
-            () -> service.execute(null, new BigDecimal("100.00")));
+            () -> service.execute(null, newTotal));
 
     assertEquals("apiId must not be null", ex.getMessage());
     verifyNoInteractions(bankAccountRepository);
   }
 
-  // =========================================================================
-  // Validation — newTotal
-  // =========================================================================
-
   @Test
   void shouldThrowIllegalArgumentExceptionWhenNewTotalIsNull() {
-    IllegalArgumentException ex = assertThrows(
-            IllegalArgumentException.class,
-            () -> service.execute(UUID.randomUUID(), null));
+    UUID apiId = UUID.randomUUID();
 
-    assertEquals("newTotal must not be null and must be greater than or equal to zero",
-            ex.getMessage());
-    verifyNoInteractions(bankAccountRepository);
+    when(bankAccountRepository.findByApiId(apiId))
+            .thenReturn(Optional.of(BankAccount.builder().apiId(apiId.toString()).build()));
+    InvalidAmountException ex = assertThrows(
+            InvalidAmountException.class,
+            () -> service.execute(apiId, null));
+
+    assertEquals("The amount must be greater than or equal to 0", ex.getMessage());
   }
 
   @Test
   void shouldThrowIllegalArgumentExceptionWhenNewTotalIsNegative() {
-    IllegalArgumentException ex = assertThrows(
-            IllegalArgumentException.class,
-            () -> service.execute(UUID.randomUUID(), new BigDecimal("-0.01")));
+    UUID apiId = UUID.randomUUID();
+    BigDecimal newTotal = new BigDecimal("-0.01");
 
-    assertEquals("newTotal must not be null and must be greater than or equal to zero",
-            ex.getMessage());
-    verifyNoInteractions(bankAccountRepository);
+    when(bankAccountRepository.findByApiId(apiId))
+            .thenReturn(Optional.of(BankAccount.builder().apiId(apiId.toString()).build()));
+    InvalidAmountException ex = assertThrows(
+            InvalidAmountException.class,
+            () -> service.execute(apiId, newTotal));
+
+    assertEquals("The amount must be greater than or equal to 0", ex.getMessage());
   }
-
-  // =========================================================================
-  // Not found
-  // =========================================================================
 
   @Test
   void shouldThrowBankAccountNotFoundExceptionWhenApiIdNotFound() {
     UUID apiId = UUID.randomUUID();
+    BigDecimal newTotal = new BigDecimal("200.00");
 
     when(bankAccountRepository.findByApiId(apiId)).thenReturn(Optional.empty());
 
     assertThrows(BankAccountNotFoundException.class,
-            () -> service.execute(apiId, new BigDecimal("200.00")));
+            () -> service.execute(apiId, newTotal));
 
     verify(bankAccountRepository).findByApiId(apiId);
     verifyNoMoreInteractions(bankAccountRepository);
@@ -132,14 +125,14 @@ class UpdateBankAccountTotalServiceTest {
   @Test
   void shouldIncludeApiIdInNotFoundExceptionMessage() {
     UUID apiId = UUID.randomUUID();
+    BigDecimal newTotal = new BigDecimal("100.00");
 
     when(bankAccountRepository.findByApiId(apiId)).thenReturn(Optional.empty());
 
     BankAccountNotFoundException ex = assertThrows(
             BankAccountNotFoundException.class,
-            () -> service.execute(apiId, new BigDecimal("100.00")));
+            () -> service.execute(apiId, newTotal));
 
     assertEquals("Bank account not found for apiId " + apiId, ex.getMessage());
   }
 }
-

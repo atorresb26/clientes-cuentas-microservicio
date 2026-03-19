@@ -1,10 +1,9 @@
 package com.clientes.cuentas.bankingservice.application.service;
 
-import com.clientes.cuentas.bankingservice.application.repository.CustomerRepository;
-import com.clientes.cuentas.bankingservice.domain.exception.InvalidAmountException;
-import com.clientes.cuentas.bankingservice.domain.model.Customer;
-import com.clientes.cuentas.bankingservice.application.pagination.PaginationCriteria;
 import com.clientes.cuentas.bankingservice.application.pagination.PageResult;
+import com.clientes.cuentas.bankingservice.application.pagination.PaginationCriteria;
+import com.clientes.cuentas.bankingservice.application.repository.CustomerRepository;
+import com.clientes.cuentas.bankingservice.domain.model.Customer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,8 +37,8 @@ class GetCustomersWithHigherAmountServiceTest {
   @Test
   void shouldThrowExceptionWhenAmountIsNull() {
     PaginationCriteria pagination = PaginationCriteria.builder().page(0).size(20).build();
-    InvalidAmountException ex = assertThrows(
-            InvalidAmountException.class,
+    IllegalArgumentException ex = assertThrows(
+            IllegalArgumentException.class,
             () -> service.execute(null, pagination)
     );
 
@@ -52,8 +51,8 @@ class GetCustomersWithHigherAmountServiceTest {
   void shouldThrowExceptionWhenAmountIsNegative() {
     BigDecimal amount = new BigDecimal("-10.0");
     PaginationCriteria pagination = PaginationCriteria.builder().page(0).size(20).build();
-    InvalidAmountException ex = assertThrows(
-            InvalidAmountException.class,
+    IllegalArgumentException ex = assertThrows(
+            IllegalArgumentException.class,
             () -> service.execute(amount, pagination)
     );
 

@@ -30,10 +30,11 @@ public class CreateBankAccountForCustomerService implements CreateBankAccountFor
   @Transactional
   @CacheEvict(value = CacheNames.CUSTOMER_BY_DNI, allEntries = true)
   public BankAccount execute(CreateBankAccountForCustomerCommand command) {
-    var customer = customerRepository.findByDni(command.customerDni())
+    Dni verifiedDni = Dni.of(command.customerDni());
+    var customer = customerRepository.findByDni(verifiedDni.value())
             .orElseGet(() -> customerRepository.save(
                             Customer.builder()
-                                    .dni(Dni.of(command.customerDni()))
+                                    .dni(verifiedDni)
                                     .build()
                     )
             );
