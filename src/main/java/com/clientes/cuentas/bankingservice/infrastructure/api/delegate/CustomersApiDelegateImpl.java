@@ -4,12 +4,12 @@ import com.clientes.cuentas.bankingservice.application.usecase.GetAdultCustomers
 import com.clientes.cuentas.bankingservice.application.usecase.GetCustomerByDniUseCase;
 import com.clientes.cuentas.bankingservice.application.usecase.GetCustomersUseCase;
 import com.clientes.cuentas.bankingservice.application.usecase.GetCustomersWithHigherAmountUseCase;
+import com.clientes.cuentas.bankingservice.application.pagination.PaginationCriteria;
 import com.clientes.cuentas.bankingservice.infrastructure.api.mapper.CustomerApiMapper;
 import com.clientes.cuentas.bankingservice.infrastructure.input.api.ClientesApiDelegate;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.PaginatedCustomerAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.PaginatedCustomerDTO;
-import com.clientes.cuentas.bankingservice.infrastructure.pagination.PaginationRequestDTO;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,13 +40,7 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
           Integer page, Integer size, String sort) {
     log.debug("- Init - getCustomersAndAccounts() with page={}, size={}, sort={}", page, size, sort);
 
-    var pagination = PaginationRequestDTO.builder()
-            .page(page)
-            .size(size)
-            .sort(sort)
-            .build();
-
-    var pageResult = getCustomersUseCase.execute(pagination.toCriteria());
+    var pageResult = getCustomersUseCase.execute(toPaginationCriteria(page, size, sort));
     var response = mapper.toPaginatedCustomerAccountDto(pageResult);
 
     log.debug("- End - getCustomersAndAccounts()");
@@ -60,13 +54,7 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
           Integer page, Integer size, String sort) {
     log.debug("- Init - getAdultCustomers() with page={}, size={}, sort={}", page, size, sort);
 
-    var pagination = PaginationRequestDTO.builder()
-            .page(page)
-            .size(size)
-            .sort(sort)
-            .build();
-
-    var pageResult = getAdultCustomersUseCase.execute(pagination.toCriteria());
+    var pageResult = getAdultCustomersUseCase.execute(toPaginationCriteria(page, size, sort));
     var response = mapper.toPaginatedCustomerDto(pageResult);
 
     log.debug("- End - getAdultCustomers()");
@@ -81,13 +69,7 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
     log.debug("- Init - getCustomersWithHigherAmount() with cantidad={}, page={}, size={}, sort={}",
             cantidad, page, size, sort);
 
-    var pagination = PaginationRequestDTO.builder()
-            .page(page)
-            .size(size)
-            .sort(sort)
-            .build();
-
-    var pageResult = getCustomersWithHigherAmountUseCase.execute(cantidad, pagination.toCriteria());
+    var pageResult = getCustomersWithHigherAmountUseCase.execute(cantidad, toPaginationCriteria(page, size, sort));
     var response = mapper.toPaginatedCustomerDto(pageResult);
 
     log.debug("- End - getCustomersWithHigherAmount()");
@@ -105,5 +87,13 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
 
     log.debug("- End - getCustomerByDni()");
     return ResponseEntity.ok(response);
+  }
+
+  private PaginationCriteria toPaginationCriteria(Integer page, Integer size, String sort) {
+    return PaginationCriteria.builder()
+            .page(page != null ? page : 0)
+            .size(size != null ? size : 20)
+            .sort(sort)
+            .build();
   }
 }

@@ -34,4 +34,3 @@ public record Dni(String value) {
     return new Dni(value);
   }
 }
-

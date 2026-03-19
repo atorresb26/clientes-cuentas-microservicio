@@ -32,7 +32,6 @@ public class Customer {
   @Builder.Default
   private List<BankAccount> bankAccounts = new ArrayList<>();
 
-
   /**
    * Adds a bank account to this customer.
    *

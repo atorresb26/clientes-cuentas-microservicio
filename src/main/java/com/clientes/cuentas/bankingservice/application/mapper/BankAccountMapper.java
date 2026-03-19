@@ -17,9 +17,6 @@ public interface BankAccountMapper {
    * Converts the command used to create a bank account into the
    * corresponding domain {@link BankAccount} object.
    *
-   * <p>The account type code provided in the command is mapped
-   * to the {@code accountType} field using {@link AccountTypeMapper}.</p>
-   *
    * @param command command containing the information required
    *                to create the bank account
    * @return domain bank account object
@@ -27,6 +24,6 @@ public interface BankAccountMapper {
   @Mapping(target = "accountType", source = "accountTypeCode")
   @Mapping(target = "apiId", ignore = true)
   @Mapping(target = "customerId", ignore = true)
-  @Mapping(target = "total", expression = "java(command.total() != null ? new Money(command.total()) : null)")
+  @Mapping(target = "total", expression = "java(Money.of(command.total()))")
   BankAccount toBankAccount(CreateBankAccountForCustomerCommand command);
 }

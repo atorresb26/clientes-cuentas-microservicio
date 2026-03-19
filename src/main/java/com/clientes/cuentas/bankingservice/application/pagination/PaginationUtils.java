@@ -1,17 +1,18 @@
 package com.clientes.cuentas.bankingservice.application.pagination;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.util.Objects;
+
 /**
  * Utility class for converting pagination criteria to Spring Data's Pageable.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PaginationUtils {
-
-  private PaginationUtils() {
-    // Utility class
-  }
 
   /**
    * Converts PaginationCriteria to a Spring Data Pageable.
@@ -20,7 +21,7 @@ public class PaginationUtils {
    * @return a Pageable instance ready to use with Spring Data repositories
    */
   public static Pageable toPageable(PaginationCriteria pagination) {
-    if (pagination == null) {
+    if (Objects.isNull(pagination)) {
       pagination = new PaginationCriteria();
     }
 
@@ -39,7 +40,7 @@ public class PaginationUtils {
    * @return a Sort instance, or Sort.unsorted() if no valid criteria is provided
    */
   private static Sort parseSortCriteria(String sortString) {
-    if (sortString == null || sortString.trim().isEmpty()) {
+    if (Objects.isNull(sortString) || sortString.trim().isEmpty()) {
       return Sort.unsorted();
     }
 
@@ -60,5 +61,3 @@ public class PaginationUtils {
     return sort;
   }
 }
-
-

@@ -1,6 +1,7 @@
 package com.clientes.cuentas.bankingservice.infrastructure.persistence.mapper;
 
 import com.clientes.cuentas.bankingservice.domain.enums.AccountType;
+import com.clientes.cuentas.bankingservice.domain.exception.InvalidAccountTypeCodeException;
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.entity.AccountTypeEntity;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -55,11 +56,11 @@ class AccountTypeEntityMapperTest {
   // -------------------------------------------------------------------------
 
   @Test
-  void shouldThrowEnumConstantNotPresentExceptionWhenEntityHasUnknownCode() {
+  void shouldThrowInvalidAccountTypeCodeExceptionWhenEntityHasUnknownCode() {
     AccountTypeEntity entity = new AccountTypeEntity();
     entity.setCode("UNKNOWN");
 
-    assertThrows(EnumConstantNotPresentException.class, () -> mapper.fromEntity(entity));
+    assertThrows(InvalidAccountTypeCodeException.class, () -> mapper.fromEntity(entity));
   }
 }
 

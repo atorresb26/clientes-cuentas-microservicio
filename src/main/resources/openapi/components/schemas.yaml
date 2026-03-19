@@ -127,14 +127,9 @@ CreateBankAccountForCustomerRequest:
     - codTipoCuenta
     - total
 
-PaginatedCustomerAccount:
+PaginationMetadata:
   type: object
   properties:
-    content:
-      type: array
-      description: Lista de clientes con sus cuentas asociadas
-      items:
-        $ref: '#/CustomerAccount'
     currentPage:
       type: integer
       format: int32
@@ -172,47 +167,24 @@ PaginatedCustomerAccount:
       description: Indica si hay una página anterior
       example: false
 
+PaginatedCustomerAccount:
+  allOf:
+    - $ref: '#/PaginationMetadata'
+    - type: object
+      properties:
+        content:
+          type: array
+          description: Lista de clientes con sus cuentas asociadas
+          items:
+            $ref: '#/CustomerAccount'
+
 PaginatedCustomer:
-  type: object
-  properties:
-    content:
-      type: array
-      description: Lista de clientes
-      items:
-        $ref: '#/Customer'
-    currentPage:
-      type: integer
-      format: int32
-      description: Número de página actual (comenzando desde 0)
-      example: 0
-    pageSize:
-      type: integer
-      format: int32
-      description: Tamaño de la página
-      example: 20
-    totalElements:
-      type: integer
-      format: int64
-      description: Número total de elementos
-      example: 100
-    totalPages:
-      type: integer
-      format: int32
-      description: Número total de páginas
-      example: 5
-    isFirst:
-      type: boolean
-      description: Indica si esta es la primera página
-      example: true
-    isLast:
-      type: boolean
-      description: Indica si esta es la última página
-      example: false
-    hasNext:
-      type: boolean
-      description: Indica si hay una página siguiente
-      example: true
-    hasPrevious:
-      type: boolean
-      description: Indica si hay una página anterior
-      example: false
+  allOf:
+    - $ref: '#/PaginationMetadata'
+    - type: object
+      properties:
+        content:
+          type: array
+          description: Lista de clientes
+          items:
+            $ref: '#/Customer'

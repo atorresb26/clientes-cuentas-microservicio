@@ -177,10 +177,24 @@ class CreateBankAccountForCustomerServiceTest {
             null
     );
 
+    Customer existingCustomer = Customer.builder()
+            .id(10L)
+            .dni(Dni.of("12345678A"))
+            .build();
+
+    when(customerRepository.findByDni("12345678A")).thenReturn(Optional.of(existingCustomer));
+    when(bankAccountMapper.toBankAccount(command)).thenThrow(new InvalidAmountException(
+            "The amount must be greater than or equal to 0"
+    ));
+
     InvalidAmountException ex = assertThrows(InvalidAmountException.class, () -> service.execute(command));
 
     assertEquals("The amount must be greater than or equal to 0", ex.getMessage());
-    verifyNoInteractions(customerRepository, bankAccountMapper, bankAccountRepository);
+    verify(customerRepository).findByDni("12345678A");
+    verify(bankAccountMapper).toBankAccount(command);
+    verify(customerRepository, never()).save(org.mockito.ArgumentMatchers.any(Customer.class));
+    verifyNoInteractions(bankAccountRepository);
+    verifyNoMoreInteractions(customerRepository, bankAccountMapper);
   }
 
   @Test
@@ -191,10 +205,24 @@ class CreateBankAccountForCustomerServiceTest {
             new BigDecimal("-1.00")
     );
 
+    Customer existingCustomer = Customer.builder()
+            .id(10L)
+            .dni(Dni.of("12345678A"))
+            .build();
+
+    when(customerRepository.findByDni("12345678A")).thenReturn(Optional.of(existingCustomer));
+    when(bankAccountMapper.toBankAccount(command)).thenThrow(new InvalidAmountException(
+            "The amount must be greater than or equal to 0"
+    ));
+
     InvalidAmountException ex = assertThrows(InvalidAmountException.class, () -> service.execute(command));
 
     assertEquals("The amount must be greater than or equal to 0", ex.getMessage());
-    verifyNoInteractions(customerRepository, bankAccountMapper, bankAccountRepository);
+    verify(customerRepository).findByDni("12345678A");
+    verify(bankAccountMapper).toBankAccount(command);
+    verify(customerRepository, never()).save(org.mockito.ArgumentMatchers.any(Customer.class));
+    verifyNoInteractions(bankAccountRepository);
+    verifyNoMoreInteractions(customerRepository, bankAccountMapper);
   }
 
   @Test
@@ -219,12 +247,26 @@ class CreateBankAccountForCustomerServiceTest {
             new BigDecimal("10.00")
     );
 
+    Customer existingCustomer = Customer.builder()
+            .id(10L)
+            .dni(Dni.of("12345678A"))
+            .build();
+
+    when(customerRepository.findByDni("12345678A")).thenReturn(Optional.of(existingCustomer));
+    when(bankAccountMapper.toBankAccount(command)).thenThrow(new InvalidAccountTypeCodeException(
+            String.format("Invalid account type code. Accepted values are: %s", AccountType.getAcceptedCodesMessage())
+    ));
+
     InvalidAccountTypeCodeException ex = assertThrows(InvalidAccountTypeCodeException.class, () -> service.execute(command));
 
     assertEquals(
             String.format("Invalid account type code. Accepted values are: %s", AccountType.getAcceptedCodesMessage()),
             ex.getMessage());
-    verifyNoInteractions(customerRepository, bankAccountMapper, bankAccountRepository);
+    verify(customerRepository).findByDni("12345678A");
+    verify(bankAccountMapper).toBankAccount(command);
+    verify(customerRepository, never()).save(org.mockito.ArgumentMatchers.any(Customer.class));
+    verifyNoInteractions(bankAccountRepository);
+    verifyNoMoreInteractions(customerRepository, bankAccountMapper);
   }
 
   @Test
@@ -235,11 +277,25 @@ class CreateBankAccountForCustomerServiceTest {
             new BigDecimal("10.00")
     );
 
+    Customer existingCustomer = Customer.builder()
+            .id(10L)
+            .dni(Dni.of("12345678A"))
+            .build();
+
+    when(customerRepository.findByDni("12345678A")).thenReturn(Optional.of(existingCustomer));
+    when(bankAccountMapper.toBankAccount(command)).thenThrow(new InvalidAccountTypeCodeException(
+            String.format("Invalid account type code 'VIP'. Accepted values are: %s", AccountType.getAcceptedCodesMessage())
+    ));
+
     InvalidAccountTypeCodeException ex = assertThrows(InvalidAccountTypeCodeException.class, () -> service.execute(command));
 
     assertEquals(
             String.format("Invalid account type code 'VIP'. Accepted values are: %s", AccountType.getAcceptedCodesMessage()),
             ex.getMessage());
-    verifyNoInteractions(customerRepository, bankAccountMapper, bankAccountRepository);
+    verify(customerRepository).findByDni("12345678A");
+    verify(bankAccountMapper).toBankAccount(command);
+    verify(customerRepository, never()).save(org.mockito.ArgumentMatchers.any(Customer.class));
+    verifyNoInteractions(bankAccountRepository);
+    verifyNoMoreInteractions(customerRepository, bankAccountMapper);
   }
 }

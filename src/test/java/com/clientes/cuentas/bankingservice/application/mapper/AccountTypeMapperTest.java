@@ -1,12 +1,12 @@
 package com.clientes.cuentas.bankingservice.application.mapper;
 
 import com.clientes.cuentas.bankingservice.domain.enums.AccountType;
+import com.clientes.cuentas.bankingservice.domain.exception.InvalidAccountTypeCodeException;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AccountTypeMapperTest {
 
@@ -21,15 +21,16 @@ class AccountTypeMapperTest {
 
   @Test
   void shouldThrowExceptionWhenCodeIsNull() {
-    assertThrows(EnumConstantNotPresentException.class, () -> mapper.fromCode(null));
+    InvalidAccountTypeCodeException ex = assertThrows(InvalidAccountTypeCodeException.class, () -> mapper.fromCode(null));
+    assertEquals("Invalid account type code. Accepted values are: [JR, NRML, PREM]", ex.getMessage());
   }
 
   @Test
   void shouldThrowExceptionWhenCodeIsInvalid() {
-    EnumConstantNotPresentException ex = assertThrows(
-            EnumConstantNotPresentException.class,
+    InvalidAccountTypeCodeException ex = assertThrows(
+            InvalidAccountTypeCodeException.class,
             () -> mapper.fromCode("XXX")
     );
-    assertTrue(ex.getMessage().contains("XXX"));
+    assertEquals("Invalid account type code 'XXX'. Accepted values are: [JR, NRML, PREM]", ex.getMessage());
   }
 }

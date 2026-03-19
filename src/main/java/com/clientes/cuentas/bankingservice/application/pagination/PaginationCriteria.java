@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 /**
  * Application model for pagination parameters.
  */
@@ -22,13 +24,12 @@ public class PaginationCriteria {
    * Applies default values when parameters are not provided.
    */
   public PaginationCriteria withDefaults() {
-    if (this.page == null) {
+    if (Objects.isNull(this.page)) {
       this.page = 0;
     }
-    if (this.size == null) {
-      this.size = 20;
+    if (Objects.isNull(this.size)) {
+      this.size = 10;
     }
     return this;
   }
 }
-

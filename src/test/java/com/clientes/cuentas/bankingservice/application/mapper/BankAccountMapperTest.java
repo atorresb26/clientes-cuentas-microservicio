@@ -2,6 +2,8 @@ package com.clientes.cuentas.bankingservice.application.mapper;
 
 import com.clientes.cuentas.bankingservice.application.command.CreateBankAccountForCustomerCommand;
 import com.clientes.cuentas.bankingservice.domain.enums.AccountType;
+import com.clientes.cuentas.bankingservice.domain.exception.InvalidAmountException;
+import com.clientes.cuentas.bankingservice.domain.exception.InvalidAccountTypeCodeException;
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,10 +54,25 @@ class BankAccountMapperTest {
             new BigDecimal("10.00")
     );
 
-    EnumConstantNotPresentException ex = assertThrows(
-            EnumConstantNotPresentException.class,
+    InvalidAccountTypeCodeException ex = assertThrows(
+            InvalidAccountTypeCodeException.class,
             () -> mapper.toBankAccount(command)
     );
-    assertEquals("XXX", ex.constantName());
+    assertEquals("Invalid account type code 'XXX'. Accepted values are: [JR, NRML, PREM]", ex.getMessage());
+  }
+
+  @Test
+  void shouldThrowExceptionWhenTotalIsNull() {
+    CreateBankAccountForCustomerCommand command = new CreateBankAccountForCustomerCommand(
+            "12345678A",
+            "NRML",
+            null
+    );
+
+    InvalidAmountException ex = assertThrows(
+            InvalidAmountException.class,
+            () -> mapper.toBankAccount(command)
+    );
+    assertEquals("The amount must be greater than or equal to 0", ex.getMessage());
   }
 }
