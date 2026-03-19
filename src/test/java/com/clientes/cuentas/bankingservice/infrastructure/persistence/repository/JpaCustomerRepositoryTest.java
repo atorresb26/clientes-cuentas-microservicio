@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
@@ -35,7 +36,8 @@ class JpaCustomerRepositoryTest {
 
   @Test
   void shouldReturnEmptyListWhenNoCustomers() {
-    List<CustomerAccountRow> result = jpaCustomerRepository.getCustomersAndAccounts();
+    List<CustomerAccountRow> result = jpaCustomerRepository.getCustomersAndAccountsPaginated(Pageable.unpaged())
+            .getContent();
     assertEquals(0, result.size());
   }
 
@@ -65,7 +67,8 @@ class JpaCustomerRepositoryTest {
     testEntityManager.flush();
 
     // when
-    List<CustomerAccountRow> result = jpaCustomerRepository.getCustomersAndAccounts();
+    List<CustomerAccountRow> result = jpaCustomerRepository.getCustomersAndAccountsPaginated(Pageable.unpaged())
+            .getContent();
 
     // then
     assertEquals(1, result.size());
@@ -137,7 +140,9 @@ class JpaCustomerRepositoryTest {
 
     testEntityManager.flush();
 
-    List<CustomerEntity> result = jpaCustomerRepository.getCustomersWithHigherAmount(new BigDecimal("300.0"));
+    List<CustomerEntity> result = jpaCustomerRepository
+            .getCustomersWithHigherAmountPaginated(new BigDecimal("300.0"), Pageable.unpaged())
+            .getContent();
 
     assertEquals(1, result.size());
     assertTrue(result.contains(c1));
@@ -165,7 +170,9 @@ class JpaCustomerRepositoryTest {
     testEntityManager.persist(ba);
     testEntityManager.flush();
 
-    List<CustomerEntity> result = jpaCustomerRepository.getCustomersWithHigherAmount(new BigDecimal("300.0"));
+    List<CustomerEntity> result = jpaCustomerRepository
+            .getCustomersWithHigherAmountPaginated(new BigDecimal("300.0"), Pageable.unpaged())
+            .getContent();
 
     assertTrue(result.isEmpty());
   }
@@ -206,7 +213,8 @@ class JpaCustomerRepositoryTest {
     testEntityManager.persist(customer);
     testEntityManager.flush();
 
-    List<CustomerAccountRow> result = jpaCustomerRepository.getCustomersAndAccounts();
+    List<CustomerAccountRow> result = jpaCustomerRepository.getCustomersAndAccountsPaginated(Pageable.unpaged())
+            .getContent();
 
     assertEquals(1, result.size());
     CustomerAccountRow row = result.getFirst();
@@ -249,7 +257,8 @@ class JpaCustomerRepositoryTest {
 
     testEntityManager.flush();
 
-    List<CustomerAccountRow> result = jpaCustomerRepository.getCustomersAndAccounts();
+    List<CustomerAccountRow> result = jpaCustomerRepository.getCustomersAndAccountsPaginated(Pageable.unpaged())
+            .getContent();
 
     assertEquals(2, result.size());
 
@@ -292,7 +301,9 @@ class JpaCustomerRepositoryTest {
 
     testEntityManager.flush();
 
-    List<CustomerEntity> result = jpaCustomerRepository.getCustomersWithHigherAmount(new BigDecimal("300.00"));
+    List<CustomerEntity> result = jpaCustomerRepository
+            .getCustomersWithHigherAmountPaginated(new BigDecimal("300.00"), Pageable.unpaged())
+            .getContent();
 
     assertTrue(result.isEmpty());
   }

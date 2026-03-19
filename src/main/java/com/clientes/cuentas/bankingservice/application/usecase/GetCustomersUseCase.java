@@ -1,18 +1,19 @@
 package com.clientes.cuentas.bankingservice.application.usecase;
 
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
-
-import java.util.List;
+import com.clientes.cuentas.bankingservice.application.port.dto.PaginationRequestDTO;
+import com.clientes.cuentas.bankingservice.application.port.model.PageResult;
 
 /**
- * Use case of obtaining all customers with their associated accounts.
+ * Use case of obtaining all customers with their associated accounts with pagination support.
  */
 public interface GetCustomersUseCase {
 
   /**
-   * Obtain all customers with their associated accounts.
+   * Obtain all customers with their associated accounts with pagination support.
    *
-   * @return the list of all customers.
+   * @param pagination the pagination parameters (page, size, sort)
+   * @return a paginated result containing customers
    */
-  List<Customer> execute();
+  PageResult<Customer> execute(PaginationRequestDTO pagination);
 }

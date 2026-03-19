@@ -77,6 +77,8 @@ public class HexagonalArchitectureTest {
   /**
    * Application can depend on infrastructure.config and infrastructure.output
    * (output ports, general configuration, etc.) but not on JPA details.
+   * application.port contains cross-layer utilities (DTOs, models) shared across layers.
+   * These classes may have OpenAPI/Swagger annotations for API documentation.
    */
   @ArchTest
   public static final ArchRule application_should_only_use_infrastructure_ports =
@@ -90,6 +92,7 @@ public class HexagonalArchitectureTest {
                           "..infrastructure.output..",
                           "..infrastructure.port..",
                           "jakarta..",
+                          "io.swagger.v3..",
                           "org.springframework..",
                           "org.slf4j..",
                           "org.mapstruct..",
@@ -239,6 +242,7 @@ public class HexagonalArchitectureTest {
    * Restricts that classes only reside in authorized packages within each layer.
    * Exceptions are allowed for: main Application class, configurations, base test classes, and architecture tests.
    * Also allows inner/anonymous classes.
+   * application.port is a special cross-layer package containing DTOs and models shared across layers.
    */
   @ArchTest
   public static final ArchRule classes_should_be_organized_in_layers =

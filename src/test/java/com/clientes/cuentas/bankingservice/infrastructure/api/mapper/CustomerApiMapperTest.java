@@ -8,6 +8,9 @@ import com.clientes.cuentas.bankingservice.domain.model.vo.Money;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.BankAccountNoCustomerDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerDTO;
+import com.clientes.cuentas.bankingservice.infrastructure.input.dto.PaginatedCustomerAccountDTO;
+import com.clientes.cuentas.bankingservice.infrastructure.input.dto.PaginatedCustomerDTO;
+import com.clientes.cuentas.bankingservice.application.port.model.PageResult;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
@@ -32,6 +35,8 @@ class CustomerApiMapperTest {
     assertNull(mapper.toCustomerDtoList(null));
     assertTrue(mapper.toCustomerDtoList(List.of()).isEmpty());
     assertNull(mapper.toCustomerDto(null));
+    assertNull(mapper.toPaginatedCustomerDto(null));
+    assertNull(mapper.toPaginatedCustomerAccountDto(null));
   }
 
   @Test
@@ -124,5 +129,65 @@ class CustomerApiMapperTest {
     assertEquals("Juan", dto.getName());
     assertEquals("Prez", dto.getSurname1());
     assertEquals("Lpez", dto.getSurname2());
+  }
+
+  @Test
+  void shouldMapPageResultToPaginatedCustomerDto() {
+    Customer customer = Customer.builder()
+        .dni(Dni.of("11111111A"))
+        .name("Juan")
+        .build();
+    PageResult<Customer> pageResult = PageResult.<Customer>builder()
+        .content(List.of(customer))
+        .pageNumber(2)
+        .pageSize(10)
+        .totalElements(25)
+        .totalPages(3)
+        .isFirst(false)
+        .isLast(true)
+        .build();
+
+    PaginatedCustomerDTO dto = mapper.toPaginatedCustomerDto(pageResult);
+
+    assertEquals(1, dto.getContent().size());
+    assertEquals("11111111A", dto.getContent().getFirst().getDni());
+    assertEquals(2, dto.getCurrentPage());
+    assertEquals(10, dto.getPageSize());
+    assertEquals(25L, dto.getTotalElements());
+    assertEquals(3, dto.getTotalPages());
+    assertEquals(false, dto.getIsFirst());
+    assertEquals(true, dto.getIsLast());
+    assertEquals(false, dto.getHasNext());
+    assertEquals(true, dto.getHasPrevious());
+  }
+
+  @Test
+  void shouldMapPageResultToPaginatedCustomerAccountDto() {
+    Customer customer = Customer.builder()
+        .dni(Dni.of("22222222B"))
+        .name("Maria")
+        .build();
+    PageResult<Customer> pageResult = PageResult.<Customer>builder()
+        .content(List.of(customer))
+        .pageNumber(0)
+        .pageSize(20)
+        .totalElements(1)
+        .totalPages(1)
+        .isFirst(true)
+        .isLast(true)
+        .build();
+
+    PaginatedCustomerAccountDTO dto = mapper.toPaginatedCustomerAccountDto(pageResult);
+
+    assertEquals(1, dto.getContent().size());
+    assertEquals("22222222B", dto.getContent().getFirst().getDni());
+    assertEquals(0, dto.getCurrentPage());
+    assertEquals(20, dto.getPageSize());
+    assertEquals(1L, dto.getTotalElements());
+    assertEquals(1, dto.getTotalPages());
+    assertEquals(true, dto.getIsFirst());
+    assertEquals(true, dto.getIsLast());
+    assertEquals(false, dto.getHasNext());
+    assertEquals(false, dto.getHasPrevious());
   }
 }

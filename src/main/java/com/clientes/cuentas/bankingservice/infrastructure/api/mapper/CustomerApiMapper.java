@@ -6,6 +6,9 @@ import com.clientes.cuentas.bankingservice.domain.model.vo.Dni;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.BankAccountNoCustomerDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerDTO;
+import com.clientes.cuentas.bankingservice.infrastructure.input.dto.PaginatedCustomerAccountDTO;
+import com.clientes.cuentas.bankingservice.infrastructure.input.dto.PaginatedCustomerDTO;
+import com.clientes.cuentas.bankingservice.application.port.model.PageResult;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -63,4 +66,38 @@ public interface CustomerApiMapper {
    */
   @Mapping(target = "dni", expression = "java(customer.getDni() != null ? customer.getDni().value() : null)")
   CustomerDTO toCustomerDto(Customer customer);
+
+  /**
+   * Maps a paginated customer result to the API paginated customer DTO.
+   *
+   * @param pageResult source paginated result from application layer
+   * @return mapped paginated customer DTO
+   */
+  @Mapping(target = "content", source = "content")
+  @Mapping(target = "currentPage", source = "pageNumber")
+  @Mapping(target = "pageSize", source = "pageSize")
+  @Mapping(target = "totalElements", source = "totalElements")
+  @Mapping(target = "totalPages", source = "totalPages")
+  @Mapping(target = "isFirst", expression = "java(pageResult.isFirst())")
+  @Mapping(target = "isLast", expression = "java(pageResult.isLast())")
+  @Mapping(target = "hasNext", expression = "java(pageResult.hasNext())")
+  @Mapping(target = "hasPrevious", expression = "java(pageResult.hasPrevious())")
+  PaginatedCustomerDTO toPaginatedCustomerDto(PageResult<Customer> pageResult);
+
+  /**
+   * Maps a paginated customer result to the API paginated customer-account DTO.
+   *
+   * @param pageResult source paginated result from application layer
+   * @return mapped paginated customer-account DTO
+   */
+  @Mapping(target = "content", source = "content")
+  @Mapping(target = "currentPage", source = "pageNumber")
+  @Mapping(target = "pageSize", source = "pageSize")
+  @Mapping(target = "totalElements", source = "totalElements")
+  @Mapping(target = "totalPages", source = "totalPages")
+  @Mapping(target = "isFirst", expression = "java(pageResult.isFirst())")
+  @Mapping(target = "isLast", expression = "java(pageResult.isLast())")
+  @Mapping(target = "hasNext", expression = "java(pageResult.hasNext())")
+  @Mapping(target = "hasPrevious", expression = "java(pageResult.hasPrevious())")
+  PaginatedCustomerAccountDTO toPaginatedCustomerAccountDto(PageResult<Customer> pageResult);
 }

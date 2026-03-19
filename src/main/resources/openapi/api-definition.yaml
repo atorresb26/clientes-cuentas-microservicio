@@ -16,19 +16,36 @@ paths:
         - Clientes
       summary: Obtener todos los clientes con sus cuentas asociadas.
       operationId: getCustomersAndAccounts
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: Número de página (comenzando desde 0)
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: size
+          in: query
+          required: false
+          description: Tamaño de la página
+          schema:
+            type: integer
+            minimum: 1
+            default: 20
+        - name: sort
+          in: query
+          required: false
+          description: Criterio de ordenamiento (formato field,direction - ej. name,asc)
+          schema:
+            type: string
       responses:
         '200':
-          description: Lista de todos los clientes con sus datos personales y las cuentas bancarias asociadas
+          description: Lista paginada de todos los clientes con sus datos personales y las cuentas bancarias asociadas
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CustomerAccount'
-        #        '401':
-        #          $ref: './components/responses.yaml#/Unauthorized'
-        #        '403':
-        #          $ref: './components/responses.yaml#/Forbidden'
+                $ref: '#/components/schemas/PaginatedCustomerAccount'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -38,15 +55,36 @@ paths:
         - Clientes
       summary: Obtener todos los clientes que sean mayores de edad (18 años o más).
       operationId: getAdultCustomers
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: Número de página (comenzando desde 0)
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: size
+          in: query
+          required: false
+          description: Tamaño de la página
+          schema:
+            type: integer
+            minimum: 1
+            default: 20
+        - name: sort
+          in: query
+          required: false
+          description: Criterio de ordenamiento (formato field,direction - ej. name,asc)
+          schema:
+            type: string
       responses:
         '200':
-          description: Lista de todos los clientes mayores de edad (que tienen 18 años o más).
+          description: Lista paginada de todos los clientes mayores de edad (que tienen 18 años o más).
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Customer'
+                $ref: '#/components/schemas/PaginatedCustomer'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -66,15 +104,35 @@ paths:
             format: bigdecimal
             minimum: 0
             example: 1000.50
+        - name: page
+          in: query
+          required: false
+          description: Número de página (comenzando desde 0)
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: size
+          in: query
+          required: false
+          description: Tamaño de la página
+          schema:
+            type: integer
+            minimum: 1
+            default: 20
+        - name: sort
+          in: query
+          required: false
+          description: Criterio de ordenamiento (formato field,direction - ej. name,asc)
+          schema:
+            type: string
       responses:
         '200':
-          description: Lista de todos los clientes que tienen una suma total mayor a la indicada.
+          description: Lista paginada de todos los clientes que tienen una suma total mayor a la indicada.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Customer'
+                $ref: '#/components/schemas/PaginatedCustomer'
         '400':
           $ref: '#/components/responses/BadRequest'
         '500':
@@ -216,6 +274,10 @@ components:
       $ref: './components/schemas.yaml#/CustomerAccount'
     Customer:
       $ref: './components/schemas.yaml#/Customer'
+    PaginatedCustomerAccount:
+      $ref: './components/schemas.yaml#/PaginatedCustomerAccount'
+    PaginatedCustomer:
+      $ref: './components/schemas.yaml#/PaginatedCustomer'
     CreateBankAccountForCustomerRequest:
       $ref: './components/schemas.yaml#/CreateBankAccountForCustomerRequest'
   responses:

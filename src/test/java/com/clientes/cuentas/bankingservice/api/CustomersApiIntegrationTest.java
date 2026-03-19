@@ -38,8 +38,9 @@ class CustomersApiIntegrationTest extends BaseIntegrationTest {
   void shouldReturnAllCustomers() throws Exception {
     mockMvc.perform(get("/clientes"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$").isArray())
-            .andExpect(jsonPath("$.length()").value(5));
+            .andExpect(jsonPath("$.content").isArray())
+            .andExpect(jsonPath("$.content.length()").value(5))
+            .andExpect(jsonPath("$.totalElements").value(5));
   }
 
   @Test
@@ -50,7 +51,8 @@ class CustomersApiIntegrationTest extends BaseIntegrationTest {
             .andReturn();
 
     String json = result.getResponse().getContentAsString();
-    List<CustomerDTO> customers = objectMapper.readValue(json, new TypeReference<>() {});
+    var response = objectMapper.readTree(json);
+    List<CustomerDTO> customers = objectMapper.convertValue(response.get("content"), new TypeReference<>() {});
 
     LocalDate adultLimit = LocalDate.now().minusYears(18);
     customers.forEach(customer -> assertFalse(customer.getBirthDate().isAfter(adultLimit)));
@@ -61,8 +63,9 @@ class CustomersApiIntegrationTest extends BaseIntegrationTest {
   void shouldReturnFourCustomersWhenMinBalanceIs300()  throws Exception {
     mockMvc.perform(get("/clientes/con-cuenta-superior-a/{cantidad}", new BigDecimal("300.00")))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$").isArray())
-            .andExpect(jsonPath("$.length()").value(4));
+            .andExpect(jsonPath("$.content").isArray())
+            .andExpect(jsonPath("$.content.length()").value(4))
+            .andExpect(jsonPath("$.totalElements").value(4));
   }
 
   @Test

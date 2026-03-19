@@ -3,17 +3,24 @@ package com.clientes.cuentas.bankingservice.application.service;
 import com.clientes.cuentas.bankingservice.application.repository.CustomerRepository;
 import com.clientes.cuentas.bankingservice.domain.exception.InvalidAmountException;
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
+import com.clientes.cuentas.bankingservice.application.port.dto.PaginationRequestDTO;
+import com.clientes.cuentas.bankingservice.application.port.model.PageResult;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -30,9 +37,10 @@ class GetCustomersWithHigherAmountServiceTest {
 
   @Test
   void shouldThrowExceptionWhenAmountIsNull() {
+    PaginationRequestDTO pagination = PaginationRequestDTO.builder().page(0).size(20).build();
     InvalidAmountException ex = assertThrows(
             InvalidAmountException.class,
-            () -> service.execute(null)
+            () -> service.execute(null, pagination)
     );
 
     assertEquals("The amount must be greater than or equal to 0", ex.getMessage());
@@ -43,9 +51,10 @@ class GetCustomersWithHigherAmountServiceTest {
   @Test
   void shouldThrowExceptionWhenAmountIsNegative() {
     BigDecimal amount = new BigDecimal("-10.0");
+    PaginationRequestDTO pagination = PaginationRequestDTO.builder().page(0).size(20).build();
     InvalidAmountException ex = assertThrows(
             InvalidAmountException.class,
-            () -> service.execute(amount)
+            () -> service.execute(amount, pagination)
     );
 
     assertEquals("The amount must be greater than or equal to 0", ex.getMessage());
@@ -54,22 +63,25 @@ class GetCustomersWithHigherAmountServiceTest {
   }
 
   @Test
-  void shouldReturnCustomersWhenAmountIsValid() {
+  void shouldReturnPaginatedCustomersWhenAmountIsValid() {
     BigDecimal amount = new BigDecimal("300.0");
 
     List<Customer> expectedCustomers = List.of(
             new Customer(),
             new Customer()
     );
+    Page<Customer> page = new PageImpl<>(expectedCustomers, PageRequest.of(0, 20), 2);
 
-    when(customerRepository.getCustomersWithHigherAmount(amount))
-            .thenReturn(expectedCustomers);
+    when(customerRepository.getCustomersWithHigherAmountPaginated(eq(amount), any()))
+            .thenReturn(page);
 
-    List<Customer> result = service.execute(amount);
+    PaginationRequestDTO pagination = PaginationRequestDTO.builder().page(0).size(20).build();
+    PageResult<Customer> result = service.execute(amount, pagination);
 
-    assertEquals(expectedCustomers, result);
+    assertEquals(expectedCustomers, result.getContent());
+    assertEquals(2, result.getTotalElements());
 
-    verify(customerRepository).getCustomersWithHigherAmount(amount);
+    verify(customerRepository).getCustomersWithHigherAmountPaginated(eq(amount), any());
     verifyNoMoreInteractions(customerRepository);
   }
 }

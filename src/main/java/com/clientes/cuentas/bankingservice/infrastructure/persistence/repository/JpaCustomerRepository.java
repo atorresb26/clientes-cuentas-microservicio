@@ -3,6 +3,8 @@ package com.clientes.cuentas.bankingservice.infrastructure.persistence.repositor
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.entity.CustomerEntity;
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.projection.CustomerAccountRow;
 import io.micrometer.core.annotation.Timed;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,17 +20,16 @@ import java.util.Optional;
 public interface JpaCustomerRepository extends JpaRepository<CustomerEntity, Long> {
 
   /**
-   * Retrieves all customers together with their associated bank accounts mapped into a projection object
-   * to avoid N+1 queries.
+   * Retrieves all customers together with their associated bank accounts with pagination support.
    *
-   * @return The list of rows representing the customers with one account. If any customer have more than one,
-   * then it will be in more than one record
+   * @param pageable the pagination criteria
+   * @return a page of customers with their accounts
    */
   @Timed(value = "jpa.db.query", extraTags = {
           "repository", "JpaCustomerRepository",
-          "method", "getCustomersAndAccounts"
+          "method", "getCustomersAndAccountsPaginated"
   })
-  @Query("""
+  @Query(value = """
           SELECT new com.clientes.cuentas.bankingservice.infrastructure.persistence.projection.CustomerAccountRow(
                       c.id,
                       c.dni,
@@ -44,48 +45,53 @@ public interface JpaCustomerRepository extends JpaRepository<CustomerEntity, Lon
             FROM CustomerEntity c
             LEFT JOIN BankAccountEntity ba ON ba.customer.id = c.id
             LEFT JOIN ba.accountType at
-          """)
-  List<CustomerAccountRow> getCustomersAndAccounts();
+          """,
+          countQuery = "SELECT COUNT(DISTINCT c.id) FROM CustomerEntity c LEFT JOIN BankAccountEntity ba ON ba.customer.id = c.id")
+  Page<CustomerAccountRow> getCustomersAndAccountsPaginated(Pageable pageable);
 
   /**
-   * Retrieves a list of customers who meet the condition of having been born before the date specified as a parameter.
+   * Retrieves a page of customers who meet the condition of having been born before the date specified as a parameter.
    *
    * @param date the date we want to use for the search
-   * @return list of customers who meet the condition
+   * @param pageable the pagination criteria
+   * @return a page of customers who meet the condition
    */
   @Timed(value = "jpa.db.query", extraTags = {
           "repository", "JpaCustomerRepository",
-          "method", "getCustomersByBirthDateBefore"
+          "method", "getCustomersByBirthDateLessThanEqualPaginated"
   })
-  List<CustomerEntity> getCustomersByBirthDateLessThanEqual(LocalDate date);
+  @Query("SELECT c FROM CustomerEntity c WHERE c.birthDate <= :date")
+  Page<CustomerEntity> getCustomersByBirthDateLessThanEqualPaginated(LocalDate date, Pageable pageable);
 
   /**
-   * Retrieves all customers whose total balance across all their bank accounts
-   * is greater than the specified amount.
-   *
-   * <p>The query joins customers with their associated bank accounts and groups
-   * the results by customer. For each customer, the total balance is calculated
-   * using the {@code SUM} aggregate function. Only customers whose aggregated
-   * balance exceeds the given amount are returned.</p>
+   * Retrieves a page of customers whose total balance across all their bank accounts
+   * is greater than the specified amount, with pagination support.
    *
    * @param amount the minimum total balance that the sum of all bank accounts
    *               associated with a customer must exceed
-   * @return a list of {@link CustomerEntity} whose aggregated account balance
+   * @param pageable the pagination criteria
+   * @return a page of {@link CustomerEntity} whose aggregated account balance
    * is greater than the specified amount
    */
   @Timed(value = "jpa.db.query", extraTags = {
           "repository", "JpaCustomerRepository",
-          "method", "getCustomersWithHigherAmount"
+          "method", "getCustomersWithHigherAmountPaginated"
   })
-  @Query("""
+  @Query(value = """
           SELECT c
           FROM CustomerEntity c
           JOIN BankAccountEntity ba ON ba.customer.id = c.id
           GROUP BY c
           HAVING SUM(ba.total) > :amount
+          """,
+          countQuery = """
+          SELECT COUNT(DISTINCT c.id)
+          FROM CustomerEntity c
+          JOIN BankAccountEntity ba ON ba.customer.id = c.id
+          GROUP BY c
+          HAVING SUM(ba.total) > :amount
           """)
-  List<CustomerEntity> getCustomersWithHigherAmount(@Param("amount") BigDecimal amount);
-
+  Page<CustomerEntity> getCustomersWithHigherAmountPaginated(@Param("amount") BigDecimal amount, Pageable pageable);
 
   /**
    * Finds a customer by their unique DNI.

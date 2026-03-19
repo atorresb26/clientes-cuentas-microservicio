@@ -1,18 +1,19 @@
 package com.clientes.cuentas.bankingservice.application.usecase;
 
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
-
-import java.util.List;
+import com.clientes.cuentas.bankingservice.application.port.dto.PaginationRequestDTO;
+import com.clientes.cuentas.bankingservice.application.port.model.PageResult;
 
 /**
- * Use case of obtaining all adult customers.
+ * Use case of obtaining all adult customers with pagination support.
  */
 public interface GetAdultCustomersUseCase {
 
   /**
-   * Obtain all adult customers (>= 18 years old).
+   * Obtain all adult customers (>= 18 years old) with pagination support.
    *
-   * @return the list of customers.
+   * @param pagination the pagination parameters (page, size, sort)
+   * @return a paginated result containing adult customers
    */
-  List<Customer> execute();
+  PageResult<Customer> execute(PaginationRequestDTO pagination);
 }

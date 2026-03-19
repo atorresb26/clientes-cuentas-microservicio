@@ -11,6 +11,7 @@ import com.clientes.cuentas.bankingservice.infrastructure.input.dto.BankAccountD
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.BankAccountNoCustomerDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CreateBankAccountForCustomerRequestDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.UpdateBankAccountTotalRequestDTO;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,6 +19,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.math.BigDecimal;
 import java.net.URI;
@@ -48,6 +52,17 @@ class BankAccountApiDelegateImplTest {
   @Mock
   private BankAccountApiMapper mapper;
 
+  @BeforeEach
+  void setUp() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setScheme("http");
+    request.setServerName("localhost");
+    request.setServerPort(8080);
+    request.setRequestURI("/cuentas");
+    request.setMethod("POST");
+    RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+  }
+
 
   @Test
   void shouldReturn201CreatedWithLocationHeaderAndMappedBody() {
@@ -65,8 +80,8 @@ class BankAccountApiDelegateImplTest {
             delegate.createBankAccountForCustomer(requestDTO);
 
     assertEquals(HttpStatus.CREATED, response.getStatusCode());
-    // Location header must point to the newly created resource
-    assertEquals(URI.create("/cuentas/" + apiId), response.getHeaders().getLocation());
+    // Location header must point to the newly created resource (with full URL from mock servlet)
+    assertEquals(URI.create("http://localhost:8080/cuentas/" + apiId), response.getHeaders().getLocation());
     assertSame(expectedDto, response.getBody());
 
     verify(mapper).toCommand(requestDTO);
@@ -90,7 +105,7 @@ class BankAccountApiDelegateImplTest {
     ResponseEntity<BankAccountNoCustomerDTO> response =
             delegate.createBankAccountForCustomer(requestDTO);
 
-    assertEquals(URI.create("/cuentas/fixed-api-id-123"), response.getHeaders().getLocation());
+    assertEquals(URI.create("http://localhost:8080/cuentas/fixed-api-id-123"), response.getHeaders().getLocation());
   }
 
   // =========================================================================

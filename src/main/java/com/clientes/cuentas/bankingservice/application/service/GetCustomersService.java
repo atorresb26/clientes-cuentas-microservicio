@@ -1,14 +1,16 @@
 package com.clientes.cuentas.bankingservice.application.service;
 
-import com.clientes.cuentas.bankingservice.application.constants.CacheNames;
 import com.clientes.cuentas.bankingservice.application.repository.CustomerRepository;
 import com.clientes.cuentas.bankingservice.application.usecase.GetCustomersUseCase;
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
+import com.clientes.cuentas.bankingservice.application.port.dto.PaginationRequestDTO;
+import com.clientes.cuentas.bankingservice.application.port.model.PageResult;
+import com.clientes.cuentas.bankingservice.application.port.PageResultConverter;
+import com.clientes.cuentas.bankingservice.application.port.PaginationUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Service implementation for the GetCustomersUseCase.
@@ -20,8 +22,9 @@ public class GetCustomersService implements GetCustomersUseCase {
   private final CustomerRepository customerRepository;
 
   @Override
-  @Cacheable(value = CacheNames.CUSTOMER_WITH_ACCOUNTS, sync = true)
-  public List<Customer> execute() {
-    return customerRepository.getCustomersAndAccounts();
+  public PageResult<Customer> execute(PaginationRequestDTO pagination) {
+    Pageable pageable = PaginationUtils.toPageable(pagination);
+    Page<Customer> customersAndAccountsPaginated = customerRepository.getCustomersAndAccountsPaginated(pageable);
+    return PageResultConverter.fromPage(customersAndAccountsPaginated);
   }
 }

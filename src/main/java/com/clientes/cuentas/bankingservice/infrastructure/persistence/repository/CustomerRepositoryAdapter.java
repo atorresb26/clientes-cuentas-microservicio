@@ -6,12 +6,14 @@ import com.clientes.cuentas.bankingservice.infrastructure.persistence.mapper.Cus
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.mapper.CustomerEntityMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -24,33 +26,36 @@ public class CustomerRepositoryAdapter implements CustomerRepository {
 
   private final JpaCustomerRepository jpaCustomerRepository;
   private final CustomerAccountAssembler customerAccountAssembler;
-
   private final CustomerEntityMapper mapper;
 
   @Override
   @Transactional(readOnly = true)
-  public List<Customer> getCustomersAndAccounts() {
-    var customersAndAccounts = jpaCustomerRepository.getCustomersAndAccounts();
-    log.debug("- getCustomersAndAccounts search returns {} results.", customersAndAccounts.size());
-    return customerAccountAssembler.toCustomers(customersAndAccounts);
+  public Page<Customer> getCustomersAndAccountsPaginated(Pageable pageable) {
+    var page = jpaCustomerRepository.getCustomersAndAccountsPaginated(pageable);
+    log.debug("- getCustomersAndAccountsPaginated search returns {} results in page {}.", 
+        page.getContent().size(), page.getNumber());
+    var customers = customerAccountAssembler.toCustomers(page.getContent());
+    return new PageImpl<>(customers, pageable, page.getTotalElements());
   }
 
   @Override
   @Transactional(readOnly = true)
-  public List<Customer> getAdultCustomers() {
-    var adultDate = LocalDate.now().minusYears(18);
-    var adultCustomers = jpaCustomerRepository.getCustomersByBirthDateLessThanEqual(adultDate);
-    log.debug("- getCustomersByBirthDateBefore search returns {} results who were born before that date: {}",
-            adultCustomers.size(), adultDate);
-    return mapper.toCustomerList(adultCustomers);
+  public Page<Customer> getAdultCustomersPaginated(Pageable pageable) {
+    var page = jpaCustomerRepository.getCustomersByBirthDateLessThanEqualPaginated(LocalDate.now().minusYears(18), pageable);
+    log.debug("- getAdultCustomersPaginated search returns {} results in page {}", 
+        page.getContent().size(), page.getNumber());
+    var customers = mapper.toCustomerList(page.getContent());
+    return new PageImpl<>(customers, pageable, page.getTotalElements());
   }
 
   @Override
   @Transactional(readOnly = true)
-  public List<Customer> getCustomersWithHigherAmount(BigDecimal amount) {
-    var customers = jpaCustomerRepository.getCustomersWithHigherAmount(amount);
-    log.debug("- getCustomersWithHigherAmount search returns {} results.", customers.size());
-    return mapper.toCustomerList(customers);
+  public Page<Customer> getCustomersWithHigherAmountPaginated(BigDecimal amount, Pageable pageable) {
+    var page = jpaCustomerRepository.getCustomersWithHigherAmountPaginated(amount, pageable);
+    log.debug("- getCustomersWithHigherAmountPaginated search returns {} results in page {} for amount: {}", 
+        page.getContent().size(), page.getNumber(), amount);
+    var customers = mapper.toCustomerList(page.getContent());
+    return new PageImpl<>(customers, pageable, page.getTotalElements());
   }
 
   @Override

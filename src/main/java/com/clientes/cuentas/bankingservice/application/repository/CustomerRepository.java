@@ -2,9 +2,10 @@ package com.clientes.cuentas.bankingservice.application.repository;
 
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -13,26 +14,30 @@ import java.util.Optional;
 public interface CustomerRepository {
 
   /**
-   * Retrieves all customers together with their associated bank accounts.
+   * Retrieves all customers together with their associated bank accounts with pagination support.
    *
-   * @return a list of {@link Customer} domain objects, each containing the list of associated {@link BankAccount}.
+   * @param pageable the pagination criteria
+   * @return a page of {@link Customer} domain objects, each containing the list of associated {@link BankAccount}.
    */
-  List<Customer> getCustomersAndAccounts();
+  Page<Customer> getCustomersAndAccountsPaginated(Pageable pageable);
 
   /**
-   * Retrieves all the adults customers (>= 18 years old).
+   * Retrieves all the adults customers (>= 18 years old) with pagination support.
    *
-   * @return a list of {@link Customer} domain objects
+   * @param pageable the pagination criteria
+   * @return a page of {@link Customer} domain objects
    */
-  List<Customer> getAdultCustomers();
+  Page<Customer> getAdultCustomersPaginated(Pageable pageable);
 
   /**
-   * Retrieves all customers whose total balance across all their bank accounts is greater than the specified amount.
+   * Retrieves all customers whose total balance across all their bank accounts is greater than the specified amount,
+   * with pagination support.
    *
    * @param amount the amount provided to filter
-   * @return the list of {@link Customer} domain objects
+   * @param pageable the pagination criteria
+   * @return a page of {@link Customer} domain objects
    */
-  List<Customer> getCustomersWithHigherAmount(BigDecimal amount);
+  Page<Customer> getCustomersWithHigherAmountPaginated(BigDecimal amount, Pageable pageable);
 
   /**
    * Finds a customer by their DNI.
