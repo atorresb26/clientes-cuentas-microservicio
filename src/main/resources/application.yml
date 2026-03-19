@@ -31,7 +31,7 @@ spring:
   cache:
     cache-names:
       - customer-with-accounts
-      - adult-customers
+      - bank-accounts
       - account-types
     caffeine:
       spec: maximumSize=500,expireAfterWrite=2m,recordStats

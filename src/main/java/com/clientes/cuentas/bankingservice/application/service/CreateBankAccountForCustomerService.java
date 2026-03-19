@@ -38,7 +38,7 @@ public class CreateBankAccountForCustomerService implements CreateBankAccountFor
 
   @Override
   @Transactional
-  @CacheEvict(value = CacheNames.CUSTOMER_WITH_ACCOUNTS, allEntries = true)
+  @CacheEvict(value = CacheNames.CUSTOMER_BY_DNI, allEntries = true)
   public BankAccount execute(CreateBankAccountForCustomerCommand command) {
     validateCommand(command);
 

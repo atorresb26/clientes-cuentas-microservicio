@@ -1,10 +1,13 @@
 package com.clientes.cuentas.bankingservice.application.service;
 
+import com.clientes.cuentas.bankingservice.application.constants.CacheNames;
 import com.clientes.cuentas.bankingservice.application.repository.BankAccountRepository;
 import com.clientes.cuentas.bankingservice.application.usecase.UpdateBankAccountTotalUseCase;
 import com.clientes.cuentas.bankingservice.domain.exception.BankAccountNotFoundException;
 import com.clientes.cuentas.bankingservice.domain.model.vo.Money;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +28,10 @@ public class UpdateBankAccountTotalService implements UpdateBankAccountTotalUseC
 
   @Override
   @Transactional
+  @Caching(evict = {
+      @CacheEvict(value = CacheNames.BANK_ACCOUNTS, key = "#apiId"),
+      @CacheEvict(value = CacheNames.CUSTOMER_BY_DNI, allEntries = true)
+  })
   public void execute(UUID apiId, BigDecimal newTotal) {
     validateParameters(apiId, newTotal);
     var account = bankAccountRepository.findByApiId(apiId)

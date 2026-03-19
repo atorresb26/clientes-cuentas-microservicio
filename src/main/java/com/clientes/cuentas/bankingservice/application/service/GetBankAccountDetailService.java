@@ -1,10 +1,12 @@
 package com.clientes.cuentas.bankingservice.application.service;
 
+import com.clientes.cuentas.bankingservice.application.constants.CacheNames;
 import com.clientes.cuentas.bankingservice.application.repository.BankAccountRepository;
 import com.clientes.cuentas.bankingservice.application.usecase.GetBankAccountDetailUseCase;
 import com.clientes.cuentas.bankingservice.domain.exception.BankAccountNotFoundException;
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.security.InvalidParameterException;
@@ -23,6 +25,7 @@ public class GetBankAccountDetailService implements GetBankAccountDetailUseCase 
   private final BankAccountRepository bankAccountRepository;
 
   @Override
+  @Cacheable(value = CacheNames.BANK_ACCOUNTS, key = "#apiId")
   public BankAccount execute(UUID apiId) {
     if (Objects.isNull(apiId)) {
       throw new InvalidParameterException("apiId must not be null");

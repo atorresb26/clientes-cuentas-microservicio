@@ -9,8 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CacheNames {
 
-  public static final String CUSTOMER_WITH_ACCOUNTS = "customer-with-accounts";
-  public static final String ADULT_CUSTOMERS = "adult-customers";
+  /** Cache for {@code getCustomerByDni}: keyed by DNI. Evicted on create/update account. */
+  public static final String CUSTOMER_BY_DNI = "customer-with-accounts";
+
+  /** Cache for {@code getBankAccountByApiId}: keyed by UUID. Evicted on update total. */
+  public static final String BANK_ACCOUNTS = "bank-accounts";
+
+  /** Cache for {@code AccountTypeReferenceMapper}: keyed by code. Reference data, rarely changes. */
   public static final String ACCOUNT_TYPES = "account-types";
 }
 
