@@ -3,10 +3,10 @@ package com.clientes.cuentas.bankingservice.application.service;
 import com.clientes.cuentas.bankingservice.application.repository.CustomerRepository;
 import com.clientes.cuentas.bankingservice.application.usecase.GetCustomersUseCase;
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
-import com.clientes.cuentas.bankingservice.application.port.dto.PaginationRequestDTO;
-import com.clientes.cuentas.bankingservice.application.port.model.PageResult;
-import com.clientes.cuentas.bankingservice.application.port.PageResultConverter;
-import com.clientes.cuentas.bankingservice.application.port.PaginationUtils;
+import com.clientes.cuentas.bankingservice.application.pagination.PaginationCriteria;
+import com.clientes.cuentas.bankingservice.application.pagination.PageResult;
+import com.clientes.cuentas.bankingservice.application.pagination.PageResultConverter;
+import com.clientes.cuentas.bankingservice.application.pagination.PaginationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +22,7 @@ public class GetCustomersService implements GetCustomersUseCase {
   private final CustomerRepository customerRepository;
 
   @Override
-  public PageResult<Customer> execute(PaginationRequestDTO pagination) {
+  public PageResult<Customer> execute(PaginationCriteria pagination) {
     Pageable pageable = PaginationUtils.toPageable(pagination);
     Page<Customer> customersAndAccountsPaginated = customerRepository.getCustomersAndAccountsPaginated(pageable);
     return PageResultConverter.fromPage(customersAndAccountsPaginated);

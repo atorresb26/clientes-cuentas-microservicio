@@ -9,7 +9,7 @@ import com.clientes.cuentas.bankingservice.infrastructure.input.api.ClientesApiD
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.PaginatedCustomerAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.PaginatedCustomerDTO;
-import com.clientes.cuentas.bankingservice.application.port.dto.PaginationRequestDTO;
+import com.clientes.cuentas.bankingservice.infrastructure.pagination.PaginationRequestDTO;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +46,7 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
             .sort(sort)
             .build();
 
-    var pageResult = getCustomersUseCase.execute(pagination);
+    var pageResult = getCustomersUseCase.execute(pagination.toCriteria());
     var response = mapper.toPaginatedCustomerAccountDto(pageResult);
 
     log.debug("- End - getCustomersAndAccounts()");
@@ -66,7 +66,7 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
             .sort(sort)
             .build();
 
-    var pageResult = getAdultCustomersUseCase.execute(pagination);
+    var pageResult = getAdultCustomersUseCase.execute(pagination.toCriteria());
     var response = mapper.toPaginatedCustomerDto(pageResult);
 
     log.debug("- End - getAdultCustomers()");
@@ -87,7 +87,7 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
             .sort(sort)
             .build();
 
-    var pageResult = getCustomersWithHigherAmountUseCase.execute(cantidad, pagination);
+    var pageResult = getCustomersWithHigherAmountUseCase.execute(cantidad, pagination.toCriteria());
     var response = mapper.toPaginatedCustomerDto(pageResult);
 
     log.debug("- End - getCustomersWithHigherAmount()");

@@ -3,8 +3,8 @@ package com.clientes.cuentas.bankingservice.application.service;
 import com.clientes.cuentas.bankingservice.application.repository.CustomerRepository;
 import com.clientes.cuentas.bankingservice.domain.exception.InvalidAmountException;
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
-import com.clientes.cuentas.bankingservice.application.port.dto.PaginationRequestDTO;
-import com.clientes.cuentas.bankingservice.application.port.model.PageResult;
+import com.clientes.cuentas.bankingservice.application.pagination.PaginationCriteria;
+import com.clientes.cuentas.bankingservice.application.pagination.PageResult;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,7 +37,7 @@ class GetCustomersWithHigherAmountServiceTest {
 
   @Test
   void shouldThrowExceptionWhenAmountIsNull() {
-    PaginationRequestDTO pagination = PaginationRequestDTO.builder().page(0).size(20).build();
+    PaginationCriteria pagination = PaginationCriteria.builder().page(0).size(20).build();
     InvalidAmountException ex = assertThrows(
             InvalidAmountException.class,
             () -> service.execute(null, pagination)
@@ -51,7 +51,7 @@ class GetCustomersWithHigherAmountServiceTest {
   @Test
   void shouldThrowExceptionWhenAmountIsNegative() {
     BigDecimal amount = new BigDecimal("-10.0");
-    PaginationRequestDTO pagination = PaginationRequestDTO.builder().page(0).size(20).build();
+    PaginationCriteria pagination = PaginationCriteria.builder().page(0).size(20).build();
     InvalidAmountException ex = assertThrows(
             InvalidAmountException.class,
             () -> service.execute(amount, pagination)
@@ -75,7 +75,7 @@ class GetCustomersWithHigherAmountServiceTest {
     when(customerRepository.getCustomersWithHigherAmountPaginated(eq(amount), any()))
             .thenReturn(page);
 
-    PaginationRequestDTO pagination = PaginationRequestDTO.builder().page(0).size(20).build();
+    PaginationCriteria pagination = PaginationCriteria.builder().page(0).size(20).build();
     PageResult<Customer> result = service.execute(amount, pagination);
 
     assertEquals(expectedCustomers, result.getContent());

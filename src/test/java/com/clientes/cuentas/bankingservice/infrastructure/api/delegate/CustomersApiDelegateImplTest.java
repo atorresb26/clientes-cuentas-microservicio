@@ -10,8 +10,8 @@ import com.clientes.cuentas.bankingservice.infrastructure.api.mapper.CustomerApi
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.PaginatedCustomerAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.PaginatedCustomerDTO;
-import com.clientes.cuentas.bankingservice.application.port.dto.PaginationRequestDTO;
-import com.clientes.cuentas.bankingservice.application.port.model.PageResult;
+import com.clientes.cuentas.bankingservice.application.pagination.PaginationCriteria;
+import com.clientes.cuentas.bankingservice.application.pagination.PageResult;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -81,7 +81,7 @@ class CustomersApiDelegateImplTest {
     expectedResponse.setHasNext(true);
     expectedResponse.setHasPrevious(true);
 
-    when(getCustomersUseCase.execute(any(PaginationRequestDTO.class))).thenReturn(pageResult);
+    when(getCustomersUseCase.execute(any(PaginationCriteria.class))).thenReturn(pageResult);
     when(mapper.toPaginatedCustomerAccountDto(pageResult)).thenReturn(expectedResponse);
 
     ResponseEntity<PaginatedCustomerAccountDTO> response = delegate.getCustomersAndAccounts(0, 20, null);
@@ -98,7 +98,7 @@ class CustomersApiDelegateImplTest {
     assertEquals(true, response.getBody().getHasNext());
     assertEquals(true, response.getBody().getHasPrevious());
 
-    verify(getCustomersUseCase).execute(any(PaginationRequestDTO.class));
+    verify(getCustomersUseCase).execute(any(PaginationCriteria.class));
     verify(mapper).toPaginatedCustomerAccountDto(pageResult);
   }
 
@@ -116,7 +116,7 @@ class CustomersApiDelegateImplTest {
 
     PaginatedCustomerAccountDTO expectedResponse = new PaginatedCustomerAccountDTO();
     expectedResponse.setContent(List.of());
-    when(getCustomersUseCase.execute(any(PaginationRequestDTO.class))).thenReturn(emptyPage);
+    when(getCustomersUseCase.execute(any(PaginationCriteria.class))).thenReturn(emptyPage);
     when(mapper.toPaginatedCustomerAccountDto(emptyPage)).thenReturn(expectedResponse);
 
     ResponseEntity<PaginatedCustomerAccountDTO> response = delegate.getCustomersAndAccounts(0, 20, null);
@@ -153,7 +153,7 @@ class CustomersApiDelegateImplTest {
     expectedResponse.setHasNext(true);
     expectedResponse.setHasPrevious(false);
 
-    when(getAdultCustomersUseCase.execute(any(PaginationRequestDTO.class))).thenReturn(pageResult);
+    when(getAdultCustomersUseCase.execute(any(PaginationCriteria.class))).thenReturn(pageResult);
     when(mapper.toPaginatedCustomerDto(pageResult)).thenReturn(expectedResponse);
 
     ResponseEntity<PaginatedCustomerDTO> response = delegate.getAdultCustomers(0, 20, null);
@@ -170,7 +170,7 @@ class CustomersApiDelegateImplTest {
     assertEquals(true, response.getBody().getHasNext());
     assertEquals(false, response.getBody().getHasPrevious());
 
-    verify(getAdultCustomersUseCase).execute(any(PaginationRequestDTO.class));
+    verify(getAdultCustomersUseCase).execute(any(PaginationCriteria.class));
     verify(mapper).toPaginatedCustomerDto(pageResult);
   }
 
@@ -188,7 +188,7 @@ class CustomersApiDelegateImplTest {
 
     PaginatedCustomerDTO expectedResponse = new PaginatedCustomerDTO();
     expectedResponse.setContent(List.of());
-    when(getAdultCustomersUseCase.execute(any(PaginationRequestDTO.class))).thenReturn(emptyPage);
+    when(getAdultCustomersUseCase.execute(any(PaginationCriteria.class))).thenReturn(emptyPage);
     when(mapper.toPaginatedCustomerDto(emptyPage)).thenReturn(expectedResponse);
 
     ResponseEntity<PaginatedCustomerDTO> response = delegate.getAdultCustomers(0, 20, null);
@@ -218,7 +218,7 @@ class CustomersApiDelegateImplTest {
     PaginatedCustomerDTO expectedResponse = new PaginatedCustomerDTO();
     expectedResponse.setContent(List.of());
 
-    when(getCustomersWithHigherAmountUseCase.execute(eq(cantidad), any(PaginationRequestDTO.class)))
+    when(getCustomersWithHigherAmountUseCase.execute(eq(cantidad), any(PaginationCriteria.class)))
         .thenReturn(pageResult);
     when(mapper.toPaginatedCustomerDto(pageResult)).thenReturn(expectedResponse);
 
@@ -228,7 +228,7 @@ class CustomersApiDelegateImplTest {
     assertNotNull(response.getBody());
     assertSame(expectedResponse.getContent(), response.getBody().getContent());
 
-    verify(getCustomersWithHigherAmountUseCase).execute(eq(cantidad), any(PaginationRequestDTO.class));
+    verify(getCustomersWithHigherAmountUseCase).execute(eq(cantidad), any(PaginationCriteria.class));
     verify(mapper).toPaginatedCustomerDto(pageResult);
   }
 
@@ -247,13 +247,13 @@ class CustomersApiDelegateImplTest {
 
     PaginatedCustomerDTO expectedResponse = new PaginatedCustomerDTO();
     expectedResponse.setContent(List.of());
-    when(getCustomersWithHigherAmountUseCase.execute(eq(cantidad), any(PaginationRequestDTO.class)))
+    when(getCustomersWithHigherAmountUseCase.execute(eq(cantidad), any(PaginationCriteria.class)))
         .thenReturn(emptyPage);
     when(mapper.toPaginatedCustomerDto(emptyPage)).thenReturn(expectedResponse);
 
     delegate.getCustomersWithHigherAmount(cantidad, 0, 20, null);
 
-    verify(getCustomersWithHigherAmountUseCase).execute(eq(cantidad), any(PaginationRequestDTO.class));
+    verify(getCustomersWithHigherAmountUseCase).execute(eq(cantidad), any(PaginationCriteria.class));
   }
 
   // =========================================================================

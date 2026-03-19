@@ -1,4 +1,4 @@
-package com.clientes.cuentas.bankingservice.application.port.model;
+package com.clientes.cuentas.bankingservice.application.pagination;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -68,4 +68,5 @@ public class PageResult<T> {
     return !isFirst;
   }
 }
+
 

@@ -10,7 +10,7 @@ import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerAcco
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.PaginatedCustomerAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.PaginatedCustomerDTO;
-import com.clientes.cuentas.bankingservice.application.port.model.PageResult;
+import com.clientes.cuentas.bankingservice.application.pagination.PageResult;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 

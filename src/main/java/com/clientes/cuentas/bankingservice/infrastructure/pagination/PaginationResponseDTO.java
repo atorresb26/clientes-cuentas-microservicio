@@ -1,4 +1,4 @@
-package com.clientes.cuentas.bankingservice.application.port.dto;
+package com.clientes.cuentas.bankingservice.infrastructure.pagination;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -84,4 +84,6 @@ public class PaginationResponseDTO<T> {
   @Schema(description = "Whether there is a previous page", example = "false")
   private Boolean hasPrevious;
 }
+
+
 

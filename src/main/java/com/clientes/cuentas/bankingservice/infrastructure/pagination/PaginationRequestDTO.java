@@ -1,5 +1,6 @@
-package com.clientes.cuentas.bankingservice.application.port.dto;
+package com.clientes.cuentas.bankingservice.infrastructure.pagination;
 
+import com.clientes.cuentas.bankingservice.application.pagination.PaginationCriteria;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,5 +54,19 @@ public class PaginationRequestDTO {
     }
     return this;
   }
+
+  /**
+   * Converts this infrastructure DTO into an application pagination model.
+   */
+  public PaginationCriteria toCriteria() {
+    PaginationRequestDTO pagination = this.withDefaults();
+    return PaginationCriteria.builder()
+        .page(pagination.getPage())
+        .size(pagination.getSize())
+        .sort(pagination.getSort())
+        .build();
+  }
 }
+
+
 

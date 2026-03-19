@@ -1,8 +1,8 @@
 package com.clientes.cuentas.bankingservice.application.usecase;
 
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
-import com.clientes.cuentas.bankingservice.application.port.dto.PaginationRequestDTO;
-import com.clientes.cuentas.bankingservice.application.port.model.PageResult;
+import com.clientes.cuentas.bankingservice.application.pagination.PaginationCriteria;
+import com.clientes.cuentas.bankingservice.application.pagination.PageResult;
 
 import java.math.BigDecimal;
 
@@ -19,5 +19,5 @@ public interface GetCustomersWithHigherAmountUseCase {
    * @param pagination the pagination parameters (page, size, sort)
    * @return a paginated result containing customers with higher balance
    */
-  PageResult<Customer> execute(BigDecimal amount, PaginationRequestDTO pagination);
+  PageResult<Customer> execute(BigDecimal amount, PaginationCriteria pagination);
 }

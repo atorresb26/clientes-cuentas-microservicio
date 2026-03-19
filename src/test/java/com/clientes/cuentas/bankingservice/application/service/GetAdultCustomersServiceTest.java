@@ -3,8 +3,8 @@ package com.clientes.cuentas.bankingservice.application.service;
 import com.clientes.cuentas.bankingservice.application.repository.CustomerRepository;
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
 import com.clientes.cuentas.bankingservice.domain.model.vo.Dni;
-import com.clientes.cuentas.bankingservice.application.port.dto.PaginationRequestDTO;
-import com.clientes.cuentas.bankingservice.application.port.model.PageResult;
+import com.clientes.cuentas.bankingservice.application.pagination.PaginationCriteria;
+import com.clientes.cuentas.bankingservice.application.pagination.PageResult;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,7 +42,7 @@ class GetAdultCustomersServiceTest {
 
     when(customerRepository.getAdultCustomersPaginated(any())).thenReturn(page);
 
-    PaginationRequestDTO pagination = PaginationRequestDTO.builder().page(0).size(20).build();
+    PaginationCriteria pagination = PaginationCriteria.builder().page(0).size(20).build();
     PageResult<Customer> result = service.execute(pagination);
 
     assertEquals(expectedCustomers, result.getContent());
@@ -59,7 +59,7 @@ class GetAdultCustomersServiceTest {
 
     when(customerRepository.getAdultCustomersPaginated(any())).thenReturn(emptyPage);
 
-    PaginationRequestDTO pagination = PaginationRequestDTO.builder().page(0).size(20).build();
+    PaginationCriteria pagination = PaginationCriteria.builder().page(0).size(20).build();
     PageResult<Customer> result = service.execute(pagination);
 
     assertTrue(result.getContent().isEmpty());

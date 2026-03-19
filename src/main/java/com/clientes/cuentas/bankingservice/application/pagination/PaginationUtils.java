@@ -1,12 +1,11 @@
-package com.clientes.cuentas.bankingservice.application.port;
+package com.clientes.cuentas.bankingservice.application.pagination;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import com.clientes.cuentas.bankingservice.application.port.dto.PaginationRequestDTO;
 
 /**
- * Utility class for converting pagination DTOs to Spring Data's Pageable.
+ * Utility class for converting pagination criteria to Spring Data's Pageable.
  */
 public class PaginationUtils {
 
@@ -15,14 +14,14 @@ public class PaginationUtils {
   }
 
   /**
-   * Converts a PaginationRequestDTO to a Spring Data Pageable.
+   * Converts PaginationCriteria to a Spring Data Pageable.
    *
-   * @param pagination the pagination request DTO
+   * @param pagination the pagination criteria
    * @return a Pageable instance ready to use with Spring Data repositories
    */
-  public static Pageable toPageable(PaginationRequestDTO pagination) {
+  public static Pageable toPageable(PaginationCriteria pagination) {
     if (pagination == null) {
-      pagination = new PaginationRequestDTO();
+      pagination = new PaginationCriteria();
     }
 
     pagination = pagination.withDefaults();
@@ -61,4 +60,5 @@ public class PaginationUtils {
     return sort;
   }
 }
+
 
