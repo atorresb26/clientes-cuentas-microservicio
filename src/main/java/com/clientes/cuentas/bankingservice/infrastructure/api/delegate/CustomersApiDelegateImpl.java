@@ -12,7 +12,7 @@ import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Implementation of the ApiDelegate generated from the API Specification for Customers.
  */
-@Service
+@Component
 @Slf4j
 @RequiredArgsConstructor
 public class CustomersApiDelegateImpl implements ClientesApiDelegate {

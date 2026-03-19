@@ -14,7 +14,8 @@ import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.UUID;
@@ -22,7 +23,7 @@ import java.util.UUID;
 /**
  * Implementation of the ApiDelegate generated from the API Specification for Bank Accounts.
  */
-@Service
+@Component
 @Slf4j
 @RequiredArgsConstructor
 public class BankAccountApiDelegateImpl implements CuentasApiDelegate {
@@ -41,7 +42,10 @@ public class BankAccountApiDelegateImpl implements CuentasApiDelegate {
 
     var command = mapper.toCommand(requestDTO);
     BankAccount response = createBankAccountForCustomerUseCase.execute(command);
-    URI location = URI.create("/cuentas/" + response.getApiId());
+    URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+            .path("/{apiId}")
+            .buildAndExpand(response.getApiId())
+            .toUri();
 
     log.debug("- End -  createBankAccountForCustomer()");
     return ResponseEntity

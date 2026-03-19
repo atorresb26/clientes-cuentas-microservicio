@@ -6,6 +6,7 @@ import com.clientes.cuentas.bankingservice.domain.exception.BankAccountNotFoundE
 import com.clientes.cuentas.bankingservice.domain.model.vo.Money;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -23,6 +24,7 @@ public class UpdateBankAccountTotalService implements UpdateBankAccountTotalUseC
   private final BankAccountRepository bankAccountRepository;
 
   @Override
+  @Transactional
   public void execute(UUID apiId, BigDecimal newTotal) {
     validateParameters(apiId, newTotal);
     var account = bankAccountRepository.findByApiId(apiId)
