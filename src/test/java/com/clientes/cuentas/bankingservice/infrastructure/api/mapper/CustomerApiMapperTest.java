@@ -34,17 +34,19 @@ class CustomerApiMapperTest {
 
   @Test
   void shouldMapCustomerToCustomerAccountDTO() {
-    BankAccount account = new BankAccount();
-    account.setApiId(UUID.randomUUID().toString());
-    account.setAccountType(AccountType.NORMAL);
-    account.setTotal(new BigDecimal("100.0"));
+    BankAccount account = BankAccount.builder()
+            .apiId(UUID.randomUUID().toString())
+            .accountType(AccountType.NORMAL)
+            .total(new BigDecimal("100.0"))
+            .build();
 
-    Customer customer = new Customer();
-    customer.setDni("dni");
-    customer.setName("name");
-    customer.setSurname1("surname1");
-    customer.setSurname2("surname2");
-    customer.setBankAccounts(List.of(account));
+    Customer customer = Customer.builder()
+            .dni("dni")
+            .name("name")
+            .surname1("surname1")
+            .surname2("surname2")
+            .bankAccounts(List.of(account))
+            .build();
 
     CustomerAccountDTO dto = mapper.toCustomerAccountDto(customer);
 
@@ -59,9 +61,10 @@ class CustomerApiMapperTest {
 
   @Test
   void shouldMapBankAccountToDto() {
-    BankAccount account = new BankAccount();
-    account.setAccountType(AccountType.NORMAL);
-    account.setTotal(new BigDecimal("200.00"));
+    BankAccount account = BankAccount.builder()
+            .accountType(AccountType.NORMAL)
+            .total(new BigDecimal("200.00"))
+            .build();
 
     BankAccountNoCustomerDTO dto = mapper.toBankAccountNoCustomerDto(account);
 
@@ -71,8 +74,9 @@ class CustomerApiMapperTest {
 
   @Test
   void shouldMapCustomerList() {
-    Customer customer = new Customer();
-    customer.setDni("11111111A");
+    Customer customer = Customer.builder()
+            .dni("11111111A")
+            .build();
 
     List<CustomerAccountDTO> result = mapper.toCustomerAccountDtoList(List.of(customer));
 
@@ -82,13 +86,15 @@ class CustomerApiMapperTest {
 
   @Test
   void shouldMapCustomerListToCustomerDTOList() {
-    Customer customer1 = new Customer();
-    customer1.setDni("11111111A");
-    customer1.setName("Juan");
+    Customer customer1 = Customer.builder()
+            .dni("11111111A")
+            .name("Juan")
+            .build();
 
-    Customer customer2 = new Customer();
-    customer2.setDni("22222222B");
-    customer2.setName("Maria");
+    Customer customer2 = Customer.builder()
+            .dni("22222222B")
+            .name("Maria")
+            .build();
 
     List<CustomerDTO> result =
             mapper.toCustomerDtoList(List.of(customer1, customer2));
@@ -102,11 +108,12 @@ class CustomerApiMapperTest {
 
   @Test
   void shouldMapCustomerToCustomerDTO() {
-    Customer customer = new Customer();
-    customer.setDni("11111111A");
-    customer.setName("Juan");
-    customer.setSurname1("Pérez");
-    customer.setSurname2("López");
+    Customer customer = Customer.builder()
+            .dni("11111111A")
+            .name("Juan")
+            .surname1("Pérez")
+            .surname2("López")
+            .build();
 
     CustomerDTO dto = mapper.toCustomerDto(customer);
 

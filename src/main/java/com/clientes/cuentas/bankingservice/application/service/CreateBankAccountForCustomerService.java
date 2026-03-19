@@ -49,7 +49,7 @@ public class CreateBankAccountForCustomerService implements CreateBankAccountFor
                     )
             );
     BankAccount bankAccount = bankAccountMapper.toBankAccount(command);
-    bankAccount.setCustomerId(customer.getId());
+    bankAccount.assignToCustomer(customer.getId());
 
     return bankAccountRepository.save(bankAccount);
   }

@@ -26,7 +26,7 @@ public class UpdateBankAccountTotalService implements UpdateBankAccountTotalUseC
     validateParameters(apiId, newTotal);
     var account = bankAccountRepository.findByApiId(apiId)
                     .orElseThrow(() -> new BankAccountNotFoundException(String.format(NOT_FOUND, apiId)));
-    account.setTotal(newTotal);
+    account.updateTotal(newTotal);
     bankAccountRepository.update(account);
   }
 
