@@ -21,9 +21,10 @@ public interface BankAccountMapper {
    *                to create the bank account
    * @return domain bank account object
    */
-  @Mapping(target = "accountType", source = "accountTypeCode")
   @Mapping(target = "apiId", ignore = true)
   @Mapping(target = "customerId", ignore = true)
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "accountType", source = "accountTypeCode")
   @Mapping(target = "total", expression = "java(Money.of(command.total()))")
   BankAccount toBankAccount(CreateBankAccountForCustomerCommand command);
 }

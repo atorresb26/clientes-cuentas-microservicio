@@ -20,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -216,5 +218,30 @@ class GlobalExceptionHandlerTest {
     assertEquals(404, result.getStatus());
     assertEquals("Not Found", result.getTitle());
     assertEquals("Customer 12345678A not found", result.getDetail());
+  }
+
+  @Test
+  void shouldReturn401ProblemDetailForAuthenticationException() {
+    AuthenticationException ex = new AuthenticationException("Invalid bearer token") {
+    };
+
+    ProblemDetail result = handler.handleAuthenticationException(ex, mockRequest("/api/secure/resource"));
+
+    assertEquals(401, result.getStatus());
+    assertEquals("Unauthorized", result.getTitle());
+    assertEquals("Invalid bearer token", result.getDetail());
+    assertEquals(URI.create("/api/secure/resource"), result.getInstance());
+  }
+
+  @Test
+  void shouldReturn403ProblemDetailForAccessDeniedException() {
+    AccessDeniedException ex = new AccessDeniedException("Missing role ADMIN");
+
+    ProblemDetail result = handler.handleAccessDeniedException(ex, mockRequest("/api/admin"));
+
+    assertEquals(403, result.getStatus());
+    assertEquals("Forbidden", result.getTitle());
+    assertEquals("Missing role ADMIN", result.getDetail());
+    assertEquals(URI.create("/api/admin"), result.getInstance());
   }
 }

@@ -14,6 +14,7 @@ import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -35,6 +36,7 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
   private final CustomerApiMapper mapper;
 
   @Override
+  @PreAuthorize("hasRole('admin')")
   @Timed(value = "customer.api.getCustomersAndAccounts",
           description = "Time spent executing the getCustomersAndAccounts functionality.")
   public ResponseEntity<PaginatedCustomerAccountDTO> getCustomersAndAccounts(
@@ -49,6 +51,7 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
   }
 
   @Override
+  @PreAuthorize("hasRole('admin')")
   @Timed(value = "customer.api.getAdultCustomers",
           description = "Time spent executing the getAdultCustomers functionality.")
   public ResponseEntity<PaginatedCustomerDTO> getAdultCustomers(
@@ -63,6 +66,7 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
   }
 
   @Override
+  @PreAuthorize("hasRole('admin')")
   @Timed(value = "customer.api.getCustomersWithHigherAmount",
           description = "Time spent executing the getCustomersWithHigherAmount functionality.")
   public ResponseEntity<PaginatedCustomerDTO> getCustomersWithHigherAmount(
@@ -78,6 +82,7 @@ public class CustomersApiDelegateImpl implements ClientesApiDelegate {
   }
 
   @Override
+  @PreAuthorize("hasRole('admin')")
   @Timed(value = "customer.api.getCustomerByDni",
           description = "Time spent executing the getCustomerByDni functionality.")
   public ResponseEntity<CustomerAccountDTO> getCustomerByDni(String dni) {

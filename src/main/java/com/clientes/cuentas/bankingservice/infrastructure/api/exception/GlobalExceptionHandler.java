@@ -19,11 +19,15 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.util.Objects;
 
 /**
  * Global exception handler for the REST API.
@@ -40,6 +44,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
   private static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
   private static final String NOT_FOUND = "Not Found";
+  private static final String UNAUTHORIZED = "Unauthorized";
+  private static final String FORBIDDEN = "Forbidden";
 
   /**
    * Handles unexpected exceptions that are not explicitly mapped by other handlers.
@@ -188,6 +194,44 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatus.NOT_FOUND,
             NOT_FOUND,
             ex.getMessage(),
+            request);
+  }
+
+  /**
+   * Handles authentication failures when credentials are missing or invalid.
+   *
+   * @param ex      the thrown authentication exception
+   * @param request the current HTTP request
+   * @return a {@link ProblemDetail} representing a 401 Unauthorized response
+   */
+  @ExceptionHandler(AuthenticationException.class)
+  public ProblemDetail handleAuthenticationException(AuthenticationException ex,
+                                                     HttpServletRequest request) {
+    return ProblemDetailHelper.fromHttpRequest(
+            HttpStatus.UNAUTHORIZED,
+            UNAUTHORIZED,
+            Objects.nonNull(ex.getMessage()) && !ex.getMessage().isBlank()
+                    ? ex.getMessage()
+                    : "Authentication credentials were not provided.",
+            request);
+  }
+
+  /**
+   * Handles authorization failures when user lacks required permissions.
+   *
+   * @param ex      the thrown access denied exception
+   * @param request the current HTTP request
+   * @return a {@link ProblemDetail} representing a 403 Forbidden response
+   */
+  @ExceptionHandler(AccessDeniedException.class)
+  public ProblemDetail handleAccessDeniedException(AccessDeniedException ex,
+                                                   HttpServletRequest request) {
+    return ProblemDetailHelper.fromHttpRequest(
+            HttpStatus.FORBIDDEN,
+            FORBIDDEN,
+            Objects.nonNull(ex.getMessage()) && !ex.getMessage().isBlank()
+                    ? ex.getMessage()
+                    : "You do not have permission to access this resource.",
             request);
   }
 }

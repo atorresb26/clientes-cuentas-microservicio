@@ -14,6 +14,7 @@ import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -35,6 +36,7 @@ public class BankAccountApiDelegateImpl implements CuentasApiDelegate {
   private final BankAccountApiMapper mapper;
 
   @Override
+  @PreAuthorize("hasRole('admin')")
   @Timed(value = "bankaccount.api.createBankAccountForCustomer",
           description = "Time spent executing the createBankAccountForCustomer functionality.")
   public ResponseEntity<BankAccountNoCustomerDTO> createBankAccountForCustomer(CreateBankAccountForCustomerRequestDTO requestDTO) {
@@ -54,6 +56,7 @@ public class BankAccountApiDelegateImpl implements CuentasApiDelegate {
   }
 
   @Override
+  @PreAuthorize("hasRole('admin')")
   @Timed(value = "bankaccount.api.getBankAccountByApiId",
           description = "Time spent executing the getBankAccountByApiId functionality.")
   public ResponseEntity<BankAccountDTO> getBankAccountByApiId(UUID bankAccountApiId) {
@@ -67,6 +70,7 @@ public class BankAccountApiDelegateImpl implements CuentasApiDelegate {
   }
 
   @Override
+  @PreAuthorize("hasRole('admin')")
   @Timed(value = "bankaccount.api.updateBankAccountTotal",
           description = "Time spent executing the updateBankAccountTotal functionality.")
   public ResponseEntity<Void> updateBankAccountTotal(UUID accountApiId, UpdateBankAccountTotalRequestDTO requestDTO) {
