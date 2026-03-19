@@ -5,6 +5,7 @@ import com.clientes.cuentas.bankingservice.application.usecase.GetCustomerByDniU
 import com.clientes.cuentas.bankingservice.application.usecase.GetCustomersUseCase;
 import com.clientes.cuentas.bankingservice.application.usecase.GetCustomersWithHigherAmountUseCase;
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
+import com.clientes.cuentas.bankingservice.domain.model.vo.Dni;
 import com.clientes.cuentas.bankingservice.infrastructure.api.mapper.CustomerApiMapper;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerDTO;
@@ -161,7 +162,7 @@ class CustomersApiDelegateImplTest {
   @Test
   void shouldReturn200OkWithMappedCustomerAccountDtoForDni() {
     String dni = "12345678A";
-    Customer customer = Customer.builder().dni(dni).build();
+    Customer customer = Customer.builder().dni(Dni.of(dni)).build();
     CustomerAccountDTO expectedDto = new CustomerAccountDTO();
 
     when(getCustomerByDniUseCase.execute(dni)).thenReturn(customer);
@@ -181,7 +182,7 @@ class CustomersApiDelegateImplTest {
   @Test
   void shouldPassDniParameterDirectlyToUseCase() {
     String dni = "99999999Z";
-    Customer customer = Customer.builder().dni(dni).build();
+    Customer customer = Customer.builder().dni(Dni.of(dni)).build();
 
     when(getCustomerByDniUseCase.execute(dni)).thenReturn(customer);
     when(mapper.toCustomerAccountDto(customer)).thenReturn(new CustomerAccountDTO());

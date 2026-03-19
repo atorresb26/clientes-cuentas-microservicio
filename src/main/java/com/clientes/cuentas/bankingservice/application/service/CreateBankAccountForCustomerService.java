@@ -10,6 +10,7 @@ import com.clientes.cuentas.bankingservice.domain.exception.InvalidAmountExcepti
 import com.clientes.cuentas.bankingservice.domain.exception.InvalidCustomerDniException;
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
+import com.clientes.cuentas.bankingservice.domain.model.vo.Dni;
 import com.clientes.cuentas.bankingservice.domain.port.output.BankAccountRepository;
 import com.clientes.cuentas.bankingservice.domain.port.output.CustomerRepository;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +45,7 @@ public class CreateBankAccountForCustomerService implements CreateBankAccountFor
     var customer = customerRepository.findByDni(command.getCustomerDni())
             .orElseGet(() -> customerRepository.save(
                             Customer.builder()
-                                    .dni(command.getCustomerDni())
+                                    .dni(Dni.of(command.getCustomerDni()))
                                     .build()
                     )
             );

@@ -1,5 +1,6 @@
 package com.clientes.cuentas.bankingservice.domain.model;
 
+import com.clientes.cuentas.bankingservice.domain.model.vo.Dni;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +22,7 @@ import java.util.List;
 public class Customer {
 
   private Long id;
-  private String dni;
+  private Dni dni;
   private String name;
   private String surname1;
   private String surname2;

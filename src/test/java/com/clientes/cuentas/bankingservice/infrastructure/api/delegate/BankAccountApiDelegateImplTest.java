@@ -5,6 +5,7 @@ import com.clientes.cuentas.bankingservice.application.usecase.CreateBankAccount
 import com.clientes.cuentas.bankingservice.application.usecase.GetBankAccountDetailUseCase;
 import com.clientes.cuentas.bankingservice.application.usecase.UpdateBankAccountTotalUseCase;
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
+import com.clientes.cuentas.bankingservice.domain.model.vo.Money;
 import com.clientes.cuentas.bankingservice.infrastructure.api.mapper.BankAccountApiMapper;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.BankAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.BankAccountNoCustomerDTO;
@@ -104,7 +105,7 @@ class BankAccountApiDelegateImplTest {
     UUID apiId = UUID.randomUUID();
     BankAccount domainAccount = BankAccount.builder()
             .apiId(apiId.toString())
-            .total(new BigDecimal("750.00"))
+            .total(new Money(new BigDecimal("750.00")))
             .build();
     BankAccountDTO expectedDto = new BankAccountDTO();
 

@@ -1,6 +1,7 @@
 package com.clientes.cuentas.bankingservice.infrastructure.persistence.mapper;
 
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
+import com.clientes.cuentas.bankingservice.domain.model.vo.Money;
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.entity.BankAccountEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,7 +14,7 @@ import org.mapstruct.Mapping;
         AccountTypeEntityMapper.class,
         CustomerReferenceMapper.class,
         AccountTypeReferenceMapper.class
-})
+}, imports = Money.class)
 public interface BankAccountEntityMapper {
 
   /**
@@ -25,6 +26,7 @@ public interface BankAccountEntityMapper {
    */
   @Mapping(target = "customer", source = "customerId")
   @Mapping(target = "accountType", source = "accountType.code")
+  @Mapping(target = "total", expression = "java(bankAccount.getTotal() != null ? bankAccount.getTotal().amount() : null)")
   BankAccountEntity toEntity(BankAccount bankAccount);
 
   /**
@@ -36,5 +38,6 @@ public interface BankAccountEntityMapper {
    */
   @Mapping(target = "customerId", source = "customer.id")
   @Mapping(target = "customerDni", source = "customer.dni")
+  @Mapping(target = "total", expression = "java(savedEntity.getTotal() != null ? new Money(savedEntity.getTotal()) : null)")
   BankAccount toDomainObject(BankAccountEntity savedEntity);
 }

@@ -3,6 +3,7 @@ package com.clientes.cuentas.bankingservice.infrastructure.api.mapper;
 import com.clientes.cuentas.bankingservice.application.command.CreateBankAccountForCustomerCommand;
 import com.clientes.cuentas.bankingservice.domain.enums.AccountType;
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
+import com.clientes.cuentas.bankingservice.domain.model.vo.Money;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.BankAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.BankAccountNoCustomerDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CreateBankAccountForCustomerRequestDTO;
@@ -95,7 +96,7 @@ class BankAccountApiMapperTest {
     BankAccount bankAccount = BankAccount.builder()
             .apiId(apiId.toString())
             .accountType(AccountType.NORMAL)
-            .total(new BigDecimal("500.00"))
+            .total(new Money(new BigDecimal("500.00")))
             .build();
 
     BankAccountNoCustomerDTO dto = mapper.toNoCustomerDto(bankAccount);
@@ -114,7 +115,7 @@ class BankAccountApiMapperTest {
       BankAccount bankAccount = BankAccount.builder()
               .apiId(UUID.randomUUID().toString())
               .accountType(type)
-              .total(BigDecimal.TEN)
+              .total(new Money(BigDecimal.TEN))
               .build();
 
       BankAccountNoCustomerDTO dto = mapper.toNoCustomerDto(bankAccount);
@@ -129,7 +130,7 @@ class BankAccountApiMapperTest {
     BankAccount bankAccount = BankAccount.builder()
             .apiId(null)
             .accountType(AccountType.JUNIOR)
-            .total(new BigDecimal("100.00"))
+            .total(new Money(new BigDecimal("100.00")))
             .build();
 
     BankAccountNoCustomerDTO dto = mapper.toNoCustomerDto(bankAccount);
@@ -143,7 +144,7 @@ class BankAccountApiMapperTest {
     BankAccount bankAccount = BankAccount.builder()
             .apiId(UUID.randomUUID().toString())
             .accountType(null)
-            .total(new BigDecimal("200.00"))
+            .total(new Money(new BigDecimal("200.00")))
             .build();
 
     BankAccountNoCustomerDTO dto = mapper.toNoCustomerDto(bankAccount);
@@ -167,7 +168,7 @@ class BankAccountApiMapperTest {
     BankAccount bankAccount = BankAccount.builder()
             .apiId(apiId.toString())
             .accountType(AccountType.PREMIUM)
-            .total(new BigDecimal("1500.00"))
+            .total(new Money(new BigDecimal("1500.00")))
             .customerDni("98765432B")
             .build();
 
@@ -186,7 +187,7 @@ class BankAccountApiMapperTest {
     BankAccount bankAccount = BankAccount.builder()
             .apiId(null)
             .accountType(AccountType.NORMAL)
-            .total(BigDecimal.ZERO)
+            .total(new Money(BigDecimal.ZERO))
             .customerDni("12345678A")
             .build();
 
@@ -201,7 +202,7 @@ class BankAccountApiMapperTest {
     BankAccount bankAccount = BankAccount.builder()
             .apiId(UUID.randomUUID().toString())
             .accountType(null)
-            .total(BigDecimal.ZERO)
+            .total(new Money(BigDecimal.ZERO))
             .customerDni("12345678A")
             .build();
 

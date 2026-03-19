@@ -2,6 +2,8 @@ package com.clientes.cuentas.bankingservice.infrastructure.persistence.mapper;
 
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
+import com.clientes.cuentas.bankingservice.domain.model.vo.Dni;
+import com.clientes.cuentas.bankingservice.domain.model.vo.Money;
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.entity.CustomerEntity;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -51,8 +53,8 @@ class CustomerEntityMapperTest {
     assertEquals(2, result.size());
     assertEquals(1L, result.get(0).getId());
     assertEquals(2L, result.get(1).getId());
-    assertEquals("11111111A", result.get(0).getDni());
-    assertEquals("22222222B", result.get(1).getDni());
+    assertEquals("11111111A", result.get(0).getDni().value());
+    assertEquals("22222222B", result.get(1).getDni().value());
     assertEquals("Juan", result.get(0).getName());
     assertEquals("Maria", result.get(1).getName());
     assertEquals("Perez", result.get(0).getSurname1());
@@ -73,7 +75,7 @@ class CustomerEntityMapperTest {
     assertEquals(2, result.size());
     assertNotNull(result.getFirst());
     assertEquals(7L, result.getFirst().getId());
-    assertEquals("77777777G", result.getFirst().getDni());
+    assertEquals("77777777G", result.getFirst().getDni().value());
     assertNull(result.get(1));
   }
 
@@ -91,7 +93,7 @@ class CustomerEntityMapperTest {
 
     assertNotNull(customer);
     assertEquals(1L, customer.getId());
-    assertEquals("12345678A", customer.getDni());
+    assertEquals("12345678A", customer.getDni().value());
     assertEquals("Juan", customer.getName());
     assertEquals("Perez", customer.getSurname1());
     assertEquals("Lopez", customer.getSurname2());
@@ -104,13 +106,13 @@ class CustomerEntityMapperTest {
   void shouldMapCustomerToCustomerEntity() {
     BankAccount bankAccount = BankAccount.builder()
             .apiId("api-1")
-            .total(new BigDecimal("250.50"))
+            .total(new Money(new BigDecimal("250.50")))
             .customerId(10L)
             .build();
 
     Customer customer = Customer.builder()
             .id(10L)
-            .dni("99999999Z")
+            .dni(Dni.of("99999999Z"))
             .name("Lucia")
             .surname1("Gomez")
             .surname2("Ruiz")

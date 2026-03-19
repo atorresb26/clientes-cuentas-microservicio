@@ -1,6 +1,7 @@
 package com.clientes.cuentas.bankingservice.application.service;
 
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
+import com.clientes.cuentas.bankingservice.domain.model.vo.Dni;
 import com.clientes.cuentas.bankingservice.domain.port.output.CustomerRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,8 +29,8 @@ class GetCustomersServiceTest {
   @Test
   void shouldReturnCustomersWithAccountsFromRepository() {
     List<Customer> expectedCustomers = List.of(
-            Customer.builder().id(1L).dni("11111111A").build(),
-            Customer.builder().id(2L).dni("22222222B").build()
+            Customer.builder().id(1L).dni(Dni.of("11111111A")).build(),
+            Customer.builder().id(2L).dni(Dni.of("22222222B")).build()
     );
 
     when(customerRepository.getCustomersAndAccounts()).thenReturn(expectedCustomers);

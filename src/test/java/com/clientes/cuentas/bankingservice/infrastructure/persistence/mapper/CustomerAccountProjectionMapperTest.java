@@ -38,7 +38,7 @@ class CustomerAccountProjectionMapperTest {
 
     Customer customer = mapper.toCustomer(row);
 
-    assertEquals("12345678A", customer.getDni());
+    assertEquals("12345678A", customer.getDni().value());
     assertEquals("John", customer.getName());
     assertEquals("Doe", customer.getSurname1());
     assertEquals("Smith", customer.getSurname2());
@@ -58,6 +58,6 @@ class CustomerAccountProjectionMapperTest {
     BankAccount account = mapper.toBankAccount(row);
 
     assertEquals("NORMAL", account.getAccountType().getName());
-    assertEquals(new BigDecimal("10000.50"), account.getTotal());
+    assertEquals(new BigDecimal("10000.50"), account.getTotal().amount());
   }
 }

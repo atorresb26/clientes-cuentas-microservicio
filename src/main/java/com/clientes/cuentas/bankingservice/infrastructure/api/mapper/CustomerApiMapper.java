@@ -2,6 +2,7 @@ package com.clientes.cuentas.bankingservice.infrastructure.api.mapper;
 
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
+import com.clientes.cuentas.bankingservice.domain.model.vo.Dni;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.BankAccountNoCustomerDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerDTO;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * MapStruct mapper for work with the {@link Customer} in the infrastructure layer.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", imports = Dni.class)
 public interface CustomerApiMapper {
 
   /**
@@ -31,6 +32,7 @@ public interface CustomerApiMapper {
    * @return the customerAccountDTO
    */
   @Mapping(target = "accounts", source = "bankAccounts")
+  @Mapping(target = "dni", expression = "java(customer.getDni() != null ? customer.getDni().value() : null)")
   CustomerAccountDTO toCustomerAccountDto(Customer customer);
 
   /**
@@ -41,6 +43,7 @@ public interface CustomerApiMapper {
    * @return the bankAccountNoCustomerDTO
    */
   @Mapping(target = "accountType", expression = "java(bankAccount.getAccountType().getName())")
+  @Mapping(target = "total", expression = "java(bankAccount.getTotal() != null ? bankAccount.getTotal().amount() : null)")
   BankAccountNoCustomerDTO toBankAccountNoCustomerDto(BankAccount bankAccount);
 
   /**
@@ -58,5 +61,6 @@ public interface CustomerApiMapper {
    * @param customer the {@link Customer} entity to convert
    * @return the mapped {@link CustomerDTO} instance
    */
+  @Mapping(target = "dni", expression = "java(customer.getDni() != null ? customer.getDni().value() : null)")
   CustomerDTO toCustomerDto(Customer customer);
 }

@@ -2,6 +2,7 @@ package com.clientes.cuentas.bankingservice.infrastructure.persistence.mapper;
 
 import com.clientes.cuentas.bankingservice.domain.enums.AccountType;
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
+import com.clientes.cuentas.bankingservice.domain.model.vo.Money;
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.entity.AccountTypeEntity;
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.entity.BankAccountEntity;
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.entity.CustomerEntity;
@@ -58,7 +59,7 @@ class BankAccountEntityMapperTest {
             .apiId("api-001")
             .customerId(10L)
             .accountType(AccountType.NORMAL)
-            .total(new BigDecimal("500.00"))
+            .total(new Money(new BigDecimal("500.00")))
             .build();
 
     CustomerEntity customerEntity = new CustomerEntity();
@@ -91,7 +92,7 @@ class BankAccountEntityMapperTest {
             .apiId("api-002")
             .customerId(20L)
             .accountType(null)
-            .total(new BigDecimal("100.00"))
+            .total(new Money(new BigDecimal("100.00")))
             .build();
 
     CustomerEntity customerEntity = new CustomerEntity();
@@ -118,7 +119,7 @@ class BankAccountEntityMapperTest {
             .apiId("api-003")
             .customerId(null)
             .accountType(AccountType.JUNIOR)
-            .total(new BigDecimal("0.00"))
+            .total(new Money(new BigDecimal("0.00")))
             .build();
 
     AccountTypeEntity accountTypeEntity = new AccountTypeEntity();
@@ -171,7 +172,7 @@ class BankAccountEntityMapperTest {
     assertNotNull(result);
     assertEquals(1L, result.getId());
     assertEquals("api-xyz", result.getApiId());
-    assertEquals(new BigDecimal("1000.00"), result.getTotal());
+    assertEquals(new BigDecimal("1000.00"), result.getTotal().amount());
     assertEquals(5L, result.getCustomerId());
     assertEquals("12345678A", result.getCustomerDni());
     assertEquals(AccountType.PREMIUM, result.getAccountType());
@@ -222,10 +223,9 @@ class BankAccountEntityMapperTest {
 
     assertEquals(77L, result.getId());
     assertEquals("api-scalar-test", result.getApiId());
-    assertEquals(new BigDecimal("250.75"), result.getTotal());
+    assertEquals(new BigDecimal("250.75"), result.getTotal().amount());
     assertEquals(99L, result.getCustomerId());
     assertEquals("99999999Z", result.getCustomerDni());
     assertEquals(AccountType.JUNIOR, result.getAccountType());
   }
 }
-

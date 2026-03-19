@@ -1,6 +1,7 @@
 package com.clientes.cuentas.bankingservice.infrastructure.persistence.repository;
 
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
+import com.clientes.cuentas.bankingservice.domain.model.vo.Dni;
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.entity.CustomerEntity;
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.mapper.CustomerAccountAssembler;
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.mapper.CustomerEntityMapper;
@@ -227,7 +228,7 @@ class CustomerRepositoryAdapterTest {
   @Test
   void shouldSaveCustomerAndReturnMappedDomainObject() {
     Customer customer = Customer.builder()
-            .dni("12345678A")
+            .dni(Dni.of("12345678A"))
             .name("Juan")
             .surname1("Perez")
             .build();
@@ -236,7 +237,7 @@ class CustomerRepositoryAdapterTest {
     CustomerEntity savedEntity = new CustomerEntity();
     Customer expectedResult = Customer.builder()
             .id(1L)
-            .dni("12345678A")
+            .dni(Dni.of("12345678A"))
             .name("Juan")
             .surname1("Perez")
             .build();
@@ -257,7 +258,7 @@ class CustomerRepositoryAdapterTest {
 
   @Test
   void shouldPropagateExceptionWhenJpaSaveFailsDuringSave() {
-    Customer customer = Customer.builder().dni("12345678A").build();
+    Customer customer = Customer.builder().dni(Dni.of("12345678A")).build();
     CustomerEntity entity = new CustomerEntity();
 
     when(mapper.toEntity(customer)).thenReturn(entity);

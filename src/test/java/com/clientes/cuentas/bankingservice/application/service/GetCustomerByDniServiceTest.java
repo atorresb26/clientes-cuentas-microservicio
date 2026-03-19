@@ -2,6 +2,7 @@ package com.clientes.cuentas.bankingservice.application.service;
 
 import com.clientes.cuentas.bankingservice.domain.exception.CustomerNotFoundException;
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
+import com.clientes.cuentas.bankingservice.domain.model.vo.Dni;
 import com.clientes.cuentas.bankingservice.domain.port.output.CustomerRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +32,7 @@ class GetCustomerByDniServiceTest {
   @Test
   void shouldReturnCustomerWithAccountsWhenFoundByDni() {
     String dni = "12345678A";
-    Customer expected = Customer.builder().id(1L).dni(dni).build();
+    Customer expected = Customer.builder().id(1L).dni(Dni.of(dni)).build();
 
     when(customerRepository.findByDniWithAccounts(dni)).thenReturn(Optional.of(expected));
 

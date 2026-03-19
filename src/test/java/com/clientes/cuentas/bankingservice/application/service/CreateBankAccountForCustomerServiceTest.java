@@ -8,6 +8,8 @@ import com.clientes.cuentas.bankingservice.domain.exception.InvalidAmountExcepti
 import com.clientes.cuentas.bankingservice.domain.exception.InvalidCustomerDniException;
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
+import com.clientes.cuentas.bankingservice.domain.model.vo.Dni;
+import com.clientes.cuentas.bankingservice.domain.model.vo.Money;
 import com.clientes.cuentas.bankingservice.domain.port.output.BankAccountRepository;
 import com.clientes.cuentas.bankingservice.domain.port.output.CustomerRepository;
 import org.junit.jupiter.api.Test;
@@ -53,17 +55,17 @@ class CreateBankAccountForCustomerServiceTest {
 
 	Customer existingCustomer = Customer.builder()
 			.id(10L)
-			.dni("12345678A")
+			.dni(Dni.of("12345678A"))
 			.build();
 
 	BankAccount mappedBankAccount = BankAccount.builder()
-			.total(new BigDecimal("100.00"))
+			.total(new Money(new BigDecimal("100.00")))
 			.build();
 
 	BankAccount persistedBankAccount = BankAccount.builder()
 			.apiId("api-1")
 			.customerId(10L)
-			.total(new BigDecimal("100.00"))
+			.total(new Money(new BigDecimal("100.00")))
 			.build();
 
 	when(customerRepository.findByDni("12345678A")).thenReturn(Optional.of(existingCustomer));
@@ -91,17 +93,17 @@ class CreateBankAccountForCustomerServiceTest {
 
 	Customer createdCustomer = Customer.builder()
 			.id(77L)
-			.dni("99999999Z")
+			.dni(Dni.of("99999999Z"))
 			.build();
 
 	BankAccount mappedBankAccount = BankAccount.builder()
-			.total(new BigDecimal("300.00"))
+			.total(new Money(new BigDecimal("300.00")))
 			.build();
 
 	BankAccount persistedBankAccount = BankAccount.builder()
 			.apiId("api-2")
 			.customerId(77L)
-			.total(new BigDecimal("300.00"))
+			.total(new Money(new BigDecimal("300.00")))
 			.build();
 
 	when(customerRepository.findByDni("99999999Z")).thenReturn(Optional.empty());
@@ -117,14 +119,14 @@ class CreateBankAccountForCustomerServiceTest {
 	ArgumentCaptor<Customer> customerCaptor = ArgumentCaptor.forClass(Customer.class);
 	verify(customerRepository).findByDni("99999999Z");
 	verify(customerRepository).save(customerCaptor.capture());
-	assertEquals("99999999Z", customerCaptor.getValue().getDni());
+	assertEquals("99999999Z", customerCaptor.getValue().getDni().value());
 
 	verify(bankAccountMapper).toBankAccount(command);
 
 	ArgumentCaptor<BankAccount> bankAccountCaptor = ArgumentCaptor.forClass(BankAccount.class);
 	verify(bankAccountRepository).save(bankAccountCaptor.capture());
 	assertEquals(77L, bankAccountCaptor.getValue().getCustomerId());
-	assertEquals(new BigDecimal("300.00"), bankAccountCaptor.getValue().getTotal());
+	assertEquals(new BigDecimal("300.00"), bankAccountCaptor.getValue().getTotal().amount());
 
 	verifyNoMoreInteractions(customerRepository, bankAccountMapper, bankAccountRepository);
   }
@@ -138,11 +140,11 @@ class CreateBankAccountForCustomerServiceTest {
 
 	Customer createdCustomer = Customer.builder()
 			.id(15L)
-			.dni("00000000T")
+			.dni(Dni.of("00000000T"))
 			.build();
 
 	BankAccount mappedBankAccount = BankAccount.builder()
-			.total(new BigDecimal("50.00"))
+			.total(new Money(new BigDecimal("50.00")))
 			.build();
 
 	RuntimeException expectedException = new RuntimeException("DB error saving bank account");

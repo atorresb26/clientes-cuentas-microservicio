@@ -1,6 +1,7 @@
 package com.clientes.cuentas.bankingservice.infrastructure.persistence.repository;
 
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
+import com.clientes.cuentas.bankingservice.domain.model.vo.Money;
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.entity.BankAccountEntity;
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.mapper.BankAccountEntityMapper;
 import org.junit.jupiter.api.Test;
@@ -43,14 +44,14 @@ class BankAccountRepositoryAdapterTest {
   @Test
   void shouldSaveBankAccountAndAssignRandomUuidAsApiId() {
     BankAccount domainAccount = BankAccount.builder()
-            .total(new BigDecimal("100.00"))
+            .total(new Money(new BigDecimal("100.00")))
             .build();
 
     BankAccountEntity mappedEntity = new BankAccountEntity();
     BankAccountEntity savedEntity = new BankAccountEntity();
     BankAccount expectedResult = BankAccount.builder()
             .apiId("generated-api-id")
-            .total(new BigDecimal("100.00"))
+            .total(new Money(new BigDecimal("100.00")))
             .build();
 
     when(mapper.toEntity(domainAccount)).thenReturn(mappedEntity);
@@ -76,7 +77,7 @@ class BankAccountRepositoryAdapterTest {
 
   @Test
   void shouldAssignDifferentUuidOnEachSave() {
-    BankAccount domainAccount = BankAccount.builder().total(new BigDecimal("50.00")).build();
+    BankAccount domainAccount = BankAccount.builder().total(new Money(new BigDecimal("50.00"))).build();
 
     BankAccountEntity entity1 = new BankAccountEntity();
     BankAccountEntity entity2 = new BankAccountEntity();
@@ -105,7 +106,7 @@ class BankAccountRepositoryAdapterTest {
 
   @Test
   void shouldPropagateExceptionWhenJpaSaveFailsDuringSave() {
-    BankAccount domainAccount = BankAccount.builder().total(new BigDecimal("50.00")).build();
+    BankAccount domainAccount = BankAccount.builder().total(new Money(new BigDecimal("50.00"))).build();
     BankAccountEntity mappedEntity = new BankAccountEntity();
 
     when(mapper.toEntity(domainAccount)).thenReturn(mappedEntity);
@@ -122,14 +123,14 @@ class BankAccountRepositoryAdapterTest {
   void shouldUpdateBankAccountAndReturnMappedDomainObject() {
     BankAccount domainAccount = BankAccount.builder()
             .apiId("api-123")
-            .total(new BigDecimal("200.00"))
+            .total(new Money(new BigDecimal("200.00")))
             .build();
 
     BankAccountEntity mappedEntity = new BankAccountEntity();
     BankAccountEntity savedEntity = new BankAccountEntity();
     BankAccount expectedResult = BankAccount.builder()
             .apiId("api-123")
-            .total(new BigDecimal("200.00"))
+            .total(new Money(new BigDecimal("200.00")))
             .build();
 
     when(mapper.toEntity(domainAccount)).thenReturn(mappedEntity);
@@ -191,4 +192,3 @@ class BankAccountRepositoryAdapterTest {
     verifyNoInteractions(mapper);
   }
 }
-

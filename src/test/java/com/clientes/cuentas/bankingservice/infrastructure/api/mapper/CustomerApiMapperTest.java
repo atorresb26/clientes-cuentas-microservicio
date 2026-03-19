@@ -3,6 +3,8 @@ package com.clientes.cuentas.bankingservice.infrastructure.api.mapper;
 import com.clientes.cuentas.bankingservice.domain.enums.AccountType;
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
+import com.clientes.cuentas.bankingservice.domain.model.vo.Dni;
+import com.clientes.cuentas.bankingservice.domain.model.vo.Money;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.BankAccountNoCustomerDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CustomerDTO;
@@ -37,11 +39,11 @@ class CustomerApiMapperTest {
     BankAccount account = BankAccount.builder()
             .apiId(UUID.randomUUID().toString())
             .accountType(AccountType.NORMAL)
-            .total(new BigDecimal("100.0"))
+            .total(new Money(new BigDecimal("100.0")))
             .build();
 
     Customer customer = Customer.builder()
-            .dni("dni")
+            .dni(Dni.of("11111111A"))
             .name("name")
             .surname1("surname1")
             .surname2("surname2")
@@ -50,7 +52,7 @@ class CustomerApiMapperTest {
 
     CustomerAccountDTO dto = mapper.toCustomerAccountDto(customer);
 
-    assertEquals("dni", dto.getDni());
+    assertEquals("11111111A", dto.getDni());
     assertEquals("name", dto.getName());
     assertEquals("surname1", dto.getSurname1());
     assertEquals("surname2", dto.getSurname2());
@@ -63,7 +65,7 @@ class CustomerApiMapperTest {
   void shouldMapBankAccountToDto() {
     BankAccount account = BankAccount.builder()
             .accountType(AccountType.NORMAL)
-            .total(new BigDecimal("200.00"))
+            .total(new Money(new BigDecimal("200.00")))
             .build();
 
     BankAccountNoCustomerDTO dto = mapper.toBankAccountNoCustomerDto(account);
@@ -75,7 +77,7 @@ class CustomerApiMapperTest {
   @Test
   void shouldMapCustomerList() {
     Customer customer = Customer.builder()
-            .dni("11111111A")
+            .dni(Dni.of("11111111A"))
             .build();
 
     List<CustomerAccountDTO> result = mapper.toCustomerAccountDtoList(List.of(customer));
@@ -87,12 +89,12 @@ class CustomerApiMapperTest {
   @Test
   void shouldMapCustomerListToCustomerDTOList() {
     Customer customer1 = Customer.builder()
-            .dni("11111111A")
+            .dni(Dni.of("11111111A"))
             .name("Juan")
             .build();
 
     Customer customer2 = Customer.builder()
-            .dni("22222222B")
+            .dni(Dni.of("22222222B"))
             .name("Maria")
             .build();
 
@@ -109,10 +111,10 @@ class CustomerApiMapperTest {
   @Test
   void shouldMapCustomerToCustomerDTO() {
     Customer customer = Customer.builder()
-            .dni("11111111A")
+            .dni(Dni.of("11111111A"))
             .name("Juan")
-            .surname1("Pérez")
-            .surname2("López")
+            .surname1("Prez")
+            .surname2("Lpez")
             .build();
 
     CustomerDTO dto = mapper.toCustomerDto(customer);
@@ -120,7 +122,7 @@ class CustomerApiMapperTest {
     assertTrue(Objects.nonNull(dto));
     assertEquals("11111111A", dto.getDni());
     assertEquals("Juan", dto.getName());
-    assertEquals("Pérez", dto.getSurname1());
-    assertEquals("López", dto.getSurname2());
+    assertEquals("Prez", dto.getSurname1());
+    assertEquals("Lpez", dto.getSurname2());
   }
 }

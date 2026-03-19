@@ -2,6 +2,7 @@ package com.clientes.cuentas.bankingservice.application.service;
 
 import com.clientes.cuentas.bankingservice.domain.exception.BankAccountNotFoundException;
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
+import com.clientes.cuentas.bankingservice.domain.model.vo.Money;
 import com.clientes.cuentas.bankingservice.domain.port.output.BankAccountRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +41,7 @@ class UpdateBankAccountTotalServiceTest {
     BigDecimal newTotal = new BigDecimal("500.00");
     BankAccount account = BankAccount.builder()
             .apiId(apiId.toString())
-            .total(new BigDecimal("100.00"))
+            .total(new Money(new BigDecimal("100.00")))
             .build();
 
     when(bankAccountRepository.findByApiId(apiId)).thenReturn(Optional.of(account));
@@ -51,7 +52,7 @@ class UpdateBankAccountTotalServiceTest {
     // Verify newTotal was applied to the account before persisting
     ArgumentCaptor<BankAccount> captor = ArgumentCaptor.forClass(BankAccount.class);
     verify(bankAccountRepository).update(captor.capture());
-    assertEquals(newTotal, captor.getValue().getTotal());
+    assertEquals(newTotal, captor.getValue().getTotal().amount());
 
     verify(bankAccountRepository).findByApiId(apiId);
     verifyNoMoreInteractions(bankAccountRepository);

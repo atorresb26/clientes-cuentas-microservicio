@@ -2,6 +2,7 @@ package com.clientes.cuentas.bankingservice.infrastructure.api.mapper;
 
 import com.clientes.cuentas.bankingservice.application.command.CreateBankAccountForCustomerCommand;
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
+import com.clientes.cuentas.bankingservice.domain.model.vo.Money;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.BankAccountDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.BankAccountNoCustomerDTO;
 import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CreateBankAccountForCustomerRequestDTO;
@@ -12,7 +13,7 @@ import org.mapstruct.Mapping;
  * Mapper responsible for converting between API layer DTOs and
  * domain objects related to bank accounts.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", imports = Money.class)
 public interface BankAccountApiMapper {
 
   /**
@@ -34,6 +35,7 @@ public interface BankAccountApiMapper {
    * @param response domain bank account object
    * @return DTO representation of the bank account without customer data
    */
+  @Mapping(target = "total", expression = "java(response.getTotal() != null ? response.getTotal().amount() : null)")
   BankAccountNoCustomerDTO toNoCustomerDto(BankAccount response);
 
   /**
@@ -43,5 +45,6 @@ public interface BankAccountApiMapper {
    * @param response domain bank account object
    * @return DTO representation of the bank account with customer data
    */
+  @Mapping(target = "total", expression = "java(response.getTotal() != null ? response.getTotal().amount() : null)")
   BankAccountDTO toDto(BankAccount response);
 }

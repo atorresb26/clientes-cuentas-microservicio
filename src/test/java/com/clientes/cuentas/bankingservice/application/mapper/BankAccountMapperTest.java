@@ -33,7 +33,7 @@ class BankAccountMapperTest {
     BankAccount result = mapper.toBankAccount(command);
 
     assertEquals(AccountType.NORMAL, result.getAccountType());
-    assertEquals(new BigDecimal("250.00"), result.getTotal());
+    assertEquals(new BigDecimal("250.00"), result.getTotal().amount());
     assertNull(result.getApiId());
     assertNull(result.getCustomerId());
   }
