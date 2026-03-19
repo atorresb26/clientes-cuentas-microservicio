@@ -3,6 +3,8 @@ package com.clientes.cuentas.bankingservice.application.service;
 import com.clientes.cuentas.bankingservice.application.command.CreateBankAccountForCustomerCommand;
 import com.clientes.cuentas.bankingservice.application.constants.CacheNames;
 import com.clientes.cuentas.bankingservice.application.mapper.BankAccountMapper;
+import com.clientes.cuentas.bankingservice.application.repository.BankAccountRepository;
+import com.clientes.cuentas.bankingservice.application.repository.CustomerRepository;
 import com.clientes.cuentas.bankingservice.application.usecase.CreateBankAccountForCustomerUseCase;
 import com.clientes.cuentas.bankingservice.domain.enums.AccountType;
 import com.clientes.cuentas.bankingservice.domain.exception.InvalidAccountTypeCodeException;
@@ -11,8 +13,6 @@ import com.clientes.cuentas.bankingservice.domain.exception.InvalidCustomerDniEx
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
 import com.clientes.cuentas.bankingservice.domain.model.vo.Dni;
-import com.clientes.cuentas.bankingservice.domain.port.output.BankAccountRepository;
-import com.clientes.cuentas.bankingservice.domain.port.output.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;

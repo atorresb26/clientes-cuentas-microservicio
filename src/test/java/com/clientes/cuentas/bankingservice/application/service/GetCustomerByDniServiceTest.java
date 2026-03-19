@@ -1,9 +1,9 @@
 package com.clientes.cuentas.bankingservice.application.service;
 
+import com.clientes.cuentas.bankingservice.application.repository.CustomerRepository;
 import com.clientes.cuentas.bankingservice.domain.exception.CustomerNotFoundException;
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
 import com.clientes.cuentas.bankingservice.domain.model.vo.Dni;
-import com.clientes.cuentas.bankingservice.domain.port.output.CustomerRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

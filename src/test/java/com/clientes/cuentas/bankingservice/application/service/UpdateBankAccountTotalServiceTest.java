@@ -1,9 +1,9 @@
 package com.clientes.cuentas.bankingservice.application.service;
 
+import com.clientes.cuentas.bankingservice.application.repository.BankAccountRepository;
 import com.clientes.cuentas.bankingservice.domain.exception.BankAccountNotFoundException;
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
 import com.clientes.cuentas.bankingservice.domain.model.vo.Money;
-import com.clientes.cuentas.bankingservice.domain.port.output.BankAccountRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

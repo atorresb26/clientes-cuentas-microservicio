@@ -1,7 +1,7 @@
 package com.clientes.cuentas.bankingservice.infrastructure.persistence.repository;
 
+import com.clientes.cuentas.bankingservice.application.repository.CustomerRepository;
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
-import com.clientes.cuentas.bankingservice.domain.port.output.CustomerRepository;
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.mapper.CustomerAccountAssembler;
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.mapper.CustomerEntityMapper;
 import lombok.RequiredArgsConstructor;

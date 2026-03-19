@@ -1,9 +1,9 @@
 package com.clientes.cuentas.bankingservice.application.service;
 
+import com.clientes.cuentas.bankingservice.application.repository.BankAccountRepository;
 import com.clientes.cuentas.bankingservice.application.usecase.UpdateBankAccountTotalUseCase;
 import com.clientes.cuentas.bankingservice.domain.exception.BankAccountNotFoundException;
 import com.clientes.cuentas.bankingservice.domain.model.vo.Money;
-import com.clientes.cuentas.bankingservice.domain.port.output.BankAccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

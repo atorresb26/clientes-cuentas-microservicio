@@ -1,9 +1,9 @@
 package com.clientes.cuentas.bankingservice.application.service;
 
+import com.clientes.cuentas.bankingservice.application.repository.CustomerRepository;
 import com.clientes.cuentas.bankingservice.application.usecase.GetCustomersWithHigherAmountUseCase;
 import com.clientes.cuentas.bankingservice.domain.exception.InvalidAmountException;
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
-import com.clientes.cuentas.bankingservice.domain.port.output.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

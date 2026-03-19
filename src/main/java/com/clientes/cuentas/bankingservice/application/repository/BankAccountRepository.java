@@ -1,4 +1,4 @@
-package com.clientes.cuentas.bankingservice.domain.port.output;
+package com.clientes.cuentas.bankingservice.application.repository;
 
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
 

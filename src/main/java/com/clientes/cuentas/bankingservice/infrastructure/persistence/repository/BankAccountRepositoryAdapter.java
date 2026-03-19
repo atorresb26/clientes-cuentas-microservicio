@@ -1,7 +1,7 @@
 package com.clientes.cuentas.bankingservice.infrastructure.persistence.repository;
 
+import com.clientes.cuentas.bankingservice.application.repository.BankAccountRepository;
 import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
-import com.clientes.cuentas.bankingservice.domain.port.output.BankAccountRepository;
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.mapper.BankAccountEntityMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
