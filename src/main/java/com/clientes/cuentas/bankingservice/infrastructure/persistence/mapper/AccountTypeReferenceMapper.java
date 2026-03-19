@@ -1,5 +1,6 @@
 package com.clientes.cuentas.bankingservice.infrastructure.persistence.mapper;
 
+import com.clientes.cuentas.bankingservice.application.constants.CacheNames;
 import com.clientes.cuentas.bankingservice.domain.exception.AccountTypeNotFoundException;
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.entity.AccountTypeEntity;
 import com.clientes.cuentas.bankingservice.infrastructure.persistence.repository.JpaAccountTypeRepository;
@@ -30,7 +31,7 @@ public class AccountTypeReferenceMapper {
    * @return the matching {@link AccountTypeEntity}, or {@code null} if {@code code} is {@code null}
    * @throws AccountTypeNotFoundException if no account type is found for the given {@code code}
    */
-  @Cacheable(value = "account-types", key = "#code", condition = "#code != null")
+  @Cacheable(value = CacheNames.ACCOUNT_TYPES, key = "#code", condition = "#code != null")
   public AccountTypeEntity mapFromCode(String code) {
     if (Objects.isNull(code)) {
       return null;

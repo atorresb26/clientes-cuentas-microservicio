@@ -1,6 +1,7 @@
 package com.clientes.cuentas.bankingservice.application.service;
 
 import com.clientes.cuentas.bankingservice.application.command.CreateBankAccountForCustomerCommand;
+import com.clientes.cuentas.bankingservice.application.constants.CacheNames;
 import com.clientes.cuentas.bankingservice.application.mapper.BankAccountMapper;
 import com.clientes.cuentas.bankingservice.application.usecase.CreateBankAccountForCustomerUseCase;
 import com.clientes.cuentas.bankingservice.domain.enums.AccountType;
@@ -36,7 +37,7 @@ public class CreateBankAccountForCustomerService implements CreateBankAccountFor
 
   @Override
   @Transactional
-  @CacheEvict(value = "customer-with-accounts", allEntries = true)
+  @CacheEvict(value = CacheNames.CUSTOMER_WITH_ACCOUNTS, allEntries = true)
   public BankAccount execute(CreateBankAccountForCustomerCommand command) {
     validateCommand(command);
 

@@ -1,5 +1,6 @@
 package com.clientes.cuentas.bankingservice.application.service;
 
+import com.clientes.cuentas.bankingservice.application.constants.CacheNames;
 import com.clientes.cuentas.bankingservice.application.usecase.GetAdultCustomersUseCase;
 import com.clientes.cuentas.bankingservice.domain.model.Customer;
 import com.clientes.cuentas.bankingservice.domain.port.output.CustomerRepository;
@@ -19,7 +20,7 @@ public class GetAdultCustomersService implements GetAdultCustomersUseCase {
   private final CustomerRepository customerRepository;
 
   @Override
-  @Cacheable(value = "adult-customers", sync = true)
+  @Cacheable(value = CacheNames.ADULT_CUSTOMERS, sync = true)
   public List<Customer> execute() {
     return customerRepository.getAdultCustomers();
   }
