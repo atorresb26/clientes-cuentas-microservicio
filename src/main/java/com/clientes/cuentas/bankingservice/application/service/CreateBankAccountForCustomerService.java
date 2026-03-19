@@ -42,10 +42,10 @@ public class CreateBankAccountForCustomerService implements CreateBankAccountFor
   public BankAccount execute(CreateBankAccountForCustomerCommand command) {
     validateCommand(command);
 
-    var customer = customerRepository.findByDni(command.getCustomerDni())
+    var customer = customerRepository.findByDni(command.customerDni())
             .orElseGet(() -> customerRepository.save(
                             Customer.builder()
-                                    .dni(Dni.of(command.getCustomerDni()))
+                                    .dni(Dni.of(command.customerDni()))
                                     .build()
                     )
             );
@@ -56,9 +56,9 @@ public class CreateBankAccountForCustomerService implements CreateBankAccountFor
   }
 
   private static void validateCommand(CreateBankAccountForCustomerCommand command) {
-    validateCustomerDni(command.getCustomerDni());
-    validateAccountTypeCode(command.getAccountTypeCode());
-    validateTotal(command.getTotal());
+    validateCustomerDni(command.customerDni());
+    validateAccountTypeCode(command.accountTypeCode());
+    validateTotal(command.total());
   }
 
   private static void validateCustomerDni(String customerDni) {

@@ -59,10 +59,11 @@ class CreateBankAccountForCustomerServiceIntegrationTest {
     accountType.setName("NORMAL");
     jpaAccountTypeRepository.save(accountType);
 
-    CreateBankAccountForCustomerCommand command = new CreateBankAccountForCustomerCommand();
-    command.setCustomerDni(dni);
-    command.setAccountTypeCode("NRML");
-    command.setTotal(new BigDecimal("150.00"));
+    CreateBankAccountForCustomerCommand command = new CreateBankAccountForCustomerCommand(
+            dni,
+            "NRML",
+            new BigDecimal("150.00")
+    );
 
     when(jpaBankAccountRepository.save(any(BankAccountEntity.class)))
             .thenThrow(new RuntimeException("Simulated persistence error"));

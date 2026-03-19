@@ -48,15 +48,12 @@ class BankAccountApiDelegateImplTest {
   @Mock
   private BankAccountApiMapper mapper;
 
-  // =========================================================================
-  // createBankAccountForCustomer()
-  // =========================================================================
 
   @Test
   void shouldReturn201CreatedWithLocationHeaderAndMappedBody() {
     String apiId = UUID.randomUUID().toString();
     CreateBankAccountForCustomerRequestDTO requestDTO = new CreateBankAccountForCustomerRequestDTO();
-    CreateBankAccountForCustomerCommand command = new CreateBankAccountForCustomerCommand();
+    CreateBankAccountForCustomerCommand command = new CreateBankAccountForCustomerCommand("", "", null);
     BankAccount domainResponse = BankAccount.builder().apiId(apiId).build();
     BankAccountNoCustomerDTO expectedDto = new BankAccountNoCustomerDTO();
 
@@ -83,7 +80,7 @@ class BankAccountApiDelegateImplTest {
   void shouldBuildLocationUriFromDomainResponseApiId() {
     String apiId = "fixed-api-id-123";
     CreateBankAccountForCustomerRequestDTO requestDTO = new CreateBankAccountForCustomerRequestDTO();
-    CreateBankAccountForCustomerCommand command = new CreateBankAccountForCustomerCommand();
+    CreateBankAccountForCustomerCommand command = new CreateBankAccountForCustomerCommand("", "", null);
     BankAccount domainResponse = BankAccount.builder().apiId(apiId).build();
 
     when(mapper.toCommand(requestDTO)).thenReturn(command);

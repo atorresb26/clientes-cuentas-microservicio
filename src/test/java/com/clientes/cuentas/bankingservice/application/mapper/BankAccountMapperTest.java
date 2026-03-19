@@ -25,10 +25,11 @@ class BankAccountMapperTest {
 
   @Test
   void shouldMapCommandToBankAccount() {
-    CreateBankAccountForCustomerCommand command = new CreateBankAccountForCustomerCommand();
-    command.setCustomerDni("12345678A");
-    command.setAccountTypeCode("NRML");
-    command.setTotal(new BigDecimal("250.00"));
+    CreateBankAccountForCustomerCommand command = new CreateBankAccountForCustomerCommand(
+            "12345678A",
+            "NRML",
+            new BigDecimal("250.00")
+    );
 
     BankAccount result = mapper.toBankAccount(command);
 
@@ -45,9 +46,11 @@ class BankAccountMapperTest {
 
   @Test
   void shouldThrowExceptionWhenAccountTypeCodeIsInvalid() {
-    CreateBankAccountForCustomerCommand command = new CreateBankAccountForCustomerCommand();
-    command.setAccountTypeCode("XXX");
-    command.setTotal(new BigDecimal("10.00"));
+    CreateBankAccountForCustomerCommand command = new CreateBankAccountForCustomerCommand(
+            "12345678A",
+            "XXX",
+            new BigDecimal("10.00")
+    );
 
     EnumConstantNotPresentException ex = assertThrows(
             EnumConstantNotPresentException.class,

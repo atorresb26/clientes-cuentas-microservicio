@@ -41,10 +41,10 @@ class BankAccountApiMapperTest {
 
     assertNotNull(command);
     // dniCliente → customerDni (renamed field)
-    assertEquals("12345678A", command.getCustomerDni());
+    assertEquals("12345678A", command.customerDni());
     // codTipoCuenta → accountTypeCode mapped using .name() of the enum constant
-    assertEquals("NRML", command.getAccountTypeCode());
-    assertEquals(new BigDecimal("350.00"), command.getTotal());
+    assertEquals("NRML", command.accountTypeCode());
+    assertEquals(new BigDecimal("350.00"), command.total());
   }
 
   @Test
@@ -62,7 +62,7 @@ class BankAccountApiMapperTest {
 
       CreateBankAccountForCustomerCommand command = mapper.toCommand(requestDTO);
 
-      assertEquals(c.expectedCode(), command.getAccountTypeCode(),
+      assertEquals(c.expectedCode(), command.accountTypeCode(),
               "Expected accountTypeCode '%s' for enum constant %s".formatted(c.expectedCode(), c.input()));
     }
   }
@@ -77,13 +77,9 @@ class BankAccountApiMapperTest {
     CreateBankAccountForCustomerCommand command = mapper.toCommand(requestDTO);
 
     assertNotNull(command);
-    assertEquals("00000000T", command.getCustomerDni());
-    assertNull(command.getAccountTypeCode());
+    assertEquals("00000000T", command.customerDni());
+    assertNull(command.accountTypeCode());
   }
-
-  // =========================================================================
-  // toNoCustomerDto()
-  // =========================================================================
 
   @Test
   void shouldReturnNullWhenBankAccountIsNullForToNoCustomerDto() {

@@ -27,6 +27,6 @@ public interface BankAccountMapper {
   @Mapping(target = "accountType", source = "accountTypeCode")
   @Mapping(target = "apiId", ignore = true)
   @Mapping(target = "customerId", ignore = true)
-  @Mapping(target = "total", expression = "java(command.getTotal() != null ? new Money(command.getTotal()) : null)")
+  @Mapping(target = "total", expression = "java(command.total() != null ? new Money(command.total()) : null)")
   BankAccount toBankAccount(CreateBankAccountForCustomerCommand command);
 }
