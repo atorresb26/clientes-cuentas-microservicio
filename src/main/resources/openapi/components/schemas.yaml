@@ -28,7 +28,7 @@ Problem:
       type: string
       format: date-time
       description: Time when the error occurred
-      example: "2026-03-14T19:30:21Z"
+      example: '2026-03-14T19:30:21Z'
   required:
     - title
     - status
@@ -107,7 +107,7 @@ CreateBankAccountForCustomerRequest:
     dniCliente:
       type: string
       description: DNI del cliente al que le queremos crear la cuenta
-      pattern: "^[0-9]{8}[A-Za-z]$"
+      pattern: '^[0-9]{8}[A-Za-z]$'
       example: 12345678A
     codTipoCuenta:
       type: string
