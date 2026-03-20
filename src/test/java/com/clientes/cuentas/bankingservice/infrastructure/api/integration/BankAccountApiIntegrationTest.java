@@ -1,4 +1,4 @@
-package com.clientes.cuentas.bankingservice.api;
+package com.clientes.cuentas.bankingservice.infrastructure.api.integration;
 
 import com.clientes.cuentas.bankingservice.BaseIntegrationTest;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,6 +1,7 @@
 package com.clientes.cuentas.bankingservice.infrastructure.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -17,6 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Configuration
+@ConditionalOnMissingBean(SecurityFilterChain.class)
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
