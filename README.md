@@ -318,7 +318,7 @@ Tras ejecutar tests, JaCoCo genera el informe en:
 
 ## 9. Postman
 
-Se incluye una colección importable en la raíz del proyecto:
+Se incluye una colección importable en la carpeta `postman`:
 
 - `clientes-cuentas-microservicio.postman_collection.json`
 

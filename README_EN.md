@@ -318,7 +318,7 @@ After running tests, JaCoCo generates the report at:
 
 ## 9. Postman
 
-An importable collection is included at the project root:
+An importable collection is included in the `postman` folder:
 
 - `clientes-cuentas-microservicio.postman_collection.json`
 
