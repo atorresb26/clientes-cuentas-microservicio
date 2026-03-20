@@ -1,0 +1,95 @@
+BadRequest:
+  description: Parámetros de solicitud no válidos
+  content:
+    application/problem+json:
+      schema:
+        $ref: './schemas.yaml#/Problem'
+      examples:
+        invalidRequest:
+          summary: Invalid query parameter
+          value:
+            title: Invalid request
+            status: 400
+            detail: Query parameter 'limit' must be greater than 0
+            instance: /customers?limit=-1
+            timestamp: '2026-03-14T19:30:21Z'
+
+Unauthorized:
+  description: Se requiere autenticación para acceder a este recurso.
+  content:
+    application/problem+json:
+      schema:
+        $ref: './schemas.yaml#/Problem'
+      examples:
+        missingToken:
+          summary: Missing authentication token
+          value:
+            title: Unauthorized
+            status: 401
+            detail: Authentication credentials were not provided.
+            instance: /customers
+            timestamp: '2026-03-14T19:30:21Z'
+        invalidToken:
+          summary: Invalid authentication token
+          value:
+            title: Invalid authentication token
+            status: 401
+            detail: The access token provided is expired or invalid.
+            instance: /customers
+            timestamp: '2026-03-14T19:30:21Z'
+
+Forbidden:
+  description: El usuario autenticado no tiene permiso para acceder a este recurso.
+  content:
+    application/problem+json:
+      schema:
+        $ref: './schemas.yaml#/Problem'
+      examples:
+        insufficientPermissions:
+          summary: User lacks required permissions
+          value:
+            title: Forbidden
+            status: 403
+            detail: You do not have permission to access this resource.
+            instance: /customers
+            timestamp: '2026-03-14T19:30:21Z'
+        roleNotAllowed:
+          summary: Role not allowed
+          value:
+            title: Access denied
+            status: 403
+            detail: Only administrators can access this resource.
+            instance: /admin/customers
+            timestamp: '2026-03-14T19:30:21Z'
+
+NotFound:
+  description: Recurso no encontrado
+  content:
+    application/problem+json:
+      schema:
+        $ref: './schemas.yaml#/Problem'
+      examples:
+        customerNotFound:
+          summary: Customer does not exist
+          value:
+            title: Customer not found
+            status: 404
+            detail: Customer with id 123 was not found
+            instance: /customers/123
+            timestamp: '2026-03-14T19:30:21Z'
+
+InternalServerError:
+  description: Error inesperado del servidor
+  content:
+    application/problem+json:
+      schema:
+        $ref: './schemas.yaml#/Problem'
+      examples:
+        serverError:
+          summary: Unexpected error
+          value:
+            status: 500
+            title: Internal Server Error
+            detail: Unexpected error occurred
+            instance: /customers
+            timestamp: '2026-03-14T19:30:21Z'

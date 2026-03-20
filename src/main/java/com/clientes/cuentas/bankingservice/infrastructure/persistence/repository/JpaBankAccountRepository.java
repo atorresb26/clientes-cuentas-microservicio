@@ -1,0 +1,27 @@
+package com.clientes.cuentas.bankingservice.infrastructure.persistence.repository;
+
+import com.clientes.cuentas.bankingservice.infrastructure.persistence.entity.BankAccountEntity;
+import io.micrometer.core.annotation.Timed;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+/**
+ * JPA Repository for the BankAccount Entity.
+ */
+public interface JpaBankAccountRepository extends JpaRepository<BankAccountEntity, Long> {
+
+  /**
+   * Retrieves a bank account by its public API identifier.
+   *
+   * @param apiId the public API identifier of the bank account
+   * @return an {@link Optional} containing the matching bank account entity if found, otherwise empty
+   */
+  @Timed(value = "jpa.db.query", extraTags = {
+          "repository", "JpaBankAccountRepository",
+          "method", "findByApiId"
+  })
+  @EntityGraph(attributePaths = {"accountType", "customer"})
+  Optional<BankAccountEntity> findByApiId(String apiId);
+}

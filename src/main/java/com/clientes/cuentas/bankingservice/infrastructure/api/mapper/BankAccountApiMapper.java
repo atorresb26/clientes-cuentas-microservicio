@@ -1,0 +1,50 @@
+package com.clientes.cuentas.bankingservice.infrastructure.api.mapper;
+
+import com.clientes.cuentas.bankingservice.application.command.CreateBankAccountForCustomerCommand;
+import com.clientes.cuentas.bankingservice.domain.model.BankAccount;
+import com.clientes.cuentas.bankingservice.domain.model.vo.Money;
+import com.clientes.cuentas.bankingservice.infrastructure.input.dto.BankAccountDTO;
+import com.clientes.cuentas.bankingservice.infrastructure.input.dto.BankAccountNoCustomerDTO;
+import com.clientes.cuentas.bankingservice.infrastructure.input.dto.CreateBankAccountForCustomerRequestDTO;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+/**
+ * Mapper responsible for converting between API layer DTOs and
+ * domain objects related to bank accounts.
+ */
+@Mapper(componentModel = "spring", imports = Money.class)
+public interface BankAccountApiMapper {
+
+  /**
+   * Converts the incoming API request DTO into a command object
+   * used by the application use case responsible for creating
+   * a bank account for a customer.
+   *
+   * @param requestDTO DTO received from the API request body
+   * @return command object containing the data required to execute
+   * the use case for creating a bank account
+   */
+  @Mapping(target = "customerDni", source = "dniCliente")
+  @Mapping(target = "accountTypeCode", source = "codTipoCuenta")
+  CreateBankAccountForCustomerCommand toCommand(CreateBankAccountForCustomerRequestDTO requestDTO);
+
+  /**
+   * Converts a domain {@link BankAccount} object into a DTO without customer information.
+   *
+   * @param response domain bank account object
+   * @return DTO representation of the bank account without customer data
+   */
+  @Mapping(target = "total", expression = "java(response.getTotal() != null ? response.getTotal().amount() : null)")
+  BankAccountNoCustomerDTO toNoCustomerDto(BankAccount response);
+
+  /**
+   * Converts a domain {@link BankAccount} object into a DTO including
+   * customer information for API responses.
+   *
+   * @param response domain bank account object
+   * @return DTO representation of the bank account with customer data
+   */
+  @Mapping(target = "total", expression = "java(response.getTotal() != null ? response.getTotal().amount() : null)")
+  BankAccountDTO toDto(BankAccount response);
+}

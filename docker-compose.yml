@@ -1,0 +1,18 @@
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    command: start-dev --import-realm
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./keycloak/banking-realm.json:/opt/keycloak/data/import/banking-realm.json
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - keycloak

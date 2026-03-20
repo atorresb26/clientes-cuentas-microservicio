@@ -1,0 +1,1317 @@
+{
+  "info": {
+    "_postman_id": "8f8f3528-0cc8-4d3d-a2d1-9b6cb2cf19f8",
+    "name": "clientes-cuentas-microservicio",
+    "description": "Colección de pruebas para el microservicio de clientes y cuentas. Incluye autenticación contra Keycloak, casos positivos y negativos, y scripts para guardar tokens y apiIds útiles.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "keycloakUrl",
+      "value": "http://localhost:8081"
+    },
+    {
+      "key": "realm",
+      "value": "banking"
+    },
+    {
+      "key": "clientId",
+      "value": "banking-service"
+    },
+    {
+      "key": "adminUsername",
+      "value": "adminUser"
+    },
+    {
+      "key": "adminPassword",
+      "value": "admin"
+    },
+    {
+      "key": "readUsername",
+      "value": "readUser"
+    },
+    {
+      "key": "readPassword",
+      "value": "read"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "readAccessToken",
+      "value": ""
+    },
+    {
+      "key": "createdAccountApiId",
+      "value": ""
+    },
+    {
+      "key": "existingCustomerDni",
+      "value": "11111111A"
+    },
+    {
+      "key": "secondCustomerDni",
+      "value": "22222222B"
+    },
+    {
+      "key": "minorCustomerDni",
+      "value": "33333333C"
+    },
+    {
+      "key": "notFoundCustomerDni",
+      "value": "00000000X"
+    },
+    {
+      "key": "invalidCustomerDni",
+      "value": "1234A"
+    },
+    {
+      "key": "newCustomerDni",
+      "value": "99999999Z"
+    },
+    {
+      "key": "unknownAccountApiId",
+      "value": "00000000-0000-0000-0000-000000000000"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Autenticación",
+      "description": "Obtención de tokens para los usuarios reales incluidos en el realm exportado de Keycloak.",
+      "item": [
+        {
+          "name": "Obtener token JWT - adminUser/admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.access_token).to.be.a('string').and.not.empty;",
+                  "pm.collectionVariables.set('accessToken', data.access_token);",
+                  "pm.test('Token admin almacenado', function () { pm.expect(pm.collectionVariables.get('accessToken')).to.be.a('string').and.not.empty; });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "value": "password",
+                  "type": "text"
+                },
+                {
+                  "key": "client_id",
+                  "value": "{{clientId}}",
+                  "type": "text"
+                },
+                {
+                  "key": "username",
+                  "value": "{{adminUsername}}",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "{{adminPassword}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{keycloakUrl}}/realms/{{realm}}/protocol/openid-connect/token",
+              "host": [
+                "{{keycloakUrl}}"
+              ],
+              "path": [
+                "realms",
+                "{{realm}}",
+                "protocol",
+                "openid-connect",
+                "token"
+              ]
+            },
+            "description": "Obtiene y guarda en la variable de colección `accessToken` el JWT del usuario administrador."
+          }
+        },
+        {
+          "name": "Obtener token JWT - readUser/read",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.access_token).to.be.a('string').and.not.empty;",
+                  "pm.collectionVariables.set('readAccessToken', data.access_token);",
+                  "pm.test('Token read almacenado', function () { pm.expect(pm.collectionVariables.get('readAccessToken')).to.be.a('string').and.not.empty; });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "value": "password",
+                  "type": "text"
+                },
+                {
+                  "key": "client_id",
+                  "value": "{{clientId}}",
+                  "type": "text"
+                },
+                {
+                  "key": "username",
+                  "value": "{{readUsername}}",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "{{readPassword}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{keycloakUrl}}/realms/{{realm}}/protocol/openid-connect/token",
+              "host": [
+                "{{keycloakUrl}}"
+              ],
+              "path": [
+                "realms",
+                "{{realm}}",
+                "protocol",
+                "openid-connect",
+                "token"
+              ]
+            },
+            "description": "Obtiene y guarda en la variable de colección `readAccessToken` el JWT del usuario de solo lectura."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Clientes",
+      "description": "Consultas de clientes protegidas con rol admin.",
+      "item": [
+        {
+          "name": "GET /clientes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.content).to.be.an('array');",
+                  "pm.expect(data.totalElements).to.be.a('number');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes?page=0&size=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /clientes/mayores-de-edad",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.content).to.be.an('array');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/mayores-de-edad?page=0&size=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes",
+                "mayores-de-edad"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /clientes/con-cuenta-superior-a/300",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.content).to.be.an('array');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/con-cuenta-superior-a/300?page=0&size=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes",
+                "con-cuenta-superior-a",
+                "300"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /clientes/con-cuenta-superior-a/60000",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/con-cuenta-superior-a/60000?page=0&size=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes",
+                "con-cuenta-superior-a",
+                "60000"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /clientes/con-cuenta-superior-a/130000",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/con-cuenta-superior-a/130000?page=0&size=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes",
+                "con-cuenta-superior-a",
+                "130000"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /clientes/{dni} - existente (22222222B)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.dni).to.eql(pm.collectionVariables.get('secondCustomerDni'));",
+                  "pm.expect(data.accounts).to.be.an('array');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/{{secondCustomerDni}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes",
+                "{{secondCustomerDni}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /clientes/{dni} - existente menor de edad (33333333C)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/{{minorCustomerDni}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes",
+                "{{minorCustomerDni}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /clientes/{dni} - no encontrado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 404', function () { pm.response.to.have.status(404); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.title).to.eql('Not Found');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/{{notFoundCustomerDni}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes",
+                "{{notFoundCustomerDni}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Cuentas",
+      "description": "Operaciones de escritura/lectura sobre cuentas. Algunas guardan `createdAccountApiId` para reutilizarlo después.",
+      "item": [
+        {
+          "name": "POST /cuentas - cliente existente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 201', function () { pm.response.to.have.status(201); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.apiId).to.be.a('string').and.not.empty;",
+                  "pm.collectionVariables.set('createdAccountApiId', data.apiId);",
+                  "pm.test('apiId guardado', function () { pm.expect(pm.collectionVariables.get('createdAccountApiId')).to.be.a('string').and.not.empty; });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dniCliente\": \"{{existingCustomerDni}}\",\n  \"codTipoCuenta\": \"JR\",\n  \"total\": 500.00\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cuentas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cuentas"
+              ]
+            },
+            "description": "Crea una nueva cuenta asociada al cliente 11111111A y guarda el apiId devuelto."
+          }
+        },
+        {
+          "name": "POST /cuentas - cliente no existente",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const randomDni = `${Math.floor(10000000 + Math.random() * 89999999)}Z`;",
+                  "pm.collectionVariables.set('newCustomerDni', randomDni);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 201', function () { pm.response.to.have.status(201); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.apiId).to.be.a('string').and.not.empty;",
+                  "pm.collectionVariables.set('createdAccountApiId', data.apiId);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dniCliente\": \"{{newCustomerDni}}\",\n  \"codTipoCuenta\": \"NRML\",\n  \"total\": 200.00\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cuentas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cuentas"
+              ]
+            },
+            "description": "Genera un DNI aleatorio válido, crea cliente y cuenta, y guarda el `createdAccountApiId`."
+          }
+        },
+        {
+          "name": "PATCH /cuentas/{apiIdCuenta}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"total\": 2500.00\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cuentas/{{createdAccountApiId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cuentas",
+                "{{createdAccountApiId}}"
+              ]
+            },
+            "description": "Requiere haber ejecutado previamente uno de los POST de creación para poblar `createdAccountApiId`."
+          }
+        },
+        {
+          "name": "GET /cuentas/{apiIdCuenta}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.apiId).to.eql(pm.collectionVariables.get('createdAccountApiId'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cuentas/{{createdAccountApiId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cuentas",
+                "{{createdAccountApiId}}"
+              ]
+            },
+            "description": "Consulta la cuenta creada en uno de los POST anteriores."
+          }
+        },
+        {
+          "name": "GET /cuentas/{apiIdCuenta} - no encontrada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 404', function () { pm.response.to.have.status(404); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.title).to.eql('Not Found');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cuentas/{{unknownAccountApiId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cuentas",
+                "{{unknownAccountApiId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Negativos y seguridad",
+      "description": "Casos recomendables para comprobar seguridad y manejo de errores ProblemDetail.",
+      "item": [
+        {
+          "name": "GET /clientes sin token -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 401', function () { pm.response.to.have.status(401); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.title).to.eql('Unauthorized');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /clientes con token readUser -> 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 403', function () { pm.response.to.have.status(403); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.title).to.eql('Forbidden');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{readAccessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            },
+            "description": "Requiere haber ejecutado previamente la petición de token del usuario readUser."
+          }
+        },
+        {
+          "name": "GET /clientes/{dni} con formato inválido -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 400', function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.title).to.eql('Bad Request');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/{{invalidCustomerDni}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes",
+                "{{invalidCustomerDni}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /cuentas con body inválido -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 400', function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.title).to.eql('Bad Request');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dniCliente\": \"12345678A\",\n  \"total\": 100.00\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cuentas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cuentas"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Métricas",
+      "description": "Consultas de observabilidad sobre endpoints de Actuator expuestos por la aplicación.",
+      "item": [
+        {
+          "name": "GET /actuator",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data._links).to.be.an('object');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actuator"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /actuator/health",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.status).to.be.oneOf(['UP', 'DOWN', 'OUT_OF_SERVICE', 'UNKNOWN']);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /actuator/metrics",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.names).to.be.an('array');",
+                  "pm.expect(data.names.length).to.be.above(0);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/metrics",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "metrics"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /actuator/metrics/http.server.requests",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.name).to.eql('http.server.requests');",
+                  "pm.expect(data.measurements).to.be.an('array');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/metrics/http.server.requests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "metrics",
+                "http.server.requests"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /actuator/metrics/jvm.memory.used",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.name).to.eql('jvm.memory.used');",
+                  "pm.expect(data.measurements).to.be.an('array');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/metrics/jvm.memory.used",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "metrics",
+                "jvm.memory.used"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /actuator/caches",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.cacheManagers).to.be.an('object');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/caches",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "caches"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /actuator/metrics/cache.gets",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.name).to.eql('cache.gets');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/metrics/cache.gets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "metrics",
+                "cache.gets"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /actuator/metrics/cache.gets (customer-with-accounts)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.name).to.eql('cache.gets');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/metrics/cache.gets?tag=cache%3Acustomer-with-accounts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "metrics",
+                "cache.gets"
+              ],
+              "query": [
+                {
+                  "key": "tag",
+                  "value": "cache:customer-with-accounts"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /actuator/metrics/cache.puts",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.name).to.eql('cache.puts');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/metrics/cache.puts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "metrics",
+                "cache.puts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /actuator/metrics/jpa.db.query",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.name).to.eql('jpa.db.query');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/metrics/jpa.db.query",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "metrics",
+                "jpa.db.query"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /actuator/metrics/jpa.db.query (findByDni)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.name).to.eql('jpa.db.query');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/metrics/jpa.db.query?tag=repository%3AJpaCustomerRepository&tag=method%3AfindByDni",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "metrics",
+                "jpa.db.query"
+              ],
+              "query": [
+                {
+                  "key": "tag",
+                  "value": "repository:JpaCustomerRepository"
+                },
+                {
+                  "key": "tag",
+                  "value": "method:findByDni"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /actuator/metrics/customer.api.getCustomerByDni",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.name).to.eql('customer.api.getCustomerByDni');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/metrics/customer.api.getCustomerByDni",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "metrics",
+                "customer.api.getCustomerByDni"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /actuator/metrics/bankaccount.api.getBankAccountByApiId",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.name).to.eql('bankaccount.api.getBankAccountByApiId');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/metrics/bankaccount.api.getBankAccountByApiId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "metrics",
+                "bankaccount.api.getBankAccountByApiId"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /actuator/metrics sin token -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Respuesta 401', function () { pm.response.to.have.status(401); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/metrics",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "metrics"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+

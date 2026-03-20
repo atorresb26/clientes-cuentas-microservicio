@@ -1,0 +1,190 @@
+Problem:
+  type: object
+  description: |
+    Respuesta de error estándar según RFC 7807 «Detalles del problema para API HTTP».
+    Este objeto proporciona detalles legibles sobre un error.
+  properties:
+    status:
+      type: integer
+      format: int32
+      description: Código de estado HTTP para esta incidencia del problema.
+      example: 404
+    title:
+      type: string
+      description: |
+        Un resumen breve y legible del problema.
+        No debe cambiar entre las distintas apariciones del mismo error.
+      example: Customer not found
+    detail:
+      type: string
+      description: Una explicación legible y específica para esta ocurrencia del problema.
+      example: Customer with id 123 was not found.
+    instance:
+      type: string
+      format: uri
+      description: Una referencia URI que identifica la ocurrencia específica del problema.
+      example: /customers/123
+    timestamp:
+      type: string
+      format: date-time
+      description: Time when the error occurred
+      example: '2026-03-14T19:30:21Z'
+  required:
+    - title
+    - status
+
+BankAccountNoCustomer:
+  type: object
+  properties:
+    apiId:
+      type: string
+      format: uuid
+      example: '6d291095-1a05-4a2d-8c65-a861c0e5797a'
+    accountType:
+      type: string
+      example: 'NORMAL'
+    total:
+      type: number
+      format: bigdecimal
+      example: '1000.50'
+
+BankAccount:
+  allOf:
+    - $ref: '#/BankAccountNoCustomer'
+    - type: object
+      properties:
+        customerDni:
+          type: string
+          example: '00000000Z'
+
+CustomerAccount:
+  type: object
+  properties:
+    dni:
+      type: string
+      example: '00000000Z'
+    name:
+      type: string
+      example: 'Adrián'
+    surname1:
+      type: string
+      example: 'Torres'
+    surname2:
+      type: string
+      example: 'Barca'
+    birthDate:
+      type: string
+      format: date
+      example: '1993-09-26'
+    accounts:
+      type: array
+      items:
+        $ref: '#/BankAccountNoCustomer'
+
+Customer:
+  type: object
+  properties:
+    dni:
+      type: string
+      example: '00000000Z'
+    name:
+      type: string
+      example: 'Adrián'
+    surname1:
+      type: string
+      example: 'Torres'
+    surname2:
+      type: string
+      example: 'Barca'
+    birthDate:
+      type: string
+      format: date
+      example: '1993-09-26'
+
+CreateBankAccountForCustomerRequest:
+  type: object
+  properties:
+    dniCliente:
+      type: string
+      description: DNI del cliente al que le queremos crear la cuenta
+      pattern: '^[0-9]{8}[A-Za-z]$'
+      example: 12345678A
+    codTipoCuenta:
+      type: string
+      description: Código del tipo de cuenta
+      example: NRML
+      enum:
+        - JR
+        - NRML
+        - PREM
+    total:
+      type: number
+      format: bigdecimal
+      minimum: 0
+      example: 10000.00
+  required:
+    - dniCliente
+    - codTipoCuenta
+    - total
+
+PaginationMetadata:
+  type: object
+  properties:
+    currentPage:
+      type: integer
+      format: int32
+      description: Número de página actual (comenzando desde 0)
+      example: 0
+    pageSize:
+      type: integer
+      format: int32
+      description: Tamaño de la página
+      example: 20
+    totalElements:
+      type: integer
+      format: int64
+      description: Número total de elementos
+      example: 100
+    totalPages:
+      type: integer
+      format: int32
+      description: Número total de páginas
+      example: 5
+    isFirst:
+      type: boolean
+      description: Indica si esta es la primera página
+      example: true
+    isLast:
+      type: boolean
+      description: Indica si esta es la última página
+      example: false
+    hasNext:
+      type: boolean
+      description: Indica si hay una página siguiente
+      example: true
+    hasPrevious:
+      type: boolean
+      description: Indica si hay una página anterior
+      example: false
+
+PaginatedCustomerAccount:
+  allOf:
+    - $ref: '#/PaginationMetadata'
+    - type: object
+      properties:
+        content:
+          type: array
+          description: Lista de clientes con sus cuentas asociadas
+          items:
+            $ref: '#/CustomerAccount'
+
+PaginatedCustomer:
+  allOf:
+    - $ref: '#/PaginationMetadata'
+    - type: object
+      properties:
+        content:
+          type: array
+          description: Lista de clientes
+          items:
+            $ref: '#/Customer'
